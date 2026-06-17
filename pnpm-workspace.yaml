@@ -1,6 +1,7 @@
 allowBuilds:
+  '0': sharp
+  '1': unrs-resolver
+  '2': msw
   msw: set this to true or false
   sharp: set this to true or false
   unrs-resolver: set this to true or false
-minimumReleaseAgeExclude:
-  - shadcn@4.8.1
