@@ -1,4 +1,5 @@
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://phonegen.vercel.app';
+const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'phone-gen.vercel.app';
+const siteUrl = rawSiteUrl.startsWith('http') ? rawSiteUrl : `https://${rawSiteUrl}`;
 
 const schema = {
   '@context': 'https://schema.org',
