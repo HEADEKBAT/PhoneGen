@@ -16,7 +16,11 @@
     "searchPlaceholder": "Rechercher des pays...",
     "listboxLabel": "Liste des pays",
     "allCountries": "Tous les pays",
-    "dialogTitle": "Choisir un pays"
+    "dialogTitle": "Choisir un pays",
+    "favorites": "Favoris",
+    "recentlyUsed": "Récemment utilisés",
+    "addToFavorites": "Ajouter aux favoris",
+    "removeFromFavorites": "Retirer des favoris"
   },
   "mainContent": {
     "breadcrumbHome": "Accueil",
@@ -28,7 +32,13 @@
     "format": "Format d'affichage",
     "international": "International",
     "national": "National",
-    "e164": "E.164 (Pur)"
+    "e164": "E.164 (Pur)",
+    "rfc3966": "RFC 3966 (tel:)",
+    "seedToggle": "Utiliser seed",
+    "hideSeed": "Masquer le seed",
+    "seedLabel": "Seed",
+    "seedPlaceholder": "Entrez le seed...",
+    "seedHint": "Même seed = mêmes numéros"
   },
   "phoneList": {
     "copied": "Copié dans le presse-papiers !",
@@ -37,14 +47,24 @@
     "tableCaption": "Numéros de téléphone générés",
     "phoneNumber": "Numéro de téléphone",
     "action": "Action",
-    "number": "#"
+    "number": "#",
+    "copyAll": "Tout copier",
+    "copiedAll": "Tous les numéros copiés !",
+    "copyAllLabel": "Copier tous les numéros",
+    "export": "Exporter",
+    "exported": "Exporté"
   },
   "infoCard": {
     "title": "Générateur gratuit de numéros {adjective}",
     "description": "Notre service vous permet de générer des numéros de téléphone {adjective} aléatoires aux formats international, national et E.164.",
     "validNumbers": "Numéros valides",
     "differentFormats": "Différents formats",
-    "fastAndSimple": "Rapide & simple"
+    "fastAndSimple": "Rapide & simple",
+    "countryInfo": "Informations sur le pays",
+    "countryCode": "Indicatif du pays",
+    "numberLength": "Longueur du numéro",
+    "digits": "chiffres",
+    "example": "Exemple"
   },
   "footer": {
     "description": "Générateur aléatoire de numéros de téléphone pour différents pays. Gratuit.",

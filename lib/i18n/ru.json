@@ -16,7 +16,11 @@
     "searchPlaceholder": "Поиск стран...",
     "listboxLabel": "Список стран",
     "allCountries": "Все страны",
-    "dialogTitle": "Выбрать страну"
+    "dialogTitle": "Выбрать страну",
+    "favorites": "Избранные",
+    "recentlyUsed": "Недавние",
+    "addToFavorites": "Добавить в избранное",
+    "removeFromFavorites": "Убрать из избранного"
   },
   "mainContent": {
     "breadcrumbHome": "Главная",
@@ -28,7 +32,13 @@
     "format": "Формат отображения",
     "international": "Международный",
     "national": "Национальный",
-    "e164": "E.164 (Pure)"
+    "e164": "E.164 (Pure)",
+    "rfc3966": "RFC 3966 (tel:)",
+    "seedToggle": "Использовать seed",
+    "hideSeed": "Скрыть seed",
+    "seedLabel": "Seed (сид)",
+    "seedPlaceholder": "Введите seed...",
+    "seedHint": "Одинаковый seed = одинаковые номера"
   },
   "phoneList": {
     "copied": "Скопировано в буфер обмена!",
@@ -37,14 +47,24 @@
     "tableCaption": "Сгенерированные телефонные номера",
     "phoneNumber": "Номер телефона",
     "action": "Действие",
-    "number": "#"
+    "number": "#",
+    "copyAll": "Копировать все",
+    "copiedAll": "Все номера скопированы!",
+    "copyAllLabel": "Скопировать все номера",
+    "export": "Экспорт",
+    "exported": "Экспортировано"
   },
   "infoCard": {
     "title": "Бесплатный генератор {adjective} номеров",
     "description": "Наш сервис позволяет получать случайные {adjective} номера телефонов в международном, национальном формате и в формате E.164.",
     "validNumbers": "Валидные номера",
     "differentFormats": "Разные форматы",
-    "fastAndSimple": "Быстро и просто"
+    "fastAndSimple": "Быстро и просто",
+    "countryInfo": "Информация о стране",
+    "countryCode": "Код страны",
+    "numberLength": "Длина номера",
+    "digits": "цифр",
+    "example": "Пример"
   },
   "footer": {
     "description": "Генератор случайных телефонных номеров для разных стран. Бесплатно.",

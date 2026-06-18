@@ -16,7 +16,11 @@
     "searchPlaceholder": "Search countries...",
     "listboxLabel": "Country list",
     "allCountries": "All countries",
-    "dialogTitle": "Select country"
+    "dialogTitle": "Select country",
+    "favorites": "Favorites",
+    "recentlyUsed": "Recently Used",
+    "addToFavorites": "Add to Favorites",
+    "removeFromFavorites": "Remove from Favorites"
   },
   "mainContent": {
     "breadcrumbHome": "Home",
@@ -28,7 +32,13 @@
     "format": "Display format",
     "international": "International",
     "national": "National",
-    "e164": "E.164 (Pure)"
+    "e164": "E.164 (Pure)",
+    "rfc3966": "RFC 3966 (tel:)",
+    "seedToggle": "Use seed",
+    "hideSeed": "Hide seed",
+    "seedLabel": "Seed",
+    "seedPlaceholder": "Enter seed...",
+    "seedHint": "Same seed = same numbers"
   },
   "phoneList": {
     "copied": "Copied to clipboard!",
@@ -37,14 +47,24 @@
     "tableCaption": "Generated phone numbers",
     "phoneNumber": "Phone Number",
     "action": "Action",
-    "number": "#"
+    "number": "#",
+    "copyAll": "Copy All",
+    "copiedAll": "All numbers copied!",
+    "copyAllLabel": "Copy all phone numbers",
+    "export": "Export",
+    "exported": "Exported"
   },
   "infoCard": {
     "title": "Free {adjective} Phone Number Generator",
     "description": "Our service allows you to generate random {adjective} phone numbers in international, national, and E.164 formats.",
     "validNumbers": "Valid Numbers",
     "differentFormats": "Multiple Formats",
-    "fastAndSimple": "Fast & Simple"
+    "fastAndSimple": "Fast & Simple",
+    "countryInfo": "Country Info",
+    "countryCode": "Country Code",
+    "numberLength": "Number Length",
+    "digits": "digits",
+    "example": "Example"
   },
   "footer": {
     "description": "Random phone number generator for different countries. Free.",

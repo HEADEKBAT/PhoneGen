@@ -1,10 +1,10 @@
 'use client';
 
-import { Search, Globe } from "lucide-react";
+import { Search, Globe, Star } from "lucide-react";
 import { useState, useMemo } from "react";
 import { COUNTRIES } from "@/lib/phoneGenerator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
-import { useCountryStore } from "@/lib/store";
+import { useCountryStore, useFavoritesStore, useRecentlyUsedStore } from "@/lib/store";
 import { useTranslations } from "@/lib/i18n";
 import Flag from 'react-world-flags'
 
@@ -19,6 +19,8 @@ export default function Sidebar({
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const setStoredCountry = useCountryStore((state) => state.setSelectedCountry);
+  const { favorites, toggleFavorite, isFavorite } = useFavoritesStore();
+  const { recentlyUsed, addRecentlyUsed } = useRecentlyUsedStore();
 
   const countriesList = useMemo(
     () => Object.values(COUNTRIES).sort((a, b) => a.name.localeCompare(b.name)),
@@ -33,6 +35,16 @@ export default function Sidebar({
         ? [...topCountries, COUNTRIES[selectedCountry]]
         : topCountries,
     [countriesList, topCountries, selectedCountry]
+  );
+
+  const favoriteCountries = useMemo(
+    () => favorites.map((code) => COUNTRIES[code]).filter(Boolean),
+    [favorites]
+  );
+
+  const recentlyUsedCountries = useMemo(
+    () => recentlyUsed.map((code) => COUNTRIES[code]).filter(Boolean),
+    [recentlyUsed]
   );
 
   const filteredCountries = useMemo(
@@ -50,8 +62,14 @@ export default function Sidebar({
   const handleSelectCountry = (code: string) => {
     onSelectCountry(code);
     setStoredCountry(code);
+    addRecentlyUsed(code);
     setDialogOpen(false);
     setSearch("");
+  };
+
+  const handleToggleFavorite = (e: React.MouseEvent, code: string) => {
+    e.stopPropagation();
+    toggleFavorite(code);
   };
 
   const getCountryCode = (code: string) => {
@@ -62,8 +80,61 @@ export default function Sidebar({
     return codeMap[code] || code;
   };
 
+  const renderCountryItem = (country: typeof COUNTRIES[string]) => (
+    <li key={country.code} role="none">
+      <button
+        role="option"
+        aria-selected={selectedCountry === country.code}
+        onClick={() => handleSelectCountry(country.code)}
+        className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors ${
+          selectedCountry === country.code
+            ? "bg-blue-600 text-white"
+            : "hover:bg-gray-200"
+        }`}
+      >
+        <Flag
+          code={getCountryCode(country.code)}
+          style={{
+            width: "26px",
+            height: "18px",
+            borderRadius: "2px",
+            objectFit: "cover",
+          }}
+          title={t("countries." + country.code)}
+        />
+        <div className="flex justify-between w-full items-center">
+          <div className="font-medium">{t("countries." + country.code)}</div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm opacity-75">{country.code}</span>
+            <span
+              onClick={(e) => handleToggleFavorite(e, country.code)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleToggleFavorite(e as unknown as React.MouseEvent, country.code); } }}
+              role="button"
+              tabIndex={0}
+              aria-label={
+                isFavorite(country.code)
+                  ? t("sidebar.removeFromFavorites")
+                  : t("sidebar.addToFavorites")
+              }
+              className={`transition-colors cursor-pointer ${
+                selectedCountry === country.code
+                  ? "text-white/70 hover:text-white"
+                  : "text-gray-300 hover:text-yellow-500"
+              }`}
+            >
+              <Star
+                size={14}
+                className={isFavorite(country.code) ? "fill-yellow-500 text-yellow-500" : ""}
+              />
+            </span>
+          </div>
+        </div>
+      </button>
+    </li>
+  );
+
   return (
-    <aside aria-label={t("sidebar.ariaLabel")} className="w-64 border-r border-gray-200 bg-gray-50 h-full">
+    <aside aria-label={t("sidebar.ariaLabel")} className="w-64 border-r border-gray-200 bg-gray-50 h-full overflow-y-auto">
       <div className="p-4 space-y-4">
         {/* Search */}
         <div className="relative">
@@ -78,6 +149,30 @@ export default function Sidebar({
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+
+        {/* Favorites Section */}
+        {!search && favoriteCountries.length > 0 && (
+          <section>
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 mb-2">
+              {t("sidebar.favorites")}
+            </h3>
+            <ul className="space-y-2" role="listbox">
+              {favoriteCountries.map(renderCountryItem)}
+            </ul>
+          </section>
+        )}
+
+        {/* Recently Used Section */}
+        {!search && recentlyUsedCountries.length > 0 && (
+          <section>
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-4 mb-2">
+              {t("sidebar.recentlyUsed")}
+            </h3>
+            <ul className="space-y-2" role="listbox">
+              {recentlyUsedCountries.map(renderCountryItem)}
+            </ul>
+          </section>
+        )}
 
         {/* Countries List */}
         <ul className="space-y-2" role="listbox" aria-label={t("sidebar.listboxLabel")}>
@@ -105,7 +200,27 @@ export default function Sidebar({
                 />
                 <div className="flex justify-between w-full items-center">
                   <div className="font-medium">{t("countries." + country.code)}</div>
-                  <div className="text-sm opacity-75">{country.code}</div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm opacity-75">{country.code}</span>
+                    <button
+                      onClick={(e) => handleToggleFavorite(e, country.code)}
+                      aria-label={
+                        isFavorite(country.code)
+                          ? t("sidebar.removeFromFavorites")
+                          : t("sidebar.addToFavorites")
+                      }
+                      className={`transition-colors ${
+                        selectedCountry === country.code
+                          ? "text-white/70 hover:text-white"
+                          : "text-gray-300 hover:text-yellow-500"
+                      }`}
+                    >
+                      <Star
+                        size={14}
+                        className={isFavorite(country.code) ? "fill-yellow-500 text-yellow-500" : ""}
+                      />
+                    </button>
+                  </div>
                 </div>
               </button>
             </li>
@@ -165,10 +280,24 @@ export default function Sidebar({
                     />
                     <div className="flex w-full items-center gap-1">
                       <div className="text-sm font-medium">{country.code}</div>
-                      <div className="text-sm opacity-75 max-w-[120px] truncate">
+                      <div className="text-sm opacity-75 max-w-30 truncate">
                         {t("countries." + country.code)}
                       </div>
                     </div>
+                    <button
+                      onClick={(e) => handleToggleFavorite(e, country.code)}
+                      aria-label={
+                        isFavorite(country.code)
+                          ? t("sidebar.removeFromFavorites")
+                          : t("sidebar.addToFavorites")
+                      }
+                      className="ml-auto text-gray-300 hover:text-yellow-500 transition-colors"
+                    >
+                      <Star
+                        size={14}
+                        className={isFavorite(country.code) ? "fill-yellow-500 text-yellow-500" : ""}
+                      />
+                    </button>
                   </button>
                 </li>
               ))}

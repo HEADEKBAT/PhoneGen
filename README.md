@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PhoneGen — Генератор телефонных номеров
 
-## Getting Started
+Бесплатный онлайн-генератор валидных телефонных номеров для 100+ стран.  
+Поддерживает международный, национальный, E.164 и RFC 3966 форматы.
 
-First, run the development server:
+## Возможности
+
+- **100+ стран** — от России до Зимбабве, с реальными мобильными префиксами
+- **4 формата** — International, National, E.164, RFC 3966 (tel:)
+- **Массовая генерация** — 1, 5, 10, 25, 50 или 100 номеров за раз
+- **Копирование** — один номер или все сразу
+- **Экспорт** — TXT, CSV, JSON
+- **Seed** — детерминированная генерация (одинаковый seed = одинаковые номера)
+- **Избранное** — сохраняйте часто используемые страны
+- **Недавние** — быстрый доступ к последним 5 странам
+- **Поиск** — фильтр стран по названию или коду
+- **Мобильная версия** — адаптивный интерфейс
+- **URL-параметры** — передача страны, количества и формата в ссылке
+- **5 языков** — русский, English, Deutsch, Español, Français
+- **Информация о стране** — код страны, длина номера, пример
+
+## Технологии
+
+- **Next.js 16** (App Router, Turbopack)
+- **React 19**
+- **TypeScript**
+- **TailwindCSS v4**
+- **shadcn/ui** + Radix UI
+- **Zustand** (persist в localStorage)
+- **Lucide React** (иконки)
+
+## Быстрый старт
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Откройте [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Сборка
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## URL-параметры
 
-To learn more about Next.js, take a look at the following resources:
+Все параметры опциональны:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Параметр | Значения | Пример |
+|----------|----------|--------|
+| `country` | Код страны (NG, US, DE, RU…) | `?country=DE` |
+| `count` | 1, 5, 10, 25, 50, 100 | `?count=50` |
+| `format` | international, national, e164, rfc3966 | `?format=e164` |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Комбинация: `?country=JP&count=25&format=national`
 
-## Deploy on Vercel
+## Структура проекта
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+app/              # Next.js App Router pages
+  page.tsx        # Главная страница
+  layout.tsx      # Корневой layout
+  about/          # Страница «О сервисе»
+components/       # UI-компоненты
+  ui/             # shadcn/ui компоненты
+  Header.tsx
+  Sidebar.tsx     # Список стран, избранное, поиск
+  MainContent.tsx # Основной контент с контролами
+  GeneratorControls.tsx
+  PhoneList.tsx   # Таблица номеров + копирование + экспорт
+  InfoCard.tsx    # Информация о стране
+  Footer.tsx
+lib/              # Логика
+  phoneGenerator.ts  # Генерация номеров (50+ стран)
+  store.ts           # Zustand store (страна, язык, избранное)
+  i18n/              # Переводы (ru, en, de, es, fr)
+public/           # Статические файлы
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Деплой
+
+Проект оптимизирован для [Vercel](https://vercel.com):
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+## Лицензия
+
+MIT

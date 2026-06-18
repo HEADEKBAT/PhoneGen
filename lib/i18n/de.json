@@ -16,7 +16,11 @@
     "searchPlaceholder": "Länder suchen...",
     "listboxLabel": "Länderliste",
     "allCountries": "Alle Länder",
-    "dialogTitle": "Land auswählen"
+    "dialogTitle": "Land auswählen",
+    "favorites": "Favoriten",
+    "recentlyUsed": "Zuletzt verwendet",
+    "addToFavorites": "Zu Favoriten hinzufügen",
+    "removeFromFavorites": "Aus Favoriten entfernen"
   },
   "mainContent": {
     "breadcrumbHome": "Startseite",
@@ -28,7 +32,13 @@
     "format": "Anzeigeformat",
     "international": "International",
     "national": "National",
-    "e164": "E.164 (Rein)"
+    "e164": "E.164 (Rein)",
+    "rfc3966": "RFC 3966 (tel:)",
+    "seedToggle": "Seed verwenden",
+    "hideSeed": "Seed ausblenden",
+    "seedLabel": "Seed",
+    "seedPlaceholder": "Seed eingeben...",
+    "seedHint": "Gleicher Seed = gleiche Nummern"
   },
   "phoneList": {
     "copied": "In die Zwischenablage kopiert!",
@@ -37,14 +47,24 @@
     "tableCaption": "Generierte Telefonnummern",
     "phoneNumber": "Telefonnummer",
     "action": "Aktion",
-    "number": "#"
+    "number": "#",
+    "copyAll": "Alle kopieren",
+    "copiedAll": "Alle Nummern kopiert!",
+    "copyAllLabel": "Alle Telefonnummern kopieren",
+    "export": "Exportieren",
+    "exported": "Exportiert"
   },
   "infoCard": {
     "title": "Kostenloser Generator für {adjective} Telefonnummern",
     "description": "Unser Dienst ermöglicht es Ihnen, zufällige {adjective} Telefonnummern im internationalen, nationalen und E.164-Format zu generieren.",
     "validNumbers": "Gültige Nummern",
     "differentFormats": "Verschiedene Formate",
-    "fastAndSimple": "Schnell & Einfach"
+    "fastAndSimple": "Schnell & Einfach",
+    "countryInfo": "Länderinformationen",
+    "countryCode": "Ländervorwahl",
+    "numberLength": "Nummernlänge",
+    "digits": "Ziffern",
+    "example": "Beispiel"
   },
   "footer": {
     "description": "Zufallsgenerator für Telefonnummern aus verschiedenen Ländern. Kostenlos.",

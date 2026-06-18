@@ -18,6 +18,8 @@ function HomeContent() {
   const setStoredCountry = useCountryStore((state) => state.setSelectedCountry);
 
   const urlCountry = searchParams.get("country");
+  const urlCount = searchParams.get("count");
+  const urlFormat = searchParams.get("format");
   const [selectedCountry, setSelectedCountry] = useState(storedCountry || "NG");
 
   useEffect(() => {
@@ -37,15 +39,25 @@ function HomeContent() {
     setStoredCountry(country);
 
     if (urlCountry !== country) {
-      router.push(`/?country=${country}`);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("country", country);
+      router.replace(`/?${params.toString()}`);
     }
-  }, [mounted, urlCountry, storedCountry, router, setStoredCountry]);
+  }, [mounted, urlCountry, storedCountry, router, setStoredCountry, searchParams]);
 
   const handleSelectCountry = (code: string) => {
     setSelectedCountry(code);
     setStoredCountry(code);
-    router.push(`/?country=${code}`);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("country", code);
+    router.replace(`/?${params.toString()}`);
   };
+
+  const parsedCount = urlCount ? parseInt(urlCount, 10) : null;
+  const validCount = parsedCount && [1, 5, 10, 25, 50, 100].includes(parsedCount) ? parsedCount : null;
+  const validFormat = urlFormat && ["international", "national", "e164"].includes(urlFormat)
+    ? urlFormat as "international" | "national" | "e164"
+    : null;
 
   if (!mounted) {
     return null;
@@ -55,8 +67,15 @@ function HomeContent() {
     <>
       <Header />
       <div className="flex flex-1">
-        <Sidebar selectedCountry={selectedCountry} onSelectCountry={handleSelectCountry} />
-        <MainContent selectedCountry={selectedCountry} />
+        <div className="hidden md:block">
+          <Sidebar selectedCountry={selectedCountry} onSelectCountry={handleSelectCountry} />
+        </div>
+        <MainContent
+          selectedCountry={selectedCountry}
+          onSelectCountry={handleSelectCountry}
+          initialCount={validCount}
+          initialFormat={validFormat}
+        />
       </div>
       <Footer />
     </>

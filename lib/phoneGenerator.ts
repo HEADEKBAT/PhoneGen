@@ -1,4 +1,4 @@
-export type PhoneFormat = "international" | "national" | "e164";
+export type PhoneFormat = "international" | "national" | "e164" | "rfc3966";
 
 export interface Country {
   name: string;
@@ -11,6 +11,31 @@ export interface Country {
     e164: (number: string) => string;
   };
   generateNumber: () => string;
+}
+
+export interface CountryInfo {
+  countryCode: string;
+  numberLength: number;
+  exampleInternational: string;
+}
+
+// ── Seeded PRNG (mulberry32) ──────────────────────────────────────────
+function mulberry32(seed: number): () => number {
+  return () => {
+    seed |= 0;
+    seed = (seed + 0x6d2b79f5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function hashSeed(seed: string): number {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = ((hash << 5) - hash + seed.charCodeAt(i)) | 0;
+  }
+  return Math.abs(hash) || 1;
 }
 
 const generateRandomDigits = (length: number): string => {
@@ -42,8 +67,9 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇺🇸",
     countryCode: "+1",
     generateNumber: () => {
-      const areaCode = generateRandomDigits(3);
-      const exchange = generateRandomDigits(3);
+      const nxx = () => (Math.floor(Math.random() * 8) + 2).toString() + generateRandomDigits(2);
+      const areaCode = nxx();
+      const exchange = nxx();
       const number = generateRandomDigits(4);
       return areaCode + exchange + number;
     },
@@ -59,13 +85,13 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇩🇪",
     countryCode: "+49",
     generateNumber: () => {
-      const areaCode = Math.floor(Math.random() * 9000) + 1000;
-      const subscriber = generateRandomDigits(8);
-      return areaCode.toString() + subscriber;
+      const prefix = ["151", "152", "155", "156", "157", "159", "160", "162", "163", "170", "171", "172", "173", "174", "175", "176", "177", "178", "179"][Math.floor(Math.random() * 19)];
+      const subscriber = generateRandomDigits(7);
+      return prefix + subscriber;
     },
     formats: {
-      international: (number: string) => `+49 ${number.slice(0, 4)} ${number.slice(4)}`,
-      national: (number: string) => `0${number.slice(0, 4)} ${number.slice(4)}`,
+      international: (number: string) => `+49 ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`,
+      national: (number: string) => `0${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`,
       e164: (number: string) => `+49${number}`,
     },
   },
@@ -93,15 +119,13 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇨🇳",
     countryCode: "+86",
     generateNumber: () => {
-      const carrier = ["13", "14", "15", "16", "17", "18", "19"][Math.floor(Math.random() * 7)];
-      const middleDigits = generateRandomDigits(3);
-      const lastDigits = generateRandomDigits(4);
-      const lastFour = generateRandomDigits(4);
-      return carrier + middleDigits + lastDigits + lastFour;
+      const prefix = ["130", "131", "132", "133", "134", "135", "136", "137", "138", "139", "150", "151", "152", "153", "155", "156", "157", "158", "159", "186", "187", "188", "189", "176", "177", "178", "180", "181", "182", "183", "184", "185", "170", "171", "172", "173", "175", "190", "191", "192", "193", "195", "196", "197", "198", "199"][Math.floor(Math.random() * 46)];
+      const subscriber = generateRandomDigits(8);
+      return prefix + subscriber;
     },
     formats: {
-      international: (number: string) => `+86 ${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5, 9)} ${number.slice(9)}`,
-      national: (number: string) => `0${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5, 9)} ${number.slice(9)}`,
+      international: (number: string) => `+86 ${number.slice(0, 3)} ${number.slice(3, 7)} ${number.slice(7)}`,
+      national: (number: string) => `${number.slice(0, 3)} ${number.slice(3, 7)} ${number.slice(7)}`,
       e164: (number: string) => `+86${number}`,
     },
   },
@@ -111,13 +135,13 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇮🇳",
     countryCode: "+91",
     generateNumber: () => {
-      const areaCode = generateRandomDigits(5);
-      const subscriber = generateRandomDigits(5);
-      return areaCode + subscriber;
+      const firstDigit = (Math.floor(Math.random() * 4) + 6).toString();
+      const rest = generateRandomDigits(9);
+      return firstDigit + rest;
     },
     formats: {
       international: (number: string) => `+91 ${number.slice(0, 5)} ${number.slice(5)}`,
-      national: (number: string) => `0${number.slice(0, 5)} ${number.slice(5)}`,
+      national: (number: string) => `${number.slice(0, 5)} ${number.slice(5)}`,
       e164: (number: string) => `+91${number}`,
     },
   },
@@ -161,13 +185,13 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇪🇸",
     countryCode: "+34",
     generateNumber: () => {
-      const areaCode = generateRandomDigits(6);
-      const subscriber = generateRandomDigits(4);
-      return areaCode + subscriber;
+      const prefix = ["6", "7"][Math.floor(Math.random() * 2)];
+      const subscriber = generateRandomDigits(8);
+      return prefix + subscriber;
     },
     formats: {
-      international: (number: string) => `+34 ${number.slice(0, 6)} ${number.slice(6)}`,
-      national: (number: string) => `0${number.slice(0, 6)} ${number.slice(6)}`,
+      international: (number: string) => `+34 ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`,
+      national: (number: string) => `${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`,
       e164: (number: string) => `+34${number}`,
     },
   },
@@ -177,14 +201,13 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇵🇹",
     countryCode: "+351",
     generateNumber: () => {
-      const areaCode = generateRandomDigits(3);
-      const middleDigits = generateRandomDigits(3);
-      const lastDigits = generateRandomDigits(3);
-      return areaCode + middleDigits + lastDigits;
+      const prefix = ["91", "92", "93", "96"][Math.floor(Math.random() * 4)];
+      const subscriber = generateRandomDigits(7);
+      return prefix + subscriber;
     },
     formats: {
-      international: (number: string) => `+351 ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`,
-      national: (number: string) => `0${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`,
+      international: (number: string) => `+351 ${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`,
+      national: (number: string) => `${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`,
       e164: (number: string) => `+351${number}`,
     },
   },
@@ -194,13 +217,13 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇬🇧",
     countryCode: "+44",
     generateNumber: () => {
-      const areaCode = generateRandomDigits(3);
-      const subscriber = generateRandomDigits(7);
-      return areaCode + subscriber;
+      const prefix = "7" + generateRandomDigits(3);
+      const subscriber = generateRandomDigits(6);
+      return prefix + subscriber;
     },
     formats: {
-      international: (number: string) => `+44 ${number.slice(0, 3)} ${number.slice(3, 7)} ${number.slice(7)}`,
-      national: (number: string) => `0${number.slice(0, 3)} ${number.slice(3, 7)} ${number.slice(7)}`,
+      international: (number: string) => `+44 ${number.slice(0, 4)} ${number.slice(4, 7)} ${number.slice(7)}`,
+      national: (number: string) => `0${number.slice(0, 4)} ${number.slice(4, 7)} ${number.slice(7)}`,
       e164: (number: string) => `+44${number}`,
     },
   },
@@ -210,14 +233,13 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇯🇵",
     countryCode: "+81",
     generateNumber: () => {
-      const areaCode = generateRandomDigits(2);
-      const firstPart = generateRandomDigits(3);
-      const secondPart = generateRandomDigits(4);
-      return areaCode + firstPart + secondPart;
+      const prefix = ["70", "80", "90"][Math.floor(Math.random() * 3)];
+      const subscriber = generateRandomDigits(8);
+      return prefix + subscriber;
     },
     formats: {
-      international: (number: string) => `+81 ${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`,
-      national: (number: string) => `0${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`,
+      international: (number: string) => `+81 ${number.slice(0, 2)} ${number.slice(2, 6)} ${number.slice(6)}`,
+      national: (number: string) => `0${number.slice(0, 2)} ${number.slice(2, 6)} ${number.slice(6)}`,
       e164: (number: string) => `+81${number}`,
     },
   },
@@ -291,13 +313,13 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇮🇹",
     countryCode: "+39",
     generateNumber: () => {
-      const areaCode = generateRandomDigits(3);
+      const prefix = ["320", "322", "323", "327", "328", "329", "330", "331", "333", "334", "335", "336", "337", "338", "339", "340", "341", "342", "343", "344", "345", "346", "347", "348", "349", "350", "351", "352", "353", "354", "355", "356", "357", "358", "359", "360", "366", "368", "370", "371", "372", "373", "374", "375", "376", "377", "378", "379", "380", "381", "383", "385", "388", "389", "391", "392", "393"][Math.floor(Math.random() * 57)];
       const subscriber = generateRandomDigits(7);
-      return areaCode + subscriber;
+      return prefix + subscriber;
     },
     formats: {
       international: (number: string) => `+39 ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`,
-      national: (number: string) => `0${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`,
+      national: (number: string) => `${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`,
       e164: (number: string) => `+39${number}`,
     },
   },
@@ -307,13 +329,12 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇳🇱",
     countryCode: "+31",
     generateNumber: () => {
-      const areaCode = generateRandomDigits(2);
       const subscriber = generateRandomDigits(8);
-      return areaCode + subscriber;
+      return "6" + subscriber;
     },
     formats: {
-      international: (number: string) => `+31 ${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`,
-      national: (number: string) => `0${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`,
+      international: (number: string) => `+31 ${number.slice(0, 1)} ${number.slice(1, 5)} ${number.slice(5)}`,
+      national: (number: string) => `06 ${number.slice(1, 5)} ${number.slice(5)}`,
       e164: (number: string) => `+31${number}`,
     },
   },
@@ -436,14 +457,13 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇰🇷",
     countryCode: "+82",
     generateNumber: () => {
-      const carrier = ["10", "11", "12", "13", "14", "15", "16", "17", "18", "19"][Math.floor(Math.random() * 10)];
-      const areaCode = generateRandomDigits(2);
-      const subscriber = generateRandomDigits(4);
-      return carrier + areaCode + subscriber;
+      const carrier = ["10", "11", "16", "17", "18", "19"][Math.floor(Math.random() * 6)];
+      const subscriber = generateRandomDigits(8);
+      return carrier + subscriber;
     },
     formats: {
-      international: (number: string) => `+82 ${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`,
-      national: (number: string) => `0${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`,
+      international: (number: string) => `+82 ${number.slice(0, 2)} ${number.slice(2, 6)} ${number.slice(6)}`,
+      national: (number: string) => `0${number.slice(0, 2)} ${number.slice(2, 6)} ${number.slice(6)}`,
       e164: (number: string) => `+82${number}`,
     },
   },
@@ -629,13 +649,13 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇭🇺",
     countryCode: "+36",
     generateNumber: () => {
-      const areaCode = generateRandomDigits(2);
-      const subscriber = generateRandomDigits(8);
-      return areaCode + subscriber;
+      const prefix = ["20", "30", "31", "50", "70"][Math.floor(Math.random() * 5)];
+      const subscriber = generateRandomDigits(7);
+      return prefix + subscriber;
     },
     formats: {
       international: (number: string) => `+36 ${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`,
-      national: (number: string) => `0${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`,
+      national: (number: string) => `06 ${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`,
       e164: (number: string) => `+36${number}`,
     },
   },
@@ -1685,7 +1705,8 @@ export const COUNTRIES: Record<string, Country> = {
 export const generatePhoneNumbers = (
   countryCode: string,
   quantity: number,
-  format: PhoneFormat
+  format: PhoneFormat,
+  seed?: string
 ): string[] => {
   const country = COUNTRIES[countryCode];
   if (!country) {
@@ -1693,11 +1714,46 @@ export const generatePhoneNumbers = (
   }
 
   const numbers: string[] = [];
-  for (let i = 0; i < quantity; i++) {
-    const rawNumber = country.generateNumber();
-    const formattedNumber = country.formats[format](rawNumber);
-    numbers.push(formattedNumber);
+  const originalRandom = Math.random;
+
+  if (seed !== undefined && seed !== "") {
+    Math.random = mulberry32(hashSeed(seed));
+  }
+
+  try {
+    for (let i = 0; i < quantity; i++) {
+      const rawNumber = country.generateNumber();
+      let formattedNumber: string;
+      if (format === "rfc3966") {
+        formattedNumber = "tel:" + country.formats.e164(rawNumber);
+      } else {
+        formattedNumber = country.formats[format](rawNumber);
+      }
+      numbers.push(formattedNumber);
+    }
+  } finally {
+    Math.random = originalRandom;
   }
 
   return numbers;
 };
+
+/**
+ * Get deterministic metadata about a country's phone numbering plan.
+ * Generates one seeded example and returns its properties.
+ */
+export function getCountryInfo(countryCode: string): CountryInfo {
+  const country = COUNTRIES[countryCode];
+  if (!country) throw new Error(`Country ${countryCode} not found`);
+
+  const originalRandom = Math.random;
+  Math.random = mulberry32(hashSeed("country-info-example"));
+  const example = country.generateNumber();
+  Math.random = originalRandom;
+
+  return {
+    countryCode: country.countryCode,
+    numberLength: example.length,
+    exampleInternational: country.formats.international(example),
+  };
+}
