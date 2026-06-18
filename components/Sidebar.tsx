@@ -202,14 +202,17 @@ export default function Sidebar({
                   <div className="font-medium">{t("countries." + country.code)}</div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm opacity-75">{country.code}</span>
-                    <button
+                    <span
                       onClick={(e) => handleToggleFavorite(e, country.code)}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleToggleFavorite(e as unknown as React.MouseEvent, country.code); } }}
+                      role="button"
+                      tabIndex={0}
                       aria-label={
                         isFavorite(country.code)
                           ? t("sidebar.removeFromFavorites")
                           : t("sidebar.addToFavorites")
                       }
-                      className={`transition-colors ${
+                      className={`transition-colors cursor-pointer ${
                         selectedCountry === country.code
                           ? "text-white/70 hover:text-white"
                           : "text-gray-300 hover:text-yellow-500"
@@ -219,7 +222,7 @@ export default function Sidebar({
                         size={14}
                         className={isFavorite(country.code) ? "fill-yellow-500 text-yellow-500" : ""}
                       />
-                    </button>
+                    </span>
                   </div>
                 </div>
               </button>
@@ -284,20 +287,23 @@ export default function Sidebar({
                         {t("countries." + country.code)}
                       </div>
                     </div>
-                    <button
+                    <span
                       onClick={(e) => handleToggleFavorite(e, country.code)}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleToggleFavorite(e as unknown as React.MouseEvent, country.code); } }}
+                      role="button"
+                      tabIndex={0}
                       aria-label={
                         isFavorite(country.code)
                           ? t("sidebar.removeFromFavorites")
                           : t("sidebar.addToFavorites")
                       }
-                      className="ml-auto text-gray-300 hover:text-yellow-500 transition-colors"
+                      className="ml-auto text-gray-300 hover:text-yellow-500 transition-colors cursor-pointer"
                     >
                       <Star
                         size={14}
                         className={isFavorite(country.code) ? "fill-yellow-500 text-yellow-500" : ""}
                       />
-                    </button>
+                    </span>
                   </button>
                 </li>
               ))}
