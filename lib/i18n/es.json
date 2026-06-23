@@ -38,7 +38,9 @@
     "hideSeed": "Ocultar semilla",
     "seedLabel": "Semilla",
     "seedPlaceholder": "Ingrese semilla...",
-    "seedHint": "Misma semilla = mismos números"
+    "seedHint": "Misma semilla = mismos números",
+    "regenerate": "Generar nuevo",
+    "copyAll": "Copiar todo"
   },
   "phoneList": {
     "copied": "¡Copiado al portapapeles!",

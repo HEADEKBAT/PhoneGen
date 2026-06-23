@@ -38,7 +38,9 @@
     "hideSeed": "Seed ausblenden",
     "seedLabel": "Seed",
     "seedPlaceholder": "Seed eingeben...",
-    "seedHint": "Gleicher Seed = gleiche Nummern"
+    "seedHint": "Gleicher Seed = gleiche Nummern",
+    "regenerate": "Neu generieren",
+    "copyAll": "Alle kopieren"
   },
   "phoneList": {
     "copied": "In die Zwischenablage kopiert!",

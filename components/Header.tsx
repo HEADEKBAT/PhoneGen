@@ -1,7 +1,8 @@
 'use client';
 
-import { Languages, Phone, Check } from "lucide-react";
+import { Languages, Check } from "lucide-react";
 import { Button } from "./ui/button";
+import Image from "next/image";
 import Link from "next/link";
 import { useTranslations, SUPPORTED_LANGUAGES, LANGUAGES } from "@/lib/i18n";
 import { useLanguageStore } from "@/lib/store";
@@ -36,10 +37,15 @@ export default function Header() {
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link href="/" aria-label={t("header.ariaLabel")} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <div className="bg-blue-600 text-white p-2 rounded-lg" aria-hidden="true">
-              <Phone size={24} />
-            </div>
+          <Link href="/" aria-label={t("header.ariaLabel")} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <Image
+              src="/logo.png"
+              alt="PhoneGen"
+              width={40}
+              height={40}
+              className="rounded-lg"
+              priority
+            />
             <span className="text-2xl font-bold">PhoneGen</span>
           </Link>
 

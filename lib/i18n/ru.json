@@ -38,7 +38,9 @@
     "hideSeed": "Скрыть seed",
     "seedLabel": "Seed (сид)",
     "seedPlaceholder": "Введите seed...",
-    "seedHint": "Одинаковый seed = одинаковые номера"
+    "seedHint": "Одинаковый seed = одинаковые номера",
+    "regenerate": "Сгенерировать",
+    "copyAll": "Копировать все"
   },
   "phoneList": {
     "copied": "Скопировано в буфер обмена!",

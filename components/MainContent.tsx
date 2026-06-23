@@ -32,6 +32,7 @@ export default function MainContent({
   const [format, setFormat] = useState<PhoneFormat>(initialFormat || "international");
   const [seed, setSeed] = useState("");
   const [phones, setPhones] = useState<string[]>([]);
+  const [regenerationCounter, setRegenerationCounter] = useState(0);
   const [mobileDialogOpen, setMobileDialogOpen] = useState(false);
   const [mobileSearch, setMobileSearch] = useState("");
   const setStoredCountry = useCountryStore((state) => state.setSelectedCountry);
@@ -43,7 +44,7 @@ export default function MainContent({
     } catch (error) {
       console.error("Error generating phone numbers:", error);
     }
-  }, [selectedCountry, quantity, format, seed]);
+  }, [selectedCountry, quantity, format, seed, regenerationCounter]);
 
   // Track recently used countries
   useEffect(() => {
@@ -226,6 +227,8 @@ export default function MainContent({
           onQuantityChange={setQuantity}
           onFormatChange={setFormat}
           onSeedChange={setSeed}
+          onRegenerate={() => setRegenerationCounter((c) => c + 1)}
+          phones={phones}
         />
 
         {/* Phone List */}
