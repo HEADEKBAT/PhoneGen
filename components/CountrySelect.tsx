@@ -1,11 +1,12 @@
 'use client';
 
-import { Search, ChevronDown, Star } from 'lucide-react';
+import { Search, ChevronDown, Star, Globe } from 'lucide-react';
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { COUNTRIES } from '@/lib/phoneGenerator';
 import { useFavoritesStore } from '@/lib/store';
 import { useTranslations } from '@/lib/i18n';
 import Flag from 'react-world-flags';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 
 interface CountrySelectProps {
   selectedCountry: string;
@@ -15,7 +16,9 @@ interface CountrySelectProps {
 export default function CountrySelect({ selectedCountry, onSelectCountry }: CountrySelectProps) {
   const { t } = useTranslations();
   const [open, setOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [dialogSearch, setDialogSearch] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -24,7 +27,6 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
 
   const sortedCountries = useMemo(() => {
     const all = Object.values(COUNTRIES).sort((a, b) => a.name.localeCompare(b.name));
-    // Sort: favorites first, then alphabetically
     return all.sort((a, b) => {
       const aFav = isFavorite(a.code) ? 0 : 1;
       const bFav = isFavorite(b.code) ? 0 : 1;
@@ -41,6 +43,15 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
       return name.includes(q) || c.code.toLowerCase().includes(q);
     });
   }, [sortedCountries, search, t]);
+
+  const dialogFilteredCountries = useMemo(() => {
+    if (!dialogSearch) return sortedCountries;
+    const q = dialogSearch.toLowerCase();
+    return sortedCountries.filter((c) => {
+      const name = t('countries.' + c.code).toLowerCase();
+      return name.includes(q) || c.code.toLowerCase().includes(q);
+    });
+  }, [sortedCountries, dialogSearch, t]);
 
   const selected = COUNTRIES[selectedCountry];
 
@@ -61,7 +72,6 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  // Scroll highlighted item into view
   useEffect(() => {
     if (highlightedIndex >= 0 && listRef.current) {
       const items = listRef.current.querySelectorAll('[data-index]');
@@ -107,6 +117,14 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
         setSearch('');
         break;
     }
+  };
+
+  const handleDialogSelect = (code: string) => {
+    onSelectCountry(code);
+    setDialogOpen(false);
+    setDialogSearch('');
+    setOpen(false);
+    setSearch('');
   };
 
   const getCountryCode = (code: string) => {
@@ -208,7 +226,7 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
                     <button
                       onClick={(e) => { e.stopPropagation(); toggleFavorite(country.code); }}
                       aria-label={fav ? t('sidebar.removeFromFavorites') : t('sidebar.addToFavorites')}
-                      className="flex-shrink-0 p-1 rounded-md hover:bg-background/50 transition-colors cursor-pointer"
+                      className="shrink-0 p-1 rounded-md hover:bg-background/50 transition-colors cursor-pointer"
                     >
                       <Star
                         size={14}
@@ -221,12 +239,84 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
             )}
           </div>
 
-          {/* Footer */}
-          <div className="px-3 py-2 border-t border-border text-xs text-muted-foreground text-center">
-            {filteredCountries.length} {filteredCountries.length === 1 ? 'country' : 'countries'}
-          </div>
+          {/* Footer — button to open full dialog */}
+          <button
+            onClick={() => { setDialogOpen(true); setOpen(false); }}
+            className="w-full flex items-center justify-center gap-2 px-3 py-2.5 border-t border-border text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
+          >
+            <Globe size={14} />
+            <span>{t('sidebar.allCountries')} ({sortedCountries.length})</span>
+          </button>
         </div>
       )}
+
+      {/* Full Country Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle>{t('sidebar.dialogTitle')}</DialogTitle>
+          </DialogHeader>
+
+          {/* Search */}
+          <div className="relative mb-3">
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+            <input
+              type="text"
+              placeholder={t('sidebar.searchPlaceholder')}
+              value={dialogSearch}
+              onChange={(e) => setDialogSearch(e.target.value)}
+              className="w-full h-10 pl-8 pr-3 rounded-xl bg-muted text-foreground text-sm placeholder:text-muted-foreground border border-input outline-none focus:ring-2 focus:ring-ring"
+              autoFocus
+            />
+          </div>
+
+          {/* Grid */}
+          <div className="flex-1 overflow-y-auto no-scrollbar -mx-2 px-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-1.5 pb-2">
+              {dialogFilteredCountries.map((country) => {
+                const isSelected = selectedCountry === country.code;
+                const fav = isFavorite(country.code);
+                return (
+                  <button
+                    key={country.code}
+                    onClick={() => handleDialogSelect(country.code)}
+                    className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-left transition-colors cursor-pointer ${
+                      isSelected
+                        ? 'bg-primary/10 ring-1 ring-primary/30'
+                        : 'hover:bg-muted border border-transparent'
+                    }`}
+                  >
+                    <Flag
+                      code={getCountryCode(country.code)}
+                      style={{ width: '22px', height: '16px', borderRadius: '2px', objectFit: 'cover', flexShrink: 0 }}
+                      title={t('countries.' + country.code)}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium truncate">{t('countries.' + country.code)}</div>
+                      <div className="text-[11px] text-muted-foreground">{country.countryCode}</div>
+                    </div>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); toggleFavorite(country.code); }}
+                      aria-label={fav ? t('sidebar.removeFromFavorites') : t('sidebar.addToFavorites')}
+                      className="shrink-0 p-0.5 rounded hover:bg-background/50 transition-colors cursor-pointer"
+                    >
+                      <Star
+                        size={12}
+                        className={fav ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/40'}
+                      />
+                    </button>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="pt-3 border-t border-border text-xs text-muted-foreground text-center shrink-0">
+            {dialogFilteredCountries.length} {dialogFilteredCountries.length === 1 ? 'country' : 'countries'}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

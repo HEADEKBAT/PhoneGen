@@ -1703,6 +1703,22 @@ export const COUNTRIES: Record<string, Country> = {
       e164: (number: string) => `+93${number}`,
     },
   },
+  KG: {
+    name: "Kyrgyzstan",
+    code: "KG",
+    flag: "🇰🇬",
+    countryCode: "+996",
+    generateNumber: () => {
+      const prefix = ["500", "501", "502", "503", "504", "505", "506", "507", "508", "509", "550", "551", "552", "553", "554", "555", "556", "557", "558", "559", "700", "701", "702", "703", "704", "705", "706", "707", "708", "709", "770", "771", "772", "773", "774", "775", "776", "777", "778", "779", "990", "991", "992", "993", "994", "995", "996", "997", "998", "999"][Math.floor(Math.random() * 50)];
+      const subscriber = generateRandomDigits(7);
+      return prefix + subscriber;
+    },
+    formats: {
+      international: (number: string) => `+996 ${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`,
+      national: (number: string) => `0${number.slice(0, 3)} ${number.slice(3, 6)} ${number.slice(6)}`,
+      e164: (number: string) => `+996${number}`,
+    },
+  },
 };
 
 export const generatePhoneNumbers = (
