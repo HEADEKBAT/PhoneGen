@@ -1,59 +1,54 @@
 'use client';
 
-import { useState } from "react";
+import { useState } from 'react';
 import {
   FlaskConical,
   ChevronDown,
   ChevronUp,
   CircleHelp,
-  Copy,
-  Check,
   RefreshCw,
-} from "lucide-react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
+} from 'lucide-react';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from './ui/select';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "./ui/tooltip";
-import { PhoneFormat } from "@/lib/phoneGenerator";
-import { useTranslations } from "@/lib/i18n";
+} from './ui/tooltip';
+import { PhoneFormat } from '@/lib/phoneGenerator';
+import { useTranslations } from '@/lib/i18n';
 
 export default function GeneratorControls({
   onQuantityChange,
   onFormatChange,
   onSeedChange,
   onRegenerate,
-  phones,
 }: {
   onQuantityChange: (quantity: number) => void;
   onFormatChange: (format: PhoneFormat) => void;
   onSeedChange?: (seed: string) => void;
   onRegenerate?: () => void;
-  phones?: string[];
 }) {
   const { t } = useTranslations();
   const [quantity, setQuantity] = useState(10);
-  const [format, setFormat] = useState<PhoneFormat>("international");
-  const [seed, setSeed] = useState("");
+  const [format, setFormat] = useState<PhoneFormat>('international');
+  const [seed, setSeed] = useState('');
   const [showSeed, setShowSeed] = useState(false);
-  const [copiedAll, setCopiedAll] = useState(false);
 
   const quantityOptions = [1, 5, 10, 25, 50, 100];
   const formatOptions = [
-    { id: "international" as PhoneFormat, label: t("generator.international") },
-    { id: "national" as PhoneFormat, label: t("generator.national") },
-    { id: "e164" as PhoneFormat, label: t("generator.e164") },
-    { id: "rfc3966" as PhoneFormat, label: t("generator.rfc3966") },
+    { id: 'international' as PhoneFormat, label: t('generator.international') },
+    { id: 'national' as PhoneFormat, label: t('generator.national') },
+    { id: 'e164' as PhoneFormat, label: t('generator.e164') },
+    { id: 'rfc3966' as PhoneFormat, label: t('generator.rfc3966') },
   ];
 
   const handleQuantityChange = (value: string) => {
@@ -73,26 +68,17 @@ export default function GeneratorControls({
     onSeedChange?.(value);
   };
 
-  const handleCopyAll = () => {
-    if (!phones?.length) return;
-    navigator.clipboard.writeText(phones.join("\n"));
-    setCopiedAll(true);
-    setTimeout(() => setCopiedAll(false), 2000);
-  };
-
   return (
-    <div className="bg-white p-6 rounded-lg border border-gray-200">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+    <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
+      {/* Main row: controls */}
+      <div className="flex flex-wrap items-end gap-3">
         {/* Quantity */}
-        <fieldset>
-          <legend className="font-semibold text-gray-900 mb-2 text-sm">
-            {t("generator.quantity")}
+        <fieldset className="min-w-0">
+          <legend className="text-xs font-medium text-muted-foreground mb-1.5 ml-1">
+            {t('generator.quantity')}
           </legend>
-          <Select
-            value={String(quantity)}
-            onValueChange={handleQuantityChange}
-          >
-            <SelectTrigger className="w-full sm:w-40">
+          <Select value={String(quantity)} onValueChange={handleQuantityChange}>
+            <SelectTrigger className="h-10 w-24 rounded-xl text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -106,12 +92,12 @@ export default function GeneratorControls({
         </fieldset>
 
         {/* Format */}
-        <fieldset>
-          <legend className="font-semibold text-gray-900 mb-2 text-sm">
-            {t("generator.format")}
+        <fieldset className="min-w-0">
+          <legend className="text-xs font-medium text-muted-foreground mb-1.5 ml-1">
+            {t('generator.format')}
           </legend>
           <Select value={format} onValueChange={handleFormatChange}>
-            <SelectTrigger className="w-full sm:w-56">
+            <SelectTrigger className="h-10 w-40 sm:w-44 rounded-xl text-sm">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -123,114 +109,88 @@ export default function GeneratorControls({
             </SelectContent>
           </Select>
         </fieldset>
-      </div>
 
-      {/* Bottom row: Seed + Action buttons */}
-      <div className="mt-5 pt-4 border-t border-gray-100">
+        {/* Spacer */}
+        <div className="flex-1 min-w-2" />
+
+        {/* Seed Toggle */}
         <TooltipProvider delayDuration={100}>
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Seed toggle */}
+          <div className="flex items-center gap-1.5 h-10 self-end">
             <Button
               type="button"
               variant="outline"
               size="sm"
               onClick={() => setShowSeed(!showSeed)}
-              className={`gap-1.5 transition-all ${
+              className={`h-10 rounded-xl gap-1.5 px-3 transition-all ${
                 showSeed
-                  ? "border-violet-300 bg-violet-50 text-violet-700 hover:bg-violet-100 hover:text-violet-800"
-                  : "text-gray-500 hover:text-gray-700"
+                  ? 'border-primary/30 bg-primary/5 text-primary hover:bg-primary/10'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
-              <FlaskConical size={15} className={showSeed ? "text-violet-500" : ""} />
-              <span>{showSeed ? t("generator.hideSeed") : t("generator.seedToggle")}</span>
-              {showSeed ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+              <FlaskConical size={14} />
+              <span className="text-xs hidden sm:inline">
+                {showSeed ? t('generator.hideSeed') : t('generator.seedToggle')}
+              </span>
+              {showSeed ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
             </Button>
 
-            {/* Seed hint tooltip */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
                   type="button"
-                  className="inline-flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 size-5 transition-colors cursor-pointer"
-                  aria-label={t("generator.seedHint")}
+                  className="inline-flex items-center justify-center size-6 rounded-full text-muted-foreground/50 hover:text-muted-foreground hover:bg-muted transition-colors cursor-pointer"
+                  aria-label={t('generator.seedHint')}
                 >
-                  <CircleHelp size={14} />
+                  <CircleHelp size={13} />
                 </button>
               </TooltipTrigger>
-              <TooltipContent side="right" className="max-w-60">
-                {t("generator.seedHint")}
+              <TooltipContent side="bottom" className="max-w-56 text-xs rounded-xl">
+                {t('generator.seedHint')}
               </TooltipContent>
             </Tooltip>
 
-            {/* Spacer */}
-            <span className="hidden sm:block w-px h-5 bg-gray-200 mx-1" aria-hidden="true" />
+            <span className="w-px h-5 bg-border mx-1 hidden sm:block" aria-hidden="true" />
 
-            {/* Copy all */}
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleCopyAll}
-              disabled={!phones?.length}
-              className={`gap-1.5 transition-all ${
-                copiedAll
-                  ? "border-green-300 bg-green-50 text-green-700"
-                  : "text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              {copiedAll ? (
-                <>
-                  <Check size={15} className="text-green-500" />
-                  <span>{t("phoneList.copiedLabel")}</span>
-                </>
-              ) : (
-                <>
-                  <Copy size={15} />
-                  <span>{t("generator.copyAll")}</span>
-                </>
-              )}
-            </Button>
-
-            {/* Regenerate */}
+            {/* Regenerate Button */}
             <Button
               type="button"
               variant="default"
               size="sm"
               onClick={() => onRegenerate?.()}
-              className="gap-1.5 bg-blue-600 hover:bg-blue-700 text-white"
+              className="h-10 rounded-xl gap-1.5 px-4 bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-none transition-all active:scale-[0.97]"
             >
-              <RefreshCw size={15} />
-              <span>{t("generator.regenerate")}</span>
+              <RefreshCw size={14} />
+              <span>{t('generator.regenerate')}</span>
             </Button>
           </div>
-
-          {/* Seed input (collapsible) */}
-          {showSeed && (
-            <div className="mt-3 animate-in slide-in-from-top-1 duration-200">
-              <label
-                htmlFor="seed-input"
-                className="block text-sm font-medium text-gray-700 mb-1.5"
-              >
-                {t("generator.seedLabel")}
-              </label>
-              <div className="relative max-w-xs">
-                <FlaskConical
-                  size={14}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-violet-400 pointer-events-none"
-                />
-                <Input
-                  id="seed-input"
-                  type="text"
-                  placeholder={t("generator.seedPlaceholder")}
-                  value={seed}
-                  onChange={(e) => handleSeedChange(e.target.value)}
-                  className="pl-8 border-violet-200 focus-visible:border-violet-400 focus-visible:ring-violet-200/50"
-                />
-              </div>
-            </div>
-          )}
         </TooltipProvider>
       </div>
+
+      {/* Seed input (collapsible) */}
+      {showSeed && (
+        <div className="mt-3 animate-in slide-in-from-top-1 duration-200">
+          <label
+            htmlFor="seed-input"
+            className="block text-xs font-medium text-muted-foreground mb-1.5 ml-1"
+          >
+            {t('generator.seedLabel')}
+          </label>
+          <div className="relative max-w-xs">
+            <FlaskConical
+              size={13}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/50 pointer-events-none"
+            />
+            <Input
+              id="seed-input"
+              type="text"
+              placeholder={t('generator.seedPlaceholder')}
+              value={seed}
+              onChange={(e) => handleSeedChange(e.target.value)}
+              className="h-10 pl-8 rounded-xl text-sm border-primary/20 focus-visible:border-primary/40 focus-visible:ring-primary/20"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

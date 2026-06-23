@@ -1,8 +1,10 @@
 'use client';
 
-import { Copy, Check, CopyCheck, Download } from "lucide-react";
-import { useState, useEffect, useRef, useCallback } from "react";
-import { useTranslations } from "@/lib/i18n";
+import { Copy, Check, Download, CopyCheck } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { useTranslations } from '@/lib/i18n';
+import Flag from 'react-world-flags';
+import { COUNTRIES } from '@/lib/phoneGenerator';
 
 interface PhoneNumber {
   id: number;
@@ -11,17 +13,16 @@ interface PhoneNumber {
 
 export default function PhoneList({
   phones = [],
+  countryCode,
 }: {
   phones?: string[];
+  countryCode?: string;
 }) {
   const { t } = useTranslations();
   const [copiedId, setCopiedId] = useState<number | null>(null);
-  const [copiedAll, setCopiedAll] = useState(false);
-  const [showCopyMessage, setShowCopyMessage] = useState(false);
-  const [messageVisible, setMessageVisible] = useState(false);
-  const [messageText, setMessageText] = useState("");
-  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [phoneList, setPhoneList] = useState<PhoneNumber[]>([]);
+  const [toast, setToast] = useState<{ text: string; visible: boolean } | null>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (phones && Array.isArray(phones)) {
@@ -34,188 +35,172 @@ export default function PhoneList({
     }
   }, [phones]);
 
-  // Cleanup timer on unmount
   useEffect(() => {
     return () => {
-      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      if (toastTimer.current) clearTimeout(toastTimer.current);
     };
   }, []);
 
   const showToast = useCallback((text: string) => {
-    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
-    setMessageText(text);
-    setShowCopyMessage(true);
-    requestAnimationFrame(() => setMessageVisible(true));
-    copyTimerRef.current = setTimeout(() => {
-      setMessageVisible(false);
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    setToast({ text, visible: true });
+    toastTimer.current = setTimeout(() => {
+      setToast((prev) => (prev ? { ...prev, visible: false } : null));
       setTimeout(() => {
-        setShowCopyMessage(false);
+        setToast(null);
         setCopiedId(null);
-        setCopiedAll(false);
-      }, 500);
-    }, 4500);
+      }, 300);
+    }, 1500);
   }, []);
 
   const handleCopy = (number: string, id: number) => {
     navigator.clipboard.writeText(number);
     setCopiedId(id);
-    showToast(t("phoneList.copied"));
+    showToast(t('phoneList.copied'));
   };
 
-  const handleCopyAll = useCallback(() => {
-    const text = phones.join("\n");
+  const handleCopyAll = () => {
+    const text = phones.join('\n');
     navigator.clipboard.writeText(text);
-    setCopiedAll(true);
-    showToast(t("phoneList.copiedAll"));
-  }, [phones, showToast, t]);
+    showToast(t('phoneList.copiedAll'));
+  };
 
-  const downloadFile = useCallback((content: string, filename: string, mimeType: string) => {
+  const downloadFile = (content: string, filename: string, mimeType: string) => {
     const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
     a.download = filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  }, []);
+  };
 
-  const handleExportTxt = useCallback(() => {
-    const content = phones.join("\n");
-    downloadFile(content, "phone-numbers.txt", "text/plain");
-    showToast(t("phoneList.exported") + " TXT");
-  }, [phones, downloadFile, showToast, t]);
+  const handleExportTxt = () => {
+    downloadFile(phones.join('\n'), 'phone-numbers.txt', 'text/plain');
+    showToast('Exported TXT');
+  };
 
-  const handleExportCsv = useCallback(() => {
-    const header = "ID,Phone Number";
+  const handleExportCsv = () => {
+    const header = 'ID,Phone Number';
     const rows = phones.map((p, i) => `${i + 1},"${p}"`);
-    const content = [header, ...rows].join("\n");
-    downloadFile(content, "phone-numbers.csv", "text/csv");
-    showToast(t("phoneList.exported") + " CSV");
-  }, [phones, downloadFile, showToast, t]);
+    downloadFile([header, ...rows].join('\n'), 'phone-numbers.csv', 'text/csv');
+    showToast('Exported CSV');
+  };
 
-  const handleExportJson = useCallback(() => {
+  const handleExportJson = () => {
     const data = phones.map((p, i) => ({ id: i + 1, number: p }));
-    const content = JSON.stringify(data, null, 2);
-    downloadFile(content, "phone-numbers.json", "application/json");
-    showToast(t("phoneList.exported") + " JSON");
-  }, [phones, downloadFile, showToast, t]);
+    downloadFile(JSON.stringify(data, null, 2), 'phone-numbers.json', 'application/json');
+    showToast('Exported JSON');
+  };
 
-  if (phoneList.length === 0) {
-    return null;
-  }
+  const country = countryCode ? COUNTRIES[countryCode] : null;
+
+  const getCountryCode = (code: string) => {
+    const codeMap: Record<string, string> = { UK: 'GB', US: 'US' };
+    return codeMap[code] || code;
+  };
+
+  if (phoneList.length === 0) return null;
 
   return (
-    <div className="space-y-4">
-      {/* Copy Success Toast */}
-      <div
-        role="status"
-        aria-live="polite"
-        className={`bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center gap-2 transition-all duration-500 ${
-          messageVisible
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 -translate-y-2"
-        } ${showCopyMessage ? "pointer-events-auto" : "pointer-events-none"}`}
-      >
-        <div className="w-2 h-2 bg-green-600 rounded-full" aria-hidden="true"></div>
-        <span>{messageText}</span>
-      </div>
-
-      {/* Copy All + Export Buttons */}
-      {phoneList.length > 1 && (
-        <div className="flex flex-wrap items-center justify-end gap-2">
+    <div className="space-y-3">
+      {/* Toolbar */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          {country && (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Flag
+                code={getCountryCode(country.code)}
+                style={{ width: '18px', height: '12px', borderRadius: '1px', objectFit: 'cover' }}
+                title={t('countries.' + country.code)}
+              />
+              <span className="font-medium text-foreground">{phoneList.length}</span>
+              <span>numbers</span>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-1">
+          {/* Copy All */}
           <button
             onClick={handleCopyAll}
-            aria-label={t("phoneList.copyAllLabel")}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors border border-blue-200"
+            className="flex items-center gap-1.5 h-8 px-3 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors border border-border"
           >
-            {copiedAll ? (
-              <>
-                <Check size={16} aria-hidden="true" />
-                <span>{t("phoneList.copiedLabel")}</span>
-              </>
-            ) : (
-              <>
-                <CopyCheck size={16} aria-hidden="true" />
-                <span>{t("phoneList.copyAll")}</span>
-              </>
-            )}
+            <CopyCheck size={14} />
+            <span className="hidden sm:inline">{t('phoneList.copyAll')}</span>
           </button>
-
-          <span className="text-gray-300 mx-1" aria-hidden="true">|</span>
-
-          <span className="text-sm text-gray-500 mr-1">{t("phoneList.export")}:</span>
-          <button
-            onClick={handleExportTxt}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors border border-gray-200"
-          >
-            <Download size={14} aria-hidden="true" />
-            TXT
-          </button>
-          <button
-            onClick={handleExportCsv}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors border border-gray-200"
-          >
-            <Download size={14} aria-hidden="true" />
-            CSV
-          </button>
-          <button
-            onClick={handleExportJson}
-            className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors border border-gray-200"
-          >
-            <Download size={14} aria-hidden="true" />
-            JSON
-          </button>
-        </div>
-      )}
-
-      {/* Phone Numbers Table */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <caption className="sr-only">{t("phoneList.tableCaption")}</caption>
-            <thead className="sr-only">
-              <tr>
-                <th scope="col">{t("phoneList.number")}</th>
-                <th scope="col">{t("phoneList.phoneNumber")}</th>
-                <th scope="col">{t("phoneList.action")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {phoneList.map((phone) => (
-                <tr key={phone.id} className="border-b border-gray-200 hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 text-gray-500 font-medium w-12">{phone.id}</td>
-                  <td className="px-6 py-4 text-gray-900 font-medium text-lg">{phone.number}</td>
-                  <td className="px-6 py-4 text-right">
-                    <button
-                      onClick={() => handleCopy(phone.number, phone.id)}
-                      aria-label={
-                        copiedId === phone.id
-                          ? t("phoneList.copiedLabel") + ": " + phone.number
-                          : t("phoneList.copy") + " " + phone.number
-                      }
-                      className="text-blue-600 hover:text-blue-700 transition-colors flex items-center gap-2 ml-auto"
-                    >
-                      {copiedId === phone.id ? (
-                        <>
-                          <Check size={18} aria-hidden="true" />
-                          <span>{t("phoneList.copiedLabel")}</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy size={18} aria-hidden="true" />
-                          <span>{t("phoneList.copy")}</span>
-                        </>
-                      )}
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {/* Export */}
+          <div className="flex items-center gap-0.5 border border-border rounded-lg p-0.5">
+            <button onClick={handleExportTxt} className="h-7 px-2 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">TXT</button>
+            <button onClick={handleExportCsv} className="h-7 px-2 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">CSV</button>
+            <button onClick={handleExportJson} className="h-7 px-2 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">JSON</button>
+          </div>
         </div>
       </div>
+
+      {/* Phone Number Cards */}
+      <div className="divide-y divide-border rounded-xl border border-border bg-card overflow-hidden">
+        {phoneList.map((phone) => (
+          <div
+            key={phone.id}
+            className="flex items-center gap-3 px-4 py-3 sm:px-5 sm:py-4 transition-colors hover:bg-muted/30 group"
+          >
+            {/* Number */}
+            <span className="w-6 sm:w-8 text-xs sm:text-sm text-muted-foreground font-mono tabular-nums shrink-0">
+              {String(phone.id).padStart(2, '0')}
+            </span>
+
+            {/* Phone Number */}
+            <span className="flex-1 font-heading text-base sm:text-lg tracking-tight text-foreground font-medium tabular-nums truncate">
+              {phone.number}
+            </span>
+
+            {/* Copy Button */}
+            <button
+              onClick={() => handleCopy(phone.number, phone.id)}
+              aria-label={
+                copiedId === phone.id
+                  ? t('phoneList.copiedLabel') + ': ' + phone.number
+                  : t('phoneList.copy') + ' ' + phone.number
+              }
+              className={`shrink-0 flex items-center gap-1.5 h-8 px-3 rounded-lg text-xs font-medium transition-all ${
+                copiedId === phone.id
+                  ? 'bg-primary/10 text-primary'
+                  : 'text-muted-foreground opacity-0 group-hover:opacity-100 hover:opacity-100 hover:bg-muted hover:text-foreground border border-transparent hover:border-border'
+              }`}
+            >
+              {copiedId === phone.id ? (
+                <>
+                  <Check size={14} />
+                  <span>{t('phoneList.copiedLabel')}</span>
+                </>
+              ) : (
+                <>
+                  <Copy size={14} />
+                  <span className="hidden xs:inline">{t('phoneList.copy')}</span>
+                </>
+              )}
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* Toast */}
+      {toast && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl border border-border bg-card shadow-dropdown flex items-center gap-2 text-sm font-medium transition-all duration-300 ${
+            toast.visible
+              ? 'opacity-100 translate-y-0'
+              : 'opacity-0 translate-y-2 pointer-events-none'
+          }`}
+        >
+          <div className="size-1.5 rounded-full bg-primary" />
+          <span>{toast.text}</span>
+        </div>
+      )}
     </div>
   );
 }
