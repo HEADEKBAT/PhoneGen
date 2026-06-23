@@ -42,7 +42,7 @@ export default function Header() {
             aria-label={t('header.ariaLabel')}
             className="flex items-center gap-3 shrink-0"
           >
-            <div className="relative size-9  overflow-hidden  ">
+            <div className="relative size-9 overflow-hidden">
               <Image
                 src="/logo.png"
                 alt="PhoneGen"

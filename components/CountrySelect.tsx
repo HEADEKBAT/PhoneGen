@@ -1,9 +1,9 @@
 'use client';
 
-import { Search, ChevronDown, Star, Globe } from 'lucide-react';
+import { Search, ChevronDown, Star, Globe, Clock } from 'lucide-react';
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { COUNTRIES } from '@/lib/phoneGenerator';
-import { useFavoritesStore } from '@/lib/store';
+import { useFavoritesStore, useRecentlyUsedStore } from '@/lib/store';
 import { useTranslations } from '@/lib/i18n';
 import Flag from 'react-world-flags';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
@@ -24,16 +24,18 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
   const listRef = useRef<HTMLDivElement>(null);
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
   const { favorites, toggleFavorite, isFavorite } = useFavoritesStore();
+  const recentlyUsed = useRecentlyUsedStore((state) => state.recentlyUsed);
 
+  // Memoize with `favorites` array, not `isFavorite` function (avoids breaking memo on every render)
   const sortedCountries = useMemo(() => {
     const all = Object.values(COUNTRIES).sort((a, b) => a.name.localeCompare(b.name));
     return all.sort((a, b) => {
-      const aFav = isFavorite(a.code) ? 0 : 1;
-      const bFav = isFavorite(b.code) ? 0 : 1;
+      const aFav = favorites.includes(a.code) ? 0 : 1;
+      const bFav = favorites.includes(b.code) ? 0 : 1;
       if (aFav !== bFav) return aFav - bFav;
       return a.name.localeCompare(b.name);
     });
-  }, [isFavorite]);
+  }, [favorites]);
 
   const filteredCountries = useMemo(() => {
     if (!search) return sortedCountries;
@@ -52,6 +54,14 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
       return name.includes(q) || c.code.toLowerCase().includes(q);
     });
   }, [sortedCountries, dialogSearch, t]);
+
+  // Recently used countries (in order of recency, filtered to not repeat in main list)
+  const recentCountries = useMemo(() => {
+    return recentlyUsed
+      .map((code) => COUNTRIES[code])
+      .filter(Boolean)
+      .filter((c) => !search || c.name.toLowerCase().includes(search.toLowerCase()) || c.code.toLowerCase().includes(search.toLowerCase()));
+  }, [recentlyUsed, search]);
 
   const selected = COUNTRIES[selectedCountry];
 
@@ -188,54 +198,90 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
           <div
             ref={listRef}
             role="listbox"
-            className="max-h-64 overflow-y-auto no-scrollbar p-1"
+            className="max-h-72 overflow-y-auto no-scrollbar p-1"
           >
             {filteredCountries.length === 0 ? (
               <div className="px-3 py-8 text-center text-sm text-muted-foreground">
                 {t('sidebar.searchPlaceholder')}
               </div>
             ) : (
-              filteredCountries.map((country, i) => {
-                const isSelected = selectedCountry === country.code;
-                const fav = isFavorite(country.code);
-                return (
-                  <div
-                    key={country.code}
-                    data-index={i}
-                    role="option"
-                    aria-selected={isSelected}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
-                      isSelected
-                        ? 'bg-primary/10 text-foreground'
-                        : highlightedIndex === i
-                          ? 'bg-muted text-foreground'
-                          : 'text-foreground hover:bg-muted'
-                    }`}
-                    onClick={() => { onSelectCountry(country.code); setOpen(false); setSearch(''); }}
-                    onMouseEnter={() => setHighlightedIndex(i)}
-                  >
-                    <Flag
-                      code={getCountryCode(country.code)}
-                      style={{ width: '22px', height: '16px', borderRadius: '2px', objectFit: 'cover', flexShrink: 0 }}
-                      title={t('countries.' + country.code)}
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium truncate">{t('countries.' + country.code)}</div>
-                      <div className="text-xs text-muted-foreground">{country.countryCode} · {country.code}</div>
+              <>
+                {/* Recently Used (only when no search query) */}
+                {!search && recentCountries.length > 0 && (
+                  <>
+                    <div className="px-3 py-1.5 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
+                      <Clock size={12} className="inline mr-1 -mt-0.5" />
+                      {t('sidebar.recentlyUsed')}
                     </div>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); toggleFavorite(country.code); }}
-                      aria-label={fav ? t('sidebar.removeFromFavorites') : t('sidebar.addToFavorites')}
-                      className="shrink-0 p-1 rounded-md hover:bg-background/50 transition-colors cursor-pointer"
+                    {recentCountries.map((country) => {
+                      const isSel = selectedCountry === country.code;
+                      const fav = isFavorite(country.code);
+                      return (
+                        <div
+                          key={country.code}
+                          role="option"
+                          aria-selected={isSel}
+                          className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors text-foreground hover:bg-muted"
+                          onClick={() => { onSelectCountry(country.code); setOpen(false); setSearch(''); }}
+                        >
+                          <Flag code={getCountryCode(country.code)} style={{ width: '22px', height: '16px', borderRadius: '2px', objectFit: 'cover', flexShrink: 0 }} title={t('countries.' + country.code)} />
+                          <div className="flex-1 min-w-0">
+                            <div className="text-sm font-medium truncate">{t('countries.' + country.code)}</div>
+                            <div className="text-xs text-muted-foreground">{country.countryCode}</div>
+                          </div>
+                          <button onClick={(e) => { e.stopPropagation(); toggleFavorite(country.code); }} aria-label={fav ? t('sidebar.removeFromFavorites') : t('sidebar.addToFavorites')} className="shrink-0 p-1 rounded-md hover:bg-background/50 transition-colors cursor-pointer">
+                            <Star size={14} className={fav ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'} />
+                          </button>
+                        </div>
+                      );
+                    })}
+                    <div className="mx-3 my-1 border-t border-border" />
+                  </>
+                )}
+
+                {/* All countries */}
+                {filteredCountries.map((country, i) => {
+                  const isSel = selectedCountry === country.code;
+                  const fav = isFavorite(country.code);
+                  return (
+                    <div
+                      key={country.code}
+                      data-index={i}
+                      role="option"
+                      aria-selected={isSel}
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${
+                        isSel
+                          ? 'bg-primary/10 text-foreground'
+                          : highlightedIndex === i
+                            ? 'bg-muted text-foreground'
+                            : 'text-foreground hover:bg-muted'
+                      }`}
+                      onClick={() => { onSelectCountry(country.code); setOpen(false); setSearch(''); }}
+                      onMouseEnter={() => setHighlightedIndex(i)}
                     >
-                      <Star
-                        size={14}
-                        className={fav ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}
+                      <Flag
+                        code={getCountryCode(country.code)}
+                        style={{ width: '22px', height: '16px', borderRadius: '2px', objectFit: 'cover', flexShrink: 0 }}
+                        title={t('countries.' + country.code)}
                       />
-                    </button>
-                  </div>
-                );
-              })
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium truncate">{t('countries.' + country.code)}</div>
+                        <div className="text-xs text-muted-foreground">{country.countryCode} · {country.code}</div>
+                      </div>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); toggleFavorite(country.code); }}
+                        aria-label={fav ? t('sidebar.removeFromFavorites') : t('sidebar.addToFavorites')}
+                        className="shrink-0 p-1 rounded-md hover:bg-background/50 transition-colors cursor-pointer"
+                      >
+                        <Star
+                          size={14}
+                          className={fav ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground'}
+                        />
+                      </button>
+                    </div>
+                  );
+                })}
+              </>
             )}
           </div>
 
@@ -295,8 +341,11 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
                       <div className="text-sm font-medium truncate">{t('countries.' + country.code)}</div>
                       <div className="text-[11px] text-muted-foreground">{country.countryCode}</div>
                     </div>
-                    <button
+                    <span
+                      role="button"
+                      tabIndex={0}
                       onClick={(e) => { e.stopPropagation(); toggleFavorite(country.code); }}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.stopPropagation(); toggleFavorite(country.code); } }}
                       aria-label={fav ? t('sidebar.removeFromFavorites') : t('sidebar.addToFavorites')}
                       className="shrink-0 p-0.5 rounded hover:bg-background/50 transition-colors cursor-pointer"
                     >
@@ -304,7 +353,7 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
                         size={12}
                         className={fav ? 'fill-amber-400 text-amber-400' : 'text-muted-foreground/40'}
                       />
-                    </button>
+                    </span>
                   </button>
                 );
               })}

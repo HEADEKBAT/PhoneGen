@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   FlaskConical,
   ChevronDown,
@@ -26,30 +26,39 @@ import {
 import { PhoneFormat } from '@/lib/phoneGenerator';
 import { useTranslations } from '@/lib/i18n';
 
+const QUANTITY_OPTIONS = [1, 5, 10, 25, 50, 100];
+const FORMAT_OPTIONS: { id: PhoneFormat; labelKey: string }[] = [
+  { id: 'international', labelKey: 'generator.international' },
+  { id: 'national', labelKey: 'generator.national' },
+  { id: 'e164', labelKey: 'generator.e164' },
+  { id: 'rfc3966', labelKey: 'generator.rfc3966' },
+];
+
 export default function GeneratorControls({
   onQuantityChange,
   onFormatChange,
   onSeedChange,
   onRegenerate,
+  defaultQuantity,
+  defaultFormat,
 }: {
   onQuantityChange: (quantity: number) => void;
   onFormatChange: (format: PhoneFormat) => void;
   onSeedChange?: (seed: string) => void;
   onRegenerate?: () => void;
+  defaultQuantity?: number;
+  defaultFormat?: PhoneFormat;
 }) {
   const { t } = useTranslations();
-  const [quantity, setQuantity] = useState(10);
-  const [format, setFormat] = useState<PhoneFormat>('international');
+  const [quantity, setQuantity] = useState(defaultQuantity || 10);
+  const [format, setFormat] = useState<PhoneFormat>(defaultFormat || 'international');
   const [seed, setSeed] = useState('');
   const [showSeed, setShowSeed] = useState(false);
 
-  const quantityOptions = [1, 5, 10, 25, 50, 100];
-  const formatOptions = [
-    { id: 'international' as PhoneFormat, label: t('generator.international') },
-    { id: 'national' as PhoneFormat, label: t('generator.national') },
-    { id: 'e164' as PhoneFormat, label: t('generator.e164') },
-    { id: 'rfc3966' as PhoneFormat, label: t('generator.rfc3966') },
-  ];
+  const formatOptions = useMemo(
+    () => FORMAT_OPTIONS.map((opt) => ({ id: opt.id, label: t(opt.labelKey) })),
+    [t]
+  );
 
   const handleQuantityChange = (value: string) => {
     const num = parseInt(value, 10);
@@ -82,7 +91,7 @@ export default function GeneratorControls({
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {quantityOptions.map((num) => (
+              {QUANTITY_OPTIONS.map((num) => (
                 <SelectItem key={num} value={String(num)}>
                   {num}
                 </SelectItem>

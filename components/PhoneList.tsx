@@ -1,7 +1,7 @@
 'use client';
 
 import { Copy, Check, Download, CopyCheck } from 'lucide-react';
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useMemo } from 'react';
 import { useTranslations } from '@/lib/i18n';
 import Flag from 'react-world-flags';
 import { COUNTRIES } from '@/lib/phoneGenerator';
@@ -20,26 +20,13 @@ export default function PhoneList({
 }) {
   const { t } = useTranslations();
   const [copiedId, setCopiedId] = useState<number | null>(null);
-  const [phoneList, setPhoneList] = useState<PhoneNumber[]>([]);
   const [toast, setToast] = useState<{ text: string; visible: boolean } | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    if (phones && Array.isArray(phones)) {
-      setPhoneList(
-        phones.map((number, index) => ({
-          id: index + 1,
-          number,
-        }))
-      );
-    }
+  const phoneList = useMemo<PhoneNumber[]>(() => {
+    if (!phones || !Array.isArray(phones)) return [];
+    return phones.map((number, index) => ({ id: index + 1, number }));
   }, [phones]);
-
-  useEffect(() => {
-    return () => {
-      if (toastTimer.current) clearTimeout(toastTimer.current);
-    };
-  }, []);
 
   const showToast = useCallback((text: string) => {
     if (toastTimer.current) clearTimeout(toastTimer.current);
@@ -152,7 +139,7 @@ export default function PhoneList({
             </span>
 
             {/* Phone Number */}
-            <span className="flex-1 font-heading text-base sm:text-lg tracking-tight text-foreground font-medium tabular-nums truncate">
+            <span className="flex-1 font-heading text-xl sm:text-2xl tracking-tight text-foreground font-semibold tabular-nums truncate">
               {phone.number}
             </span>
 
@@ -164,10 +151,10 @@ export default function PhoneList({
                   ? t('phoneList.copiedLabel') + ': ' + phone.number
                   : t('phoneList.copy') + ' ' + phone.number
               }
-              className={`shrink-0 flex items-center gap-1.5 h-8 px-3 rounded-lg text-xs font-medium transition-all ${
+              className={`shrink-0 flex items-center gap-1.5 h-9 px-3 rounded-lg text-xs font-medium transition-all ${
                 copiedId === phone.id
                   ? 'bg-primary/10 text-primary'
-                  : 'text-muted-foreground opacity-0 group-hover:opacity-100 hover:opacity-100 hover:bg-muted hover:text-foreground border border-transparent hover:border-border'
+                  : 'text-muted-foreground sm:opacity-0 sm:group-hover:opacity-100 hover:opacity-100 hover:bg-muted hover:text-foreground border border-transparent hover:border-border'
               }`}
             >
               {copiedId === phone.id ? (
@@ -191,10 +178,10 @@ export default function PhoneList({
         <div
           role="status"
           aria-live="polite"
-          className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-xl border border-border bg-card shadow-dropdown flex items-center gap-2 text-sm font-medium transition-all duration-300 ${
+          className={`px-4 py-2.5 rounded-xl border border-border bg-card shadow-dropdown flex items-center gap-2 text-sm font-medium transition-all duration-300 ${
             toast.visible
               ? 'opacity-100 translate-y-0'
-              : 'opacity-0 translate-y-2 pointer-events-none'
+              : 'opacity-0 translate-y-2 pointer-events-none absolute'
           }`}
         >
           <div className="size-1.5 rounded-full bg-primary" />

@@ -112,6 +112,8 @@ export default function MainContent({
           onFormatChange={setFormat}
           onSeedChange={setSeed}
           onRegenerate={() => setRegenerationCounter((c) => c + 1)}
+          defaultQuantity={initialCount || undefined}
+          defaultFormat={initialFormat || undefined}
         />
 
         {/* Phone List */}
