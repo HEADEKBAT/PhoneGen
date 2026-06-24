@@ -30,6 +30,10 @@
   "generator": {
     "quantity": "Anzahl der Nummern",
     "format": "Anzeigeformat",
+    "mode": "Generierungsmodus",
+    "modeRandom": "Zufällig (schnell)",
+    "modeValid": "Gültig (empfohlen)",
+    "modeExample": "Testnummern",
     "international": "International",
     "national": "National",
     "e164": "E.164 (Rein)",
@@ -52,6 +56,8 @@
     "number": "#",
     "copyAll": "Alle kopieren",
     "copiedAll": "Alle Nummern kopiert!",
+    "validBadge": "✓ Besteht libphonenumber-Prüfung",
+    "exampleBadge": "✓ Offizielle Testnummern",
     "copyAllLabel": "Alle Telefonnummern kopieren",
     "export": "Exportieren",
     "exported": "Exportiert"

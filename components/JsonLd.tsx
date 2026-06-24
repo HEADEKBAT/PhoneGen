@@ -6,7 +6,7 @@ const schema = {
   '@type': 'WebApplication',
   name: 'PhoneGen',
   description:
-    'Бесплатный онлайн-генератор валидных телефонных номеров для 100+ стран. Международный, национальный и E.164 форматы.',
+    'Generate valid phone numbers that pass libphonenumber-js validation. Free generator for 85+ countries with international, national, E.164 formats. Official test numbers included.',
   url: siteUrl,
   applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'All',

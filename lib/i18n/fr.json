@@ -30,6 +30,10 @@
   "generator": {
     "quantity": "Nombre de numéros",
     "format": "Format d'affichage",
+    "mode": "Mode de génération",
+    "modeRandom": "Aléatoire (rapide)",
+    "modeValid": "Valide (recommandé)",
+    "modeExample": "Numéros de test",
     "international": "International",
     "national": "National",
     "e164": "E.164 (Pur)",
@@ -52,6 +56,8 @@
     "number": "#",
     "copyAll": "Tout copier",
     "copiedAll": "Tous les numéros copiés !",
+    "validBadge": "✓ Passe la validation libphonenumber",
+    "exampleBadge": "✓ Numéros de test officiels",
     "copyAllLabel": "Copier tous les numéros",
     "export": "Exporter",
     "exported": "Exporté"

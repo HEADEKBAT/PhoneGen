@@ -1,5 +1,8 @@
 import { parsePhoneNumberFromString } from "libphonenumber-js";
+import { getPhoneMetadata } from './countryMetadata';
+import type { GenerationMode, PhoneMetadata } from './countryMetadata';
 
+export type { GenerationMode };
 export type PhoneFormat = "international" | "national" | "e164" | "rfc3966";
 
 export interface Country {
@@ -1721,11 +1724,94 @@ export const COUNTRIES: Record<string, Country> = {
   },
 };
 
+/**
+ * Generate a single phone number without any validation (fast, for random mode).
+ * Uses the primary NSN length from libphonenumber metadata to produce
+ * plausible numbers without the overhead of full validation.
+ */
+function generateRandomNumber(meta: PhoneMetadata | undefined, isoCode: string): string {
+  if (meta) {
+    const len = meta.primaryLength;
+    return Array.from({ length: len }, () => Math.floor(Math.random() * 10)).join('');
+  }
+  // Fallback: use existing generateNumber
+  return COUNTRIES[isoCode].generateNumber();
+}
+
+/**
+ * Generate a validated phone number (for valid mode).
+ * Generates random NSNs at the primary length from libphonenumber metadata
+ * and validates each one via parsePhoneNumberFromString().isValid().
+ * Retries up to MAX_ATTEMPTS per invocation.
+ */
+const VALID_MAX_ATTEMPTS = 200;
+
+function generateValidNumber(meta: PhoneMetadata | undefined, isoCode: string): string {
+  if (!meta) {
+    // No metadata — fallback to random + validation
+    const country = COUNTRIES[isoCode];
+    if (!country) throw new Error(`Country ${isoCode} not found`);
+    for (let attempts = 0; attempts < VALID_MAX_ATTEMPTS; attempts++) {
+      const raw = country.generateNumber();
+      const e164 = country.formats.e164(raw);
+      const parsed = parsePhoneNumberFromString(e164);
+      if (parsed && parsed.isValid()) return raw;
+    }
+    return country.generateNumber();
+  }
+
+  const len = meta.primaryLength;
+  const cc = meta.countryCode;
+  // Start with the example number's prefix to increase hit rate
+  const examplePrefix = meta.exampleNumber.slice(0, Math.min(3, Math.floor(len / 3)));
+
+  for (let round = 0; round < 3; round++) {
+    for (let attempts = 0; attempts < Math.ceil(VALID_MAX_ATTEMPTS / 3); attempts++) {
+      let nsn: string;
+      if (round === 0 && examplePrefix) {
+        // First round: seed with example prefix
+        const restLen = len - examplePrefix.length;
+        const rest = Array.from({ length: restLen }, () => Math.floor(Math.random() * 10)).join('');
+        nsn = examplePrefix + rest;
+      } else {
+        // Subsequent rounds: fully random
+        nsn = Array.from({ length: len }, () => Math.floor(Math.random() * 10)).join('');
+      }
+      const e164 = '+' + cc + nsn;
+      const parsed = parsePhoneNumberFromString(e164);
+      if (parsed && parsed.isValid()) return nsn;
+    }
+  }
+
+  // Ultimate fallback
+  return COUNTRIES[isoCode].generateNumber();
+}
+
+/**
+ * Generate an example/test phone number (for example mode).
+ * Uses example numbers from libphonenumber-js official dataset.
+ */
+const exampleCounters: Record<string, number> = {};
+
+function generateExampleNumber(meta: PhoneMetadata | undefined, isoCode: string): string {
+  if (meta?.exampleNumber) {
+    const counter = exampleCounters[isoCode] ?? 0;
+    exampleCounters[isoCode] = counter + 1;
+    return meta.exampleNumber;
+  }
+
+  // Fallback: deterministic generation from existing generator
+  const country = COUNTRIES[isoCode];
+  if (!country) throw new Error(`Country ${isoCode} not found`);
+  return country.generateNumber();
+}
+
 export const generatePhoneNumbers = (
   countryCode: string,
   quantity: number,
   format: PhoneFormat,
-  seed?: string
+  seed?: string,
+  mode: GenerationMode = 'valid',
 ): string[] => {
   const country = COUNTRIES[countryCode];
   if (!country) {
@@ -1734,27 +1820,32 @@ export const generatePhoneNumbers = (
 
   const numbers: string[] = [];
   const originalRandom = Math.random;
+  const meta = getPhoneMetadata(countryCode);
 
   if (seed !== undefined && seed !== "") {
     Math.random = mulberry32(hashSeed(seed));
+    // Reset example counters for deterministic example mode
+    if (mode === 'example') {
+      exampleCounters[countryCode] = 0;
+    }
   }
 
   try {
     for (let i = 0; i < quantity; i++) {
-      let rawNumber = country.generateNumber();
-      let attempts = 0;
+      let rawNumber: string;
 
-      // Validate generated number with libphonenumber-js, retry if invalid (up to 50 attempts)
-      if (seed === undefined || seed === "") {
-        while (attempts < 50) {
-          const e164Test = country.formats.e164(rawNumber);
-          const parsed = parsePhoneNumberFromString(e164Test);
-          // If libphonenumber can't parse at all (no mobile data for this country), skip validation
-          if (!parsed) break;
-          if (parsed.isValid()) break;
-          rawNumber = country.generateNumber();
-          attempts++;
-        }
+      switch (mode) {
+        case 'random':
+          rawNumber = generateRandomNumber(meta, countryCode);
+          break;
+        case 'valid':
+          rawNumber = generateValidNumber(meta, countryCode);
+          break;
+        case 'example':
+          rawNumber = generateExampleNumber(meta, countryCode);
+          break;
+        default:
+          rawNumber = generateRandomNumber(meta, countryCode);
       }
 
       let formattedNumber: string;
@@ -1772,10 +1863,7 @@ export const generatePhoneNumbers = (
   return numbers;
 };
 
-/**
- * Get deterministic metadata about a country's phone numbering plan.
- * Generates one seeded example and returns its properties.
- */
+/** @deprecated Use generatePhoneNumbers with mode parameter */
 export function getCountryInfo(countryCode: string): CountryInfo {
   const country = COUNTRIES[countryCode];
   if (!country) throw new Error(`Country ${countryCode} not found`);

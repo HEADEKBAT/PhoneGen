@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import MainContent from '@/components/MainContent';
 import Footer from '@/components/Footer';
-import { COUNTRIES } from '@/lib/phoneGenerator';
+import { COUNTRIES, GenerationMode } from '@/lib/phoneGenerator';
 import { useCountryStore } from '@/lib/store';
 
 function HomeContent() {
@@ -56,9 +56,12 @@ function HomeContent() {
   const validCount =
     parsedCount && [1, 5, 10, 25, 50, 100].includes(parsedCount) ? parsedCount : null;
   const validFormat =
-    urlFormat && ['international', 'national', 'e164'].includes(urlFormat)
-      ? (urlFormat as 'international' | 'national' | 'e164')
+    urlFormat && ['international', 'national', 'e164', 'rfc3966'].includes(urlFormat)
+      ? (urlFormat as 'international' | 'national' | 'e164' | 'rfc3966')
       : null;
+  const urlMode = searchParams.get('mode') as GenerationMode | null;
+  const validMode =
+    urlMode && ['random', 'valid', 'example'].includes(urlMode) ? urlMode : null;
 
   if (!mounted) {
     return null;
@@ -72,6 +75,7 @@ function HomeContent() {
         onSelectCountry={handleSelectCountry}
         initialCount={validCount}
         initialFormat={validFormat}
+        initialMode={validMode}
       />
       <Footer />
     </>

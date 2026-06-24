@@ -1,10 +1,10 @@
 'use client';
 
-import { Copy, Check, Download, CopyCheck } from 'lucide-react';
+import { Copy, Check, Download, CopyCheck, CheckCircle2 } from 'lucide-react';
 import { useState, useRef, useCallback, useMemo } from 'react';
 import { useTranslations } from '@/lib/i18n';
 import Flag from 'react-world-flags';
-import { COUNTRIES } from '@/lib/phoneGenerator';
+import { COUNTRIES, GenerationMode } from '@/lib/phoneGenerator';
 
 interface PhoneNumber {
   id: number;
@@ -14,9 +14,11 @@ interface PhoneNumber {
 export default function PhoneList({
   phones = [],
   countryCode,
+  mode = 'valid',
 }: {
   phones?: string[];
   countryCode?: string;
+  mode?: GenerationMode;
 }) {
   const { t } = useTranslations();
   const [copiedId, setCopiedId] = useState<number | null>(null);
@@ -125,6 +127,24 @@ export default function PhoneList({
           </div>
         </div>
       </div>
+
+      {/* Mode Badge */}
+      {(mode === 'valid' || mode === 'example') && (
+        <div
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium border ${
+            mode === 'valid'
+              ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800'
+              : 'bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800'
+          }`}
+        >
+          <CheckCircle2 size={14} className="shrink-0" />
+          <span>
+            {mode === 'valid'
+              ? t('phoneList.validBadge')
+              : t('phoneList.exampleBadge')}
+          </span>
+        </div>
+      )}
 
       {/* Phone Number Cards */}
       <div className="divide-y divide-border rounded-xl border border-border bg-card overflow-hidden">

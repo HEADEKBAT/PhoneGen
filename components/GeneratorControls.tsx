@@ -23,7 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from './ui/tooltip';
-import { PhoneFormat } from '@/lib/phoneGenerator';
+import { PhoneFormat, GenerationMode } from '@/lib/phoneGenerator';
 import { useTranslations } from '@/lib/i18n';
 
 const QUANTITY_OPTIONS = [1, 5, 10, 25, 50, 100];
@@ -33,30 +33,49 @@ const FORMAT_OPTIONS: { id: PhoneFormat; labelKey: string }[] = [
   { id: 'e164', labelKey: 'generator.e164' },
   { id: 'rfc3966', labelKey: 'generator.rfc3966' },
 ];
+const MODE_OPTIONS: { id: GenerationMode; labelKey: string; recommended?: boolean }[] = [
+  { id: 'random', labelKey: 'generator.modeRandom' },
+  { id: 'valid', labelKey: 'generator.modeValid', recommended: true },
+  { id: 'example', labelKey: 'generator.modeExample' },
+];
 
 export default function GeneratorControls({
   onQuantityChange,
   onFormatChange,
+  onModeChange,
   onSeedChange,
   onRegenerate,
   defaultQuantity,
   defaultFormat,
+  defaultMode,
 }: {
   onQuantityChange: (quantity: number) => void;
   onFormatChange: (format: PhoneFormat) => void;
+  onModeChange?: (mode: GenerationMode) => void;
   onSeedChange?: (seed: string) => void;
   onRegenerate?: () => void;
   defaultQuantity?: number;
   defaultFormat?: PhoneFormat;
+  defaultMode?: GenerationMode;
 }) {
   const { t } = useTranslations();
   const [quantity, setQuantity] = useState(defaultQuantity || 10);
   const [format, setFormat] = useState<PhoneFormat>(defaultFormat || 'international');
+  const [mode, setMode] = useState<GenerationMode>(defaultMode || 'valid');
   const [seed, setSeed] = useState('');
   const [showSeed, setShowSeed] = useState(false);
 
   const formatOptions = useMemo(
     () => FORMAT_OPTIONS.map((opt) => ({ id: opt.id, label: t(opt.labelKey) })),
+    [t]
+  );
+
+  const modeOptions = useMemo(
+    () => MODE_OPTIONS.map((opt) => ({
+      id: opt.id,
+      label: opt.recommended ? `${t(opt.labelKey)} ★` : t(opt.labelKey),
+      recommended: opt.recommended,
+    })),
     [t]
   );
 
@@ -70,6 +89,12 @@ export default function GeneratorControls({
     const fmt = value as PhoneFormat;
     setFormat(fmt);
     onFormatChange(fmt);
+  };
+
+  const handleModeChange = (value: string) => {
+    const m = value as GenerationMode;
+    setMode(m);
+    onModeChange?.(m);
   };
 
   const handleSeedChange = (value: string) => {
@@ -94,6 +119,25 @@ export default function GeneratorControls({
               {QUANTITY_OPTIONS.map((num) => (
                 <SelectItem key={num} value={String(num)}>
                   {num}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </fieldset>
+
+        {/* Mode */}
+        <fieldset className="min-w-0">
+          <legend className="text-xs font-medium text-muted-foreground mb-1.5 ml-1">
+            {t('generator.mode')}
+          </legend>
+          <Select value={mode} onValueChange={handleModeChange}>
+            <SelectTrigger className="h-10 w-36 sm:w-40 rounded-xl text-sm">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {modeOptions.map((option) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.label}
                 </SelectItem>
               ))}
             </SelectContent>

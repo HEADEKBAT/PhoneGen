@@ -30,6 +30,10 @@
   "generator": {
     "quantity": "Number of phone numbers",
     "format": "Display format",
+    "mode": "Generation mode",
+    "modeRandom": "Random (Fast)",
+    "modeValid": "Valid (Recommended)",
+    "modeExample": "Test Numbers",
     "international": "International",
     "national": "National",
     "e164": "E.164 (Pure)",
@@ -52,6 +56,8 @@
     "number": "#",
     "copyAll": "Copy All",
     "copiedAll": "All numbers copied!",
+    "validBadge": "✓ Passes libphonenumber validation",
+    "exampleBadge": "✓ Official test numbers",
     "copyAllLabel": "Copy all phone numbers",
     "export": "Export",
     "exported": "Exported"

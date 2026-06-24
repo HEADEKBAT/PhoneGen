@@ -24,19 +24,23 @@ const siteUrl = rawSiteUrl.startsWith("http") ? rawSiteUrl : `https://${rawSiteU
 
 export const metadata: Metadata = {
   title: {
-    default: "PhoneGen — Генератор телефонных номеров",
-    template: "%s | PhoneGen",
+    default: "PhoneGen — Valid Phone Number Generator | libphonenumber Test Data",
+    template: "%s | PhoneGen — Valid Phone Number Generator",
   },
   description:
-    "Бесплатный онлайн-генератор валидных телефонных номеров для 100+ стран. Международный, национальный и E.164 форматы. Для разработчиков, тестировщиков и аналитиков.",
+    "Generate valid phone numbers that pass libphonenumber-js validation. Free generator for 85+ countries with international, national, E.164 formats. Official test numbers included. For developers, QA engineers, and testers.",
   keywords: [
-    "генератор телефонных номеров",
-    "валидные номера",
-    "тестовые номера",
-    "phone generator",
-    "fake phone numbers",
-    "test data",
-    "номера для тестирования",
+    "valid phone number generator",
+    "libphonenumber test data",
+    "libphonenumber-js validator",
+    "phone number validation testing",
+    "realistic test phone numbers",
+    "generate valid phone numbers",
+    "valid E.164 number generator",
+    "phone number testing generator",
+    "генератор валидных номеров",
+    "тестовые номера телефонов",
+    "проверка валидации номеров",
   ],
   metadataBase: new URL(siteUrl),
   alternates: {
@@ -50,19 +54,19 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "PhoneGen — Генератор телефонных номеров",
+    title: "PhoneGen — Valid Phone Number Generator",
     description:
-      "Бесплатный онлайн-генератор валидных телефонных номеров для 100+ стран",
+      "Generate valid phone numbers that pass libphonenumber-js validation. Free generator for 85+ countries with multiple formats. Official test numbers for developers and QA.",
     url: "/",
     siteName: "PhoneGen",
-    locale: "ru_RU",
+    locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "PhoneGen — Генератор телефонных номеров",
+    title: "PhoneGen — Valid Phone Number Generator",
     description:
-      "Бесплатный онлайн-генератор валидных телефонных номеров для 100+ стран",
+      "Generate valid phone numbers that pass libphonenumber-js validation. Free generator for 85+ countries.",
   },
   robots: {
     index: true,
