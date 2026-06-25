@@ -1,4 +1,10 @@
 {
+  "home": {
+    "heroDesc": "Generieren Sie gültige Telefonnummern für über 85 Länder weltweit. Kostenlos, schnell und präzise — basierend auf libphonenumber-js.",
+    "quickStartTitle": "Schnellstart",
+    "generateButton": "Telefonnummern generieren",
+    "countriesDesc": "Klicken Sie auf ein Land, um es auszuwählen, und generieren Sie dann gültige Nummern"
+  },
   "nav": {
     "home": "Startseite",
     "about": "Über uns",

@@ -1,4 +1,10 @@
 {
+  "home": {
+    "heroDesc": "Générez des numéros de téléphone valides pour plus de 85 pays dans le monde. Gratuit, rapide et précis — propulsé par libphonenumber-js.",
+    "quickStartTitle": "Démarrage rapide",
+    "generateButton": "Générer des numéros",
+    "countriesDesc": "Cliquez sur un pays pour le sélectionner, puis générez des numéros valides"
+  },
   "nav": {
     "home": "Accueil",
     "about": "À propos",
