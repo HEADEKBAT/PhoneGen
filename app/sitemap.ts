@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'phone-gen.vercel.app';
+const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'www.gencore.space';
 const siteUrl = rawSiteUrl.startsWith('http') ? rawSiteUrl : `https://${rawSiteUrl}`;
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -10,6 +10,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1.0,
+    },
+    {
+      url: `${siteUrl}/generate`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
     },
     {
       url: `${siteUrl}/about`,

@@ -19,7 +19,8 @@ const inter = Inter({
   display: "swap",
 });
 
-const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || "phone-gen.vercel.app";
+const CANONICAL_URL = "https://www.gencore.space";
+const rawSiteUrl = process.env.NEXT_PUBLIC_SITE_URL || CANONICAL_URL;
 const siteUrl = rawSiteUrl.startsWith("http") ? rawSiteUrl : `https://${rawSiteUrl}`;
 
 export const metadata: Metadata = {
@@ -44,20 +45,20 @@ export const metadata: Metadata = {
   ],
   metadataBase: new URL(siteUrl),
   alternates: {
-    canonical: "/",
+    canonical: CANONICAL_URL,
     languages: {
-      ru: "/",
-      en: "/",
-      de: "/",
-      es: "/",
-      fr: "/",
+      ru: CANONICAL_URL + "/",
+      en: CANONICAL_URL + "/",
+      de: CANONICAL_URL + "/",
+      es: CANONICAL_URL + "/",
+      fr: CANONICAL_URL + "/",
     },
   },
   openGraph: {
     title: "PhoneGen — Valid Phone Number Generator",
     description:
       "Generate valid phone numbers that pass libphonenumber-js validation. Free generator for 85+ countries with multiple formats. Official test numbers for developers and QA.",
-    url: "/",
+    url: CANONICAL_URL,
     siteName: "PhoneGen",
     locale: "en_US",
     type: "website",
