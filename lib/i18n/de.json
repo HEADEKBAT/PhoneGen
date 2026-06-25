@@ -50,6 +50,7 @@
     "seedPlaceholder": "Seed eingeben...",
     "seedHint": "Gleicher Seed = gleiche Nummern",
     "regenerate": "Neu generieren",
+    "generating": "Generieren...",
     "copyAll": "Alle kopieren"
   },
   "phoneList": {
@@ -149,7 +150,7 @@
     "SA": "Saudi-Arabien", "AE": "VAE", "PL": "Polen", "UA": "Ukraine", "GR": "Griechenland",
     "CZ": "Tschechien", "HU": "Ungarn", "RO": "Rumänien", "BG": "Bulgarien",
     "HR": "Kroatien", "RS": "Serbien", "SI": "Slowenien", "SK": "Slowakei", "AT": "Österreich",
-    "CH": "Schweiz", "IE": "Irland", "IL": "Israel", "EG": "Ägypten", "MA": "Marokko",
+    "CH": "Schweiz", "IE": "Irland", "IL": "Israel", "EG": "Ägypten", "MA": "Marokko", "DZ": "Algerien", "TN": "Tunesien",
     "PK": "Pakistan", "BD": "Bangladesch", "VN": "Vietnam", "KH": "Kambodscha",
     "LA": "Laos", "MM": "Myanmar", "LK": "Sri Lanka", "NP": "Nepal", "KZ": "Kasachstan", "KG": "Kirgisistan",
     "UZ": "Usbekistan", "TM": "Turkmenistan", "GE": "Georgien", "AM": "Armenien",
@@ -176,7 +177,7 @@
     "CZ": "tschechische", "HU": "ungarische", "RO": "rumänische", "BG": "bulgarische",
     "HR": "kroatische", "RS": "serbische", "SI": "slowenische", "SK": "slowakische",
     "AT": "österreichische", "CH": "schweizerische", "IE": "irische", "IL": "israelische",
-    "EG": "ägyptische", "MA": "marokkanische", "PK": "pakistanische", "BD": "bangladeschische",
+    "EG": "ägyptische", "MA": "marokkanische", "DZ": "algerische", "TN": "tunesische", "PK": "pakistanische", "BD": "bangladeschische",
     "VN": "vietnamesische", "KH": "kambodschanische", "LA": "laotische", "MM": "myanmarische",
     "LK": "sri-lankische", "NP": "nepalesische", "KZ": "kasachische", "KG": "kirgisische", "UZ": "usbekische",
     "TM": "turkmenische", "GE": "georgische", "AM": "armenische", "LB": "libanesische",

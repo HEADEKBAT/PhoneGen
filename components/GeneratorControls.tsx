@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { Loader2 } from 'lucide-react';
 import {
   FlaskConical,
   ChevronDown,
@@ -48,6 +49,7 @@ export default function GeneratorControls({
   defaultQuantity,
   defaultFormat,
   defaultMode,
+  isPending,
 }: {
   onQuantityChange: (quantity: number) => void;
   onFormatChange: (format: PhoneFormat) => void;
@@ -57,6 +59,7 @@ export default function GeneratorControls({
   defaultQuantity?: number;
   defaultFormat?: PhoneFormat;
   defaultMode?: GenerationMode;
+  isPending?: boolean;
 }) {
   const { t } = useTranslations();
   const [quantity, setQuantity] = useState(defaultQuantity || 10);
@@ -210,10 +213,15 @@ export default function GeneratorControls({
               variant="default"
               size="sm"
               onClick={() => onRegenerate?.()}
-              className="h-10 rounded-xl gap-1.5 px-4 bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-none transition-all active:scale-[0.97]"
+              disabled={isPending}
+              className="h-10 rounded-xl gap-1.5 px-4 bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm hover:shadow-none transition-all active:scale-[0.97] disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              <RefreshCw size={14} />
-              <span>{t('generator.regenerate')}</span>
+              {isPending ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : (
+                <RefreshCw size={14} />
+              )}
+              <span>{isPending ? t('generator.generating') : t('generator.regenerate')}</span>
             </Button>
           </div>
         </TooltipProvider>

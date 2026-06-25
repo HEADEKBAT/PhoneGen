@@ -50,6 +50,7 @@
     "seedPlaceholder": "Ingrese semilla...",
     "seedHint": "Misma semilla = mismos números",
     "regenerate": "Generar nuevo",
+    "generating": "Generando...",
     "copyAll": "Copiar todo"
   },
   "phoneList": {
@@ -149,7 +150,7 @@
     "SA": "Arabia Saudita", "AE": "EAU", "PL": "Polonia", "UA": "Ucrania", "GR": "Grecia",
     "CZ": "República Checa", "HU": "Hungría", "RO": "Rumanía", "BG": "Bulgaria",
     "HR": "Croacia", "RS": "Serbia", "SI": "Eslovenia", "SK": "Eslovaquia", "AT": "Austria",
-    "CH": "Suiza", "IE": "Irlanda", "IL": "Israel", "EG": "Egipto", "MA": "Marruecos",
+    "CH": "Suiza", "IE": "Irlanda", "IL": "Israel", "EG": "Egipto", "MA": "Marruecos", "DZ": "Argelia", "TN": "Túnez",
     "PK": "Pakistán", "BD": "Bangladés", "VN": "Vietnam", "KH": "Camboya",
     "LA": "Laos", "MM": "Myanmar", "LK": "Sri Lanka", "NP": "Nepal", "KZ": "Kazajistán", "KG": "Kirguistán",
     "UZ": "Uzbekistán", "TM": "Turkmenistán", "GE": "Georgia", "AM": "Armenia",
@@ -176,7 +177,7 @@
     "CZ": "checos", "HU": "húngaros", "RO": "rumanos", "BG": "búlgaros",
     "HR": "croatas", "RS": "serbios", "SI": "eslovenos", "SK": "eslovacos",
     "AT": "austriacos", "CH": "suizos", "IE": "irlandeses", "IL": "israelíes",
-    "EG": "egipcios", "MA": "marroquíes", "PK": "paquistaníes", "BD": "bangladesíes",
+    "EG": "egipcios", "MA": "marroquíes", "DZ": "argelinos", "TN": "tunecinos", "PK": "paquistaníes", "BD": "bangladesíes",
     "VN": "vietnamitas", "KH": "camboyanos", "LA": "laosianos", "MM": "birmanos",
     "LK": "esrilanqueses", "NP": "nepaleses", "KZ": "kazajos", "KG": "kirguises", "UZ": "uzbecos",
     "TM": "turkmenos", "GE": "georgianos", "AM": "armenios", "LB": "libaneses",

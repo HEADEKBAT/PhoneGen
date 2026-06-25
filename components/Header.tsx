@@ -29,6 +29,7 @@ export default function Header() {
 
   const handleLangChange = (lang: SupportedLanguage) => {
     setLanguage(lang);
+    try { localStorage.setItem('language', lang); } catch { /* noop */ }
     setLangOpen(false);
   };
 

@@ -858,6 +858,38 @@ export const COUNTRIES: Record<string, Country> = {
       e164: (number: string) => `+212${number}`,
     },
   },
+  DZ: {
+    name: "Algeria",
+    code: "DZ",
+    flag: "🇩🇿",
+    countryCode: "+213",
+    generateNumber: () => {
+      const prefix = ["551", "552", "553", "554", "555", "556", "557", "558", "559", "561", "562", "563", "564", "565", "566", "567", "568", "569", "661", "662", "663", "664", "665", "666", "667", "668", "669", "671", "672", "673", "674", "675", "676", "677", "678", "679", "690", "691", "692", "693", "694", "695", "696", "697", "698", "699", "770", "771", "772", "773", "774", "775", "776", "777", "778", "779", "780", "781", "782", "783", "784", "785", "786", "787", "788", "789", "790", "791", "792", "793", "794", "795", "796", "797", "798", "799"][Math.floor(Math.random() * 75)];
+      const subscriber = generateRandomDigits(6);
+      return prefix + subscriber;
+    },
+    formats: {
+      international: (number: string) => `+213 ${number.slice(0, 3)} ${number.slice(3, 5)} ${number.slice(5, 7)} ${number.slice(7)}`,
+      national: (number: string) => `0${number.slice(0, 3)} ${number.slice(3, 5)} ${number.slice(5, 7)} ${number.slice(7)}`,
+      e164: (number: string) => `+213${number}`,
+    },
+  },
+  TN: {
+    name: "Tunisia",
+    code: "TN",
+    flag: "🇹🇳",
+    countryCode: "+216",
+    generateNumber: () => {
+      const prefix = ["20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "50", "52", "55", "56", "57", "58", "59", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"][Math.floor(Math.random() * 27)];
+      const subscriber = generateRandomDigits(6);
+      return prefix + subscriber;
+    },
+    formats: {
+      international: (number: string) => `+216 ${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`,
+      national: (number: string) => `${number.slice(0, 2)} ${number.slice(2, 5)} ${number.slice(5)}`,
+      e164: (number: string) => `+216${number}`,
+    },
+  },
   PK: {
     name: "Pakistan",
     code: "PK",

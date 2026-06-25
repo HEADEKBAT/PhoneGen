@@ -1,7 +1,7 @@
 'use client';
 
-import { Copy, Check, Download, CopyCheck, CheckCircle2 } from 'lucide-react';
-import { useState, useRef, useCallback, useMemo } from 'react';
+import { Copy, Check, CopyCheck, CheckCircle2, Loader2 } from 'lucide-react';
+import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n';
 import Flag from 'react-world-flags';
 import { COUNTRIES, GenerationMode } from '@/lib/phoneGenerator';
@@ -15,15 +15,22 @@ export default function PhoneList({
   phones = [],
   countryCode,
   mode = 'valid',
+  isPending,
 }: {
   phones?: string[];
   countryCode?: string;
   mode?: GenerationMode;
+  isPending?: boolean;
 }) {
   const { t } = useTranslations();
-  const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [copiedSet, setCopiedSet] = useState<Set<number>>(new Set());
   const [toast, setToast] = useState<{ text: string; visible: boolean } | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Reset copied state when phones change (new generation completed)
+  useEffect(() => {
+    setCopiedSet(new Set());
+  }, [phones]);
 
   const phoneList = useMemo<PhoneNumber[]>(() => {
     if (!phones || !Array.isArray(phones)) return [];
@@ -37,24 +44,25 @@ export default function PhoneList({
       setToast((prev) => (prev ? { ...prev, visible: false } : null));
       setTimeout(() => {
         setToast(null);
-        setCopiedId(null);
       }, 300);
     }, 1500);
   }, []);
 
-  const handleCopy = (number: string, id: number) => {
+  const handleCopy = useCallback((number: string, id: number) => {
     navigator.clipboard.writeText(number);
-    setCopiedId(id);
+    setCopiedSet((prev) => new Set(prev).add(id));
     showToast(t('phoneList.copied'));
-  };
+  }, [showToast, t]);
 
-  const handleCopyAll = () => {
+  const handleCopyAll = useCallback(() => {
     const text = phones.join('\n');
     navigator.clipboard.writeText(text);
+    // Mark all as copied
+    setCopiedSet(new Set(phoneList.map((p) => p.id)));
     showToast(t('phoneList.copiedAll'));
-  };
+  }, [phones, phoneList, showToast, t]);
 
-  const downloadFile = (content: string, filename: string, mimeType: string) => {
+  const downloadFile = useCallback((content: string, filename: string, mimeType: string) => {
     const blob = new Blob([content], { type: mimeType });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -64,25 +72,25 @@ export default function PhoneList({
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  };
+  }, []);
 
-  const handleExportTxt = () => {
+  const handleExportTxt = useCallback(() => {
     downloadFile(phones.join('\n'), 'phone-numbers.txt', 'text/plain');
     showToast('Exported TXT');
-  };
+  }, [phones, downloadFile, showToast]);
 
-  const handleExportCsv = () => {
+  const handleExportCsv = useCallback(() => {
     const header = 'ID,Phone Number';
     const rows = phones.map((p, i) => `${i + 1},"${p}"`);
     downloadFile([header, ...rows].join('\n'), 'phone-numbers.csv', 'text/csv');
     showToast('Exported CSV');
-  };
+  }, [phones, downloadFile, showToast]);
 
-  const handleExportJson = () => {
+  const handleExportJson = useCallback(() => {
     const data = phones.map((p, i) => ({ id: i + 1, number: p }));
     downloadFile(JSON.stringify(data, null, 2), 'phone-numbers.json', 'application/json');
     showToast('Exported JSON');
-  };
+  }, [phones, downloadFile, showToast]);
 
   const country = countryCode ? COUNTRIES[countryCode] : null;
 
@@ -91,7 +99,21 @@ export default function PhoneList({
     return codeMap[code] || code;
   };
 
-  if (phoneList.length === 0) return null;
+  if (phoneList.length === 0) {
+    if (isPending) {
+      return (
+        <div className="flex items-center justify-center py-16">
+          <div className="flex items-center gap-2.5 text-muted-foreground">
+            <Loader2 size={18} className="animate-spin" />
+            <span className="text-sm">{t('generator.generating')}</span>
+          </div>
+        </div>
+      );
+    }
+    return null;
+  }
+
+  const allCopied = phoneList.length > 0 && phoneList.every((p) => copiedSet.has(p.id));
 
   return (
     <div className="space-y-3">
@@ -107,6 +129,12 @@ export default function PhoneList({
               />
               <span className="font-medium text-foreground">{phoneList.length}</span>
               <span>numbers</span>
+              {allCopied && (
+                <span className="flex items-center gap-1 text-xs text-indigo-600 dark:text-indigo-400 font-medium animate-in fade-in duration-200">
+                  <Check size={12} />
+                  All copied
+                </span>
+              )}
             </div>
           )}
         </div>
@@ -115,6 +143,7 @@ export default function PhoneList({
           <button
             onClick={handleCopyAll}
             className="flex items-center gap-1.5 h-8 px-3 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors border border-border"
+            disabled={isPending}
           >
             <CopyCheck size={14} />
             <span className="hidden sm:inline">{t('phoneList.copyAll')}</span>
@@ -131,7 +160,9 @@ export default function PhoneList({
       {/* Mode Badge */}
       {(mode === 'valid' || mode === 'example') && (
         <div
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium border ${
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-medium border transition-opacity duration-300 ${
+            isPending ? 'opacity-50' : 'opacity-100'
+          } ${
             mode === 'valid'
               ? 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800'
               : 'bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800'
@@ -148,49 +179,70 @@ export default function PhoneList({
 
       {/* Phone Number Cards */}
       <div className="divide-y divide-border rounded-xl border border-border bg-card overflow-hidden">
-        {phoneList.map((phone) => (
-          <div
-            key={phone.id}
-            className="flex items-center gap-3 px-4 py-3 sm:px-5 sm:py-4 transition-colors hover:bg-muted/30 group"
-          >
-            {/* Number */}
-            <span className="w-6 sm:w-8 text-xs sm:text-sm text-muted-foreground font-mono tabular-nums shrink-0">
-              {String(phone.id).padStart(2, '0')}
-            </span>
-
-            {/* Phone Number */}
-            <span className="flex-1 font-heading text-xl sm:text-2xl tracking-tight text-foreground font-semibold tabular-nums truncate">
-              {phone.number}
-            </span>
-
-            {/* Copy Button */}
-            <button
-              onClick={() => handleCopy(phone.number, phone.id)}
-              aria-label={
-                copiedId === phone.id
-                  ? t('phoneList.copiedLabel') + ': ' + phone.number
-                  : t('phoneList.copy') + ' ' + phone.number
-              }
-              className={`shrink-0 flex items-center gap-1.5 h-9 px-3 rounded-lg text-xs font-medium transition-all ${
-                copiedId === phone.id
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-muted-foreground sm:opacity-0 sm:group-hover:opacity-100 hover:opacity-100 hover:bg-muted hover:text-foreground border border-transparent hover:border-border'
-              }`}
+        {phoneList.map((phone) => {
+          const isCopied = copiedSet.has(phone.id);
+          return (
+            <div
+              key={phone.id}
+              className={`flex items-center gap-3 px-4 py-3 sm:px-5 sm:py-4 transition-all duration-200 group
+                ${isCopied
+                  ? 'bg-indigo-50/80 dark:bg-indigo-950/20 border-l-2 border-l-indigo-500 dark:border-l-indigo-400'
+                  : 'hover:bg-muted/30 border-l-2 border-l-transparent'
+                }
+                ${isPending ? 'pointer-events-none' : ''}
+              `}
             >
-              {copiedId === phone.id ? (
-                <>
-                  <Check size={14} />
-                  <span>{t('phoneList.copiedLabel')}</span>
-                </>
-              ) : (
-                <>
-                  <Copy size={14} />
-                  <span className="hidden xs:inline">{t('phoneList.copy')}</span>
-                </>
-              )}
-            </button>
-          </div>
-        ))}
+              {/* Number + Check icon */}
+              <span className="relative w-6 sm:w-8 text-xs sm:text-sm text-muted-foreground font-mono tabular-nums shrink-0">
+                {isCopied ? (
+                  <span className="inline-flex items-center gap-1 text-indigo-600 dark:text-indigo-400">
+                    <Check size={14} className="animate-in zoom-in duration-200" />
+                    <span className="text-[10px]">{String(phone.id).padStart(2, '0')}</span>
+                  </span>
+                ) : (
+                  String(phone.id).padStart(2, '0')
+                )}
+              </span>
+
+              {/* Phone Number */}
+              <span className={`flex-1 font-heading text-xl sm:text-2xl tracking-tight font-semibold tabular-nums truncate transition-colors duration-200 ${
+                isCopied
+                  ? 'text-indigo-700 dark:text-indigo-300'
+                  : 'text-foreground'
+              }`}>
+                {phone.number}
+              </span>
+
+              {/* Copy Button */}
+              <button
+                onClick={() => handleCopy(phone.number, phone.id)}
+                disabled={isPending || isCopied}
+                aria-label={
+                  isCopied
+                    ? t('phoneList.copiedLabel') + ': ' + phone.number
+                    : t('phoneList.copy') + ' ' + phone.number
+                }
+                className={`shrink-0 flex items-center gap-1.5 h-9 px-3 rounded-lg text-xs font-medium transition-all duration-200 ${
+                  isCopied
+                    ? 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-700'
+                    : 'text-muted-foreground sm:opacity-0 sm:group-hover:opacity-100 hover:opacity-100 hover:bg-muted hover:text-foreground border border-transparent hover:border-border'
+                } ${isPending ? 'opacity-30' : ''}`}
+              >
+                {isCopied ? (
+                  <>
+                    <Check size={14} />
+                    <span>{t('phoneList.copiedLabel')}</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy size={14} />
+                    <span className="hidden xs:inline">{t('phoneList.copy')}</span>
+                  </>
+                )}
+              </button>
+            </div>
+          );
+        })}
       </div>
 
       {/* Toast */}

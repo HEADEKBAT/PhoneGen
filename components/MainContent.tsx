@@ -1,14 +1,15 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import { useState, useEffect, useCallback, useTransition } from 'react';
 import GeneratorControls from './GeneratorControls';
 import PhoneList from './PhoneList';
 import InfoCard from './InfoCard';
 import { COUNTRIES, generatePhoneNumbers, PhoneFormat, GenerationMode } from '@/lib/phoneGenerator';
-import { useState, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n';
 import { useCountryStore, useRecentlyUsedStore } from '@/lib/store';
 import CountrySelect from './CountrySelect';
+import { Loader2 } from 'lucide-react';
 
 export default function MainContent({
   selectedCountry,
@@ -26,6 +27,22 @@ export default function MainContent({
   const { t } = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+
+  /* ── Determine the base path for URL sync ──────────────────────────────
+   * On the legacy /generate route values are synced back to /generate.
+   * On locale-prefixed routes (/_en_/phone-generator) they sync to that same
+   * path so the URL stays consistent. */
+  const basePath = (() => {
+    const seg = pathname.split('/').filter(Boolean);
+    if (
+      seg.length > 0 &&
+      ['en', 'fr', 'es', 'pt', 'de', 'ru'].includes(seg[0])
+    ) {
+      return `/${seg[0]}/phone-generator`;
+    }
+    return '/generate';
+  })();
   const addRecentlyUsed = useRecentlyUsedStore((state) => state.addRecentlyUsed);
   const country = COUNTRIES[selectedCountry] || COUNTRIES['NG'];
   const [quantity, setQuantity] = useState(initialCount || 10);
@@ -36,21 +53,26 @@ export default function MainContent({
   const [regenerationCounter, setRegenerationCounter] = useState(0);
   const setStoredCountry = useCountryStore((state) => state.setSelectedCountry);
 
-  useEffect(() => {
-    try {
+  // ── useTransition для оптимистичной генерации ─────────────────────────
+  const [isPending, startTransition] = useTransition();
+
+  const doGenerate = useCallback(() => {
+    startTransition(() => {
       const generated = generatePhoneNumbers(selectedCountry, quantity, format, seed || undefined, mode);
       setPhones(generated);
-    } catch (error) {
-      console.error('Error generating phone numbers:', error);
-    }
-  }, [selectedCountry, quantity, format, mode, seed, regenerationCounter]);
+    });
+  }, [selectedCountry, quantity, format, mode, seed]);
 
-  // Track recently used countries
+  useEffect(() => {
+    doGenerate();
+  }, [doGenerate, regenerationCounter]);
+
+  // ── Track recently used countries ──────────────────────────────────────
   useEffect(() => {
     addRecentlyUsed(selectedCountry);
   }, [selectedCountry, addRecentlyUsed]);
 
-  // Sync count, format & mode to URL params
+  // ── Sync count, format & mode to URL params ───────────────────────────
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
     let changed = false;
@@ -83,14 +105,14 @@ export default function MainContent({
       changed = true;
     }
     if (changed) {
-      router.replace(`/?${params.toString()}`);
+      router.replace(`${basePath}?${params.toString()}`);
     }
-  }, [quantity, format, mode, searchParams, router]);
+  }, [quantity, format, mode, searchParams, router, basePath]);
 
-  const handleCountryChange = (code: string) => {
+  const handleCountryChange = useCallback((code: string) => {
     onSelectCountry(code);
     setStoredCountry(code);
-  };
+  }, [onSelectCountry, setStoredCountry]);
 
   return (
     <main className="flex-1">
@@ -128,10 +150,36 @@ export default function MainContent({
           defaultQuantity={initialCount || undefined}
           defaultFormat={initialFormat || undefined}
           defaultMode={initialMode || undefined}
+          isPending={isPending}
         />
 
-        {/* Phone List */}
-        <PhoneList phones={phones} countryCode={selectedCountry} mode={mode} />
+        {/* Phone List with active generation overlay */}
+        <div className="relative">
+          {isPending && phones.length > 0 && (
+            <div className="absolute inset-0 z-10 flex items-start justify-center pt-16 sm:pt-20 pointer-events-none">
+              <div className="flex items-center gap-2.5 px-4 py-2 rounded-full bg-background/80 backdrop-blur-sm border border-border shadow-sm">
+                <Loader2 size={16} className="animate-spin text-primary" />
+                <span className="text-sm font-medium text-foreground">
+                  {t('generator.generating')}
+                </span>
+              </div>
+            </div>
+          )}
+          <div
+            className={`transition-all duration-300 ${
+              isPending && phones.length > 0
+                ? 'opacity-40 blur-[0.5px] scale-[0.995] pointer-events-none'
+                : 'opacity-100 blur-none scale-100'
+            }`}
+          >
+            <PhoneList
+              phones={phones}
+              countryCode={selectedCountry}
+              mode={mode}
+              isPending={isPending}
+            />
+          </div>
+        </div>
 
         {/* Info Card */}
         <InfoCard countryCode={selectedCountry} />

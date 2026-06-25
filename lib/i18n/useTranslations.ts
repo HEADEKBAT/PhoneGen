@@ -7,7 +7,9 @@ import de from './de.json';
 import es from './es.json';
 import fr from './fr.json';
 
-const translations: Record<string, Record<string, unknown>> = { ru, en, de, es, fr };
+import pt from './pt.json';
+
+const translations: Record<string, Record<string, unknown>> = { ru, en, de, es, fr, pt };
 
 function getValue(obj: Record<string, unknown>, path: string): string | undefined {
   const keys = path.split('.');
@@ -26,7 +28,7 @@ export function useTranslations() {
   const t = (key: string, params?: Record<string, string | number>): string => {
     const text =
       getValue(translations[language], key) ??
-      getValue(translations.ru, key) ??
+      getValue(translations.en, key) ??
       key;
 
     if (params) {
