@@ -19,7 +19,7 @@ export const FEATURES = {
   emailGenerator: false,
   usernameGenerator: false,
   companyGenerator: false,
-  passwordGenerator: false,
+  passwordGenerator: true,
 
   /** Platform features. */
   countryPages: false,   // Country-specific SEO pages (Phase 4)

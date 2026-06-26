@@ -11,7 +11,18 @@ const LOCALES = ['en', 'fr', 'es', 'pt', 'de', 'ru'] as const;
  * Products that are enabled and have locale-prefixed pages.
  * Derived inline so the sitemap stays accurate without importing heavy modules.
  */
-const PRODUCT_SLUGS = ['phone-generator', 'user-generator'] as const;
+const PRODUCT_SLUGS = [
+  'phone-generator',
+  'user-generator',
+  'credential-generator',
+  'password-generator',
+  'human-password-generator',
+  'passphrase-generator',
+  'pin-generator',
+  'wifi-password-generator',
+  'api-key-generator',
+  'uuid-generator',
+] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];

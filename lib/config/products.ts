@@ -64,10 +64,10 @@ export const PRODUCTS: Record<string, Product> = {
   },
   password: {
     id: 'password',
-    slug: 'password-generator',
-    title: 'Password Generator',
+    slug: 'credential-generator',
+    title: 'Credential Generator',
     description: 'Generate secure passwords with configurable complexity.',
-    enabled: false,
+    enabled: true,
   },
 } as const;
 
