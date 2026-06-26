@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState, useMemo, useRef, useEffect } from 'react';
+import { Suspense, useCallback, useState, useMemo, useRef, useEffect } from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import {
   Copy,
@@ -36,7 +36,7 @@ const AGES = Array.from({ length: 82 }, (_, i) => i + 18); // 18–99
 
 /* ── Component ────────────────────────────────────────────────────────── */
 
-export default function UserGenClient() {
+function UserGenContent() {
   const searchParams = useSearchParams();
 
   /* ── Store ──────────────────────────────────────────────────────────── */
@@ -354,6 +354,14 @@ export default function UserGenClient() {
       </main>
       <Footer />
     </>
+  );
+}
+
+export default function UserGenClient() {
+  return (
+    <Suspense fallback={null}>
+      <UserGenContent />
+    </Suspense>
   );
 }
 
