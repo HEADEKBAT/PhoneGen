@@ -15,10 +15,10 @@ export const FEATURES = {
 
   /** Future generators (all off until implemented). */
   userGenerator: true,
-  addressGenerator: false,
-  emailGenerator: false,
-  usernameGenerator: false,
-  companyGenerator: false,
+  addressGenerator: true,
+  emailGenerator: true,
+  usernameGenerator: true,
+  companyGenerator: true,
   passwordGenerator: true,
 
   /** Platform features. */

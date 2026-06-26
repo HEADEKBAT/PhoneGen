@@ -22,6 +22,10 @@ const PRODUCT_SLUGS = [
   'wifi-password-generator',
   'api-key-generator',
   'uuid-generator',
+  'address-generator',
+  'email-generator',
+  'username-generator',
+  'company-generator',
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {

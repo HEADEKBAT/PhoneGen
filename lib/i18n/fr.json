@@ -147,6 +147,22 @@
     "username": "Nom d'utilisateur",
     "password": "Mot de passe"
   },
+  "addressGenerator": {
+    "heading": "Générateur d'adresses",
+    "description": "Générez des adresses réalistes pour n'importe quel pays"
+  },
+  "emailGenerator": {
+    "heading": "Générateur d'email",
+    "description": "Générez des adresses email réalistes en plusieurs modes"
+  },
+  "usernameGenerator": {
+    "heading": "Générateur de nom d'utilisateur",
+    "description": "Créez des noms d'utilisateur uniques en 7 styles"
+  },
+  "companyGenerator": {
+    "heading": "Générateur d'entreprise",
+    "description": "Créez des profils d'entreprise réalistes"
+  },
   "about": {
     "heroTitle": "PhoneGen",
     "heroDesc": "Générateur de numéros de téléphone aléatoires mais valides pour les pays du monde entier",

@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { Phone, Users, MapPin, Mail, User, Building, Key, ArrowRight, Sparkles } from 'lucide-react';
 import { ENABLED_PRODUCTS, PRODUCTS } from '@/lib/config/products';
 import type { Product } from '@/lib/config/products';
+import AnimatedBackground from '@/components/background/AnimatedBackground';
 
 const ICON_MAP: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
   phone: Phone,
@@ -50,15 +51,35 @@ export default function GenCoreHomePage() {
 
       <main className="flex-1">
         {/* ── Hero ────────────────────────────────────────────────────── */}
-        <section className="border-b border-border bg-linear-to-b from-primary/5 via-primary/[0.02] to-background">
-          <div className="mx-auto max-w-4xl px-4 sm:px-6 py-20 sm:py-28 text-center">
+        <section className="relative overflow-hidden bg-linear-to-b from-primary/5 via-primary/2 to-background">
+          <AnimatedBackground />
+          <style>{`
+            @keyframes data-ring {
+              0% { transform: scale(0.6); opacity: 0.2; }
+              50% { transform: scale(1.2);  opacity: 0.04; }
+              100% { transform: scale(0.6); opacity: 0.2; }
+            }
+            @keyframes core-glow {
+              0%, 100% { filter: brightness(1); }
+              50% { filter: brightness(1.3); }
+            }
+          `}</style>
+          <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 pt-20 sm:pt-28 pb-28 sm:pb-36 text-center">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-xs font-medium text-primary mb-6">
               <Sparkles size={12} />
               Data Generation Platform
             </div>
-            <h1 className="font-heading text-5xl sm:text-6xl lg:text-7xl font-bold text-foreground tracking-tight">
-              Gen<span className="text-primary">Core</span>
-            </h1>
+            <div className="relative inline-flex items-center justify-center">
+              {/* Decorative data-core rings */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
+                <div className="absolute w-44 h-44 rounded-full border border-primary/15 animate-[data-ring_5s_ease-in-out_infinite]" />
+                <div className="absolute w-56 h-56 rounded-full border border-primary/10 animate-[data-ring_5s_ease-in-out_infinite_0.7s]" />
+                <div className="absolute w-68 h-68 rounded-full border border-primary/[0.06] animate-[data-ring_5s_ease-in-out_infinite_1.4s]" />
+              </div>
+              <h1 className="relative font-heading text-5xl sm:text-6xl lg:text-7xl font-bold text-foreground tracking-tight">
+                Gen<span className="text-primary" style={{ animation: 'core-glow 4s ease-in-out infinite' }}>Core</span>
+              </h1>
+            </div>
             <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-lg mx-auto leading-relaxed">
               Generate realistic, valid test data for development and testing.
               One platform, multiple generators — starting with phone numbers.
@@ -79,6 +100,8 @@ export default function GenCoreHomePage() {
               </Link>
             </div>
           </div>
+          {/* Gradient fade overlay — smooth transition to products */}
+          <div className="absolute bottom-0 left-0 right-0 h-28 bg-linear-to-t from-background to-transparent pointer-events-none z-1" aria-hidden="true" />
         </section>
 
         {/* ── Products ────────────────────────────────────────────────── */}

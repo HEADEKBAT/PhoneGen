@@ -147,6 +147,22 @@
     "username": "Имя пользователя",
     "password": "Пароль"
   },
+  "addressGenerator": {
+    "heading": "Генератор адресов",
+    "description": "Генерируйте реалистичные адреса для любой страны"
+  },
+  "emailGenerator": {
+    "heading": "Генератор email",
+    "description": "Генерируйте реалистичные email адреса в нескольких режимах"
+  },
+  "usernameGenerator": {
+    "heading": "Генератор имен пользователей",
+    "description": "Создавайте уникальные имена в 7 стилях"
+  },
+  "companyGenerator": {
+    "heading": "Генератор компаний",
+    "description": "Создавайте реалистичные профили компаний"
+  },
   "about": {
     "heroTitle": "PhoneGen",
     "heroDesc": "Генератор случайных, но валидных телефонных номеров для разных стран мира",
