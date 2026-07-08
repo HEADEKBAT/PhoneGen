@@ -23,11 +23,15 @@ import {
   generatePronounceable,
   generatePin,
   generateUUID,
+  generateUUIDv7,
   generateJWTSecret,
   generateApiKey,
   generateWebhookSecret,
   generateHex,
   generateBase64,
+  generateRandomToken,
+  generateSessionSecret,
+  generateOAuthSecret,
   generateDatabasePassword,
   generateCredentialPairs,
   getCharsetSize,
@@ -43,6 +47,7 @@ import type { PasswordMode, SecretMode } from '@/lib/credentialGenerator/types';
 import StrengthMeter from './StrengthMeter';
 import CredentialHistory from './CredentialHistory';
 import CredentialExportBar from './CredentialExportBar';
+import PresetPanel from './PresetPanel';
 
 /* ── Constants ────────────────────────────────────────────────────────── */
 
@@ -62,9 +67,13 @@ const PASSWORD_MODES: { id: PasswordMode; label: string; desc: string }[] = [
 
 const SECRET_MODES: { id: SecretMode; label: string }[] = [
   { id: 'uuid', label: 'UUID v4' },
+  { id: 'uuid-v7', label: 'UUID v7' },
   { id: 'jwt', label: 'JWT Secret' },
   { id: 'api-key', label: 'API Key' },
   { id: 'webhook', label: 'Webhook Secret' },
+  { id: 'token', label: 'Random Token' },
+  { id: 'session', label: 'Session Secret' },
+  { id: 'oauth', label: 'OAuth Secret' },
   { id: 'hex', label: 'Hex' },
   { id: 'base64', label: 'Base64' },
 ];
@@ -303,6 +312,37 @@ export default function CredentialTabs() {
                 />
               </ControlGroup>
             )}
+            {store.secretMode === 'token' && (
+              <div className="flex flex-wrap gap-3">
+                <ControlGroup label="Length">
+                  <input
+                    type="number"
+                    min={1}
+                    max={1024}
+                    value={store.tokenLength}
+                    onChange={(e) => store.setTokenLength(Math.max(1, Math.min(1024, Number(e.target.value))))}
+                    className="h-9 w-24 rounded-lg border border-border bg-background px-3 text-sm text-foreground"
+                  />
+                </ControlGroup>
+                <ControlGroup label="Type">
+                  <div className="flex gap-1">
+                    {(['hex', 'base64', 'base64url'] as const).map((type) => (
+                      <button
+                        key={type}
+                        onClick={() => store.setTokenType(type)}
+                        className={`h-9 px-3 rounded-lg border text-xs font-medium transition-colors ${
+                          store.tokenType === type
+                            ? 'bg-primary text-primary-foreground border-primary'
+                            : 'border-border text-muted-foreground hover:text-foreground bg-background'
+                        }`}
+                      >
+                        {type}
+                      </button>
+                    ))}
+                  </div>
+                </ControlGroup>
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -341,6 +381,9 @@ export default function CredentialTabs() {
 
       {/* ── Tab 4: History ────────────────────────────────────────────── */}
       {store.activeTab === 'history' && <CredentialHistory />}
+
+      {/* ── Presets ───────────────────────────────────────────────────── */}
+      {store.activeTab !== 'history' && <PresetPanel />}
 
       {/* ── Generate button (not shown in History tab) ────────────────── */}
       {store.activeTab !== 'history' && (
@@ -462,9 +505,13 @@ function generatePinsSecrets(store: ReturnType<typeof useCredentialGeneratorStor
   let secret: string;
   switch (store.secretMode) {
     case 'uuid': secret = generateUUID(); break;
+    case 'uuid-v7': secret = generateUUIDv7(); break;
     case 'jwt': secret = generateJWTSecret(); break;
     case 'api-key': secret = generateApiKey('sk_test'); break;
     case 'webhook': secret = generateWebhookSecret(); break;
+    case 'token': secret = generateRandomToken(store.tokenLength, store.tokenType); break;
+    case 'session': secret = generateSessionSecret(); break;
+    case 'oauth': secret = generateOAuthSecret(); break;
     case 'hex': secret = generateHex(store.hexLength); break;
     case 'base64': secret = generateBase64(store.base64Length); break;
     default: secret = generateUUID();

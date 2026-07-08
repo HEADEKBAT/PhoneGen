@@ -1,7 +1,9 @@
 import { type ReactNode } from 'react';
 import { type Metadata } from 'next';
 import { LOCALES } from '@/lib/config';
-import { BASE_URL } from '@/lib/seo';
+import { BASE_URL } from '@/lib/config';
+import { PLATFORM_CONFIG } from '@/lib/config';
+import { AppHeader, AppFooter } from '@/components/layout';
 
 type Props = {
   children: ReactNode;
@@ -12,26 +14,34 @@ export async function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
 }
 
-/**
- * Locale-level metadata.
- *
- * Provides a shared title template for all pages under `/[locale]/*`.
- * Each page extends or overrides these defaults via its own
- * `generateMetadata` — notably the hreflang alternates, which must be
- * page-specific to point to the exact same page in other locales.
- */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
 
   return {
     title: {
-      default: 'PhoneGen',
-      template: `%s | PhoneGen`,
+      default: PLATFORM_CONFIG.name,
+      template: `%s | ${PLATFORM_CONFIG.name}`,
     },
     metadataBase: new URL(`${BASE_URL}/${locale}`),
   };
 }
 
+/**
+ * Locale layout — wraps all locale-prefixed pages.
+ *
+ * Provides the AppHeader (sticky nav + announcement bar),
+ * renders page content, and appends the AppFooter.
+ *
+ * Pages that need custom headers (e.g., generator tools)
+ * can suppress this layout's header via the `hideHeader` prop
+ * at the page level (not implemented — use fragments as needed).
+ */
 export default async function LocaleLayout({ children }: Props) {
-  return <>{children}</>;
+  return (
+    <>
+      <AppHeader />
+      {children}
+      <AppFooter />
+    </>
+  );
 }

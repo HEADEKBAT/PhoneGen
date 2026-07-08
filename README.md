@@ -89,3 +89,9 @@ public/           # Статические файлы
 ## Лицензия
 
 MIT
+
+
+npm run seo:check — полная проверка
+npm run seo:score — только число (для CI)
+npm run seo:report — сохранить отчёты
+/dev/seo в dev mode — дашборд

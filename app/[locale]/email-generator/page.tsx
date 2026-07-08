@@ -1,6 +1,14 @@
 import { type Metadata } from 'next';
-import { generateLocaleAlternates } from '@/lib/seo';
-import EmailGeneratorPage from '@/features/email-generator/EmailGenerator';
+import { getProduct, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
+import { getProductLandingConfig } from '@/lib/config/productLanding';
+import Breadcrumb from '@/components/Breadcrumb';
+import {
+  ProductHero,
+  FeatureGrid,
+  ExampleSection,
+  FAQSection,
+  CTASection,
+} from '@/components/product-landing';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -16,24 +24,67 @@ const TITLES: Record<string, string> = {
 };
 
 const DESCRIPTIONS: Record<string, string> = {
-  en: 'Generate realistic email addresses in 5 modes: random, professional, corporate, disposable, and nickname. Free online email generator for developers.',
-  fr: 'Générez des adresses email réalistes en 5 modes : aléatoire, professionnel, corporate, jetable et pseudo. Générateur gratuit.',
-  es: 'Genere direcciones de correo electrónico realistas en 5 modos: aleatorio, profesional, corporativo, desechable y apodo. Generador gratuito.',
-  pt: 'Gere endereços de email realistas em 5 modos: aleatório, profissional, corporativo, descartável e apelido. Gerador gratuito.',
-  de: 'Generieren Sie realistische E-Mail-Adressen in 5 Modi: zufällig, professionell, Unternehmens-, Wegwerf- und Spitzname. Kostenlos.',
-  ru: 'Генерируйте реалистичные email адреса в 5 режимах: случайный, профессиональный, корпоративный, одноразовый и псевдоним. Бесплатно.',
+  en: 'Generate realistic email addresses in 5 modes. Free online email generator for developers — random, professional, corporate, disposable, and nickname.',
+  fr: 'Générez des adresses email réalistes en 5 modes. Générateur gratuit pour les développeurs.',
+  es: 'Genere direcciones de correo electrónico realistas en 5 modos. Generador gratuito para desarrolladores.',
+  pt: 'Gere endereços de email realistas em 5 modos. Gerador gratuito para desenvolvedores.',
+  de: 'Generieren Sie realistische E-Mail-Adressen in 5 Modi. Kostenloser Generator für Entwickler.',
+  ru: 'Генерируйте реалистичные email адреса в 5 режимах. Бесплатный генератор для разработчиков.',
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const alternates = generateLocaleAlternates(locale, '/email-generator');
-  return {
+  const product = getProduct('email')!;
+
+  return seoGenerateMetadata({
+    type: 'product',
+    locale,
+    product,
     title: TITLES[locale] || TITLES.en,
     description: DESCRIPTIONS[locale] || DESCRIPTIONS.en,
-    alternates,
-  };
+  } satisfies SEOProductPage);
 }
 
-export default async function EmailGeneratorPageRoute() {
-  return <EmailGeneratorPage />;
+export default async function EmailGeneratorLanding({ params }: Props) {
+  const { locale } = await params;
+  const config = getProductLandingConfig('email');
+
+  return (
+    <div className="flex min-h-screen flex-col">
+      <Breadcrumb
+        items={[
+          { label: 'GenCore', href: `/${locale}` },
+          { label: 'Email Generator', href: `/${locale}/email-generator` },
+        ]}
+      />
+
+      <main className="flex-1">
+        {/* Hero */}
+        <ProductHero
+          titleKey={config.heroTitleKey}
+          descKey={config.heroDescKey}
+          ctaLabelKey={config.ctaLabelKey}
+          ctaHref={`/${locale}/email-generator/tool`}
+        />
+
+        {/* Features */}
+        <FeatureGrid features={config.features} />
+
+        {/* Example */}
+        <ExampleSection
+          labelKey={config.exampleLabelKey}
+          exampleText="user@example.com"
+        />
+
+        {/* FAQ */}
+        <FAQSection faqs={config.faqs} />
+
+        {/* CTA */}
+        <CTASection
+          labelKey={config.ctaLabelKey}
+          href={`/${locale}/email-generator/tool`}
+        />
+      </main>
+    </div>
+  );
 }

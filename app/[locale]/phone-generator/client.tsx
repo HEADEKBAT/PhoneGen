@@ -1,65 +1,68 @@
 'use client';
 
-import { Suspense, useState, useCallback, useEffect } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
-import Header from '@/components/Header';
+import { Suspense, useCallback, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import MainContent from '@/components/MainContent';
-import Footer from '@/components/Footer';
-import { COUNTRIES } from '@/lib/phoneGenerator';
+import { type PhoneFormat, type GenerationMode } from '@/lib/phoneGenerator';
 import { useCountryStore } from '@/lib/store';
 
-function PhoneGeneratorContent() {
+function PhoneGeneratorContent({
+  country,
+  locale,
+}: {
+  country: string;
+  locale: string;
+}) {
+  const router = useRouter();
   const searchParams = useSearchParams();
-
-  const storedCountry = useCountryStore((state) => state.selectedCountry);
   const setStoredCountry = useCountryStore((state) => state.setSelectedCountry);
 
-  const urlCountry = searchParams.get('country');
+  /* ── Extract initial values from URL params ───────────────────────── */
+  const urlCount = searchParams.get('count');
+  const urlFormat = searchParams.get('format') as PhoneFormat | null;
+  const urlMode = searchParams.get('mode') as GenerationMode | null;
+  const initialCount = urlCount ? parseInt(urlCount, 10) : null;
+  const initialFormat = urlFormat;
+  const initialMode = urlMode;
 
-  const initialCountry = (() => {
-    if (urlCountry && urlCountry in COUNTRIES) return urlCountry;
-    if (storedCountry && storedCountry in COUNTRIES) return storedCountry;
-    return 'NG';
-  })();
-
-  const [selectedCountry, setSelectedCountry] = useState(initialCountry);
-
-  const handleSelectCountry = useCallback(
-    (code: string) => {
-      setSelectedCountry(code);
-      setStoredCountry(code);
-    },
-    [setStoredCountry],
-  );
-
-  /* ── One-time mount reconciliation ──────────────────────────────────── */
+  /* ── Save the country to store on mount ────────────────────────────── */
   useEffect(() => {
-    const target = (() => {
-      if (urlCountry && urlCountry in COUNTRIES) return urlCountry;
-      if (storedCountry && storedCountry in COUNTRIES) return storedCountry;
-      return 'NG';
-    })();
-    if (target !== selectedCountry) setSelectedCountry(target);
-    if (storedCountry !== target) setStoredCountry(target);
+    setStoredCountry(country);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /* ── Country change → navigate to new URL ──────────────────────────── */
+  const handleSelectCountry = useCallback(
+    (code: string) => {
+      setStoredCountry(code);
+      const newPath = `/${locale}/phone-generator/${code}`;
+      const paramsStr = searchParams.toString();
+      router.replace(paramsStr ? `${newPath}?${paramsStr}` : newPath);
+    },
+    [locale, router, searchParams, setStoredCountry],
+  );
+
   return (
-    <>
-      <Header />
-      <MainContent
-        selectedCountry={selectedCountry}
-        onSelectCountry={handleSelectCountry}
-      />
-      <Footer />
-    </>
+    <MainContent
+      selectedCountry={country}
+      onSelectCountry={handleSelectCountry}
+      initialCount={initialCount}
+      initialFormat={initialFormat}
+      initialMode={initialMode}
+    />
   );
 }
 
-export default function PhoneGeneratorClient() {
+export default function PhoneGeneratorClient({
+  country,
+  locale,
+}: {
+  country: string;
+  locale: string;
+}) {
   return (
     <Suspense fallback={null}>
-      <PhoneGeneratorContent />
+      <PhoneGeneratorContent country={country} locale={locale} />
     </Suspense>
   );
 }

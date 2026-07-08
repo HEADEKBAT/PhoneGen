@@ -2,7 +2,8 @@
 
 import { Search, Globe, Star } from "lucide-react";
 import { useState, useMemo } from "react";
-import { COUNTRIES } from "@/lib/phoneGenerator";
+import { getCountry, getAllCountries } from "@/lib/phoneGenerator";
+import type { Country } from "@/lib/phoneGenerator";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { useCountryStore, useFavoritesStore, useRecentlyUsedStore } from "@/lib/store";
 import { useTranslations } from "@/lib/i18n";
@@ -23,7 +24,7 @@ export default function Sidebar({
   const { recentlyUsed, addRecentlyUsed } = useRecentlyUsedStore();
 
   const countriesList = useMemo(
-    () => Object.values(COUNTRIES).sort((a, b) => a.name.localeCompare(b.name)),
+    () => getAllCountries().sort((a, b) => a.name.localeCompare(b.name)),
     []
   );
 
@@ -32,18 +33,18 @@ export default function Sidebar({
   const displayedCountries = useMemo(
     () =>
       selectedCountry && !topCountries.find((c) => c.code === selectedCountry)
-        ? [...topCountries, COUNTRIES[selectedCountry]]
+        ? [...topCountries, getCountry(selectedCountry)]
         : topCountries,
     [countriesList, topCountries, selectedCountry]
   );
 
   const favoriteCountries = useMemo(
-    () => favorites.map((code) => COUNTRIES[code]).filter(Boolean),
+    () => favorites.map((code) => getCountry(code)).filter(Boolean),
     [favorites]
   );
 
   const recentlyUsedCountries = useMemo(
-    () => recentlyUsed.map((code) => COUNTRIES[code]).filter(Boolean),
+    () => recentlyUsed.map((code) => getCountry(code)).filter(Boolean),
     [recentlyUsed]
   );
 
@@ -80,7 +81,7 @@ export default function Sidebar({
     return codeMap[code] || code;
   };
 
-  const renderCountryItem = (country: typeof COUNTRIES[string]) => (
+  const renderCountryItem = (country: Country) => (
     <li key={country.code} role="none">
       <button
         role="option"

@@ -4,14 +4,23 @@ import { Languages, Check } from 'lucide-react';
 import { Button } from './ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter, usePathname } from 'next/navigation';
 import { useTranslations, SUPPORTED_LANGUAGES, LANGUAGES } from '@/lib/i18n';
 import { useLanguageStore } from '@/lib/store';
 import { useState, useRef, useEffect } from 'react';
 import type { SupportedLanguage } from '@/lib/i18n';
 import ThemeToggle from './ThemeToggle';
 
+/**
+ * List of known locale prefixes (must match i18n config).
+ * Used to detect and replace the locale segment in the current pathname.
+ */
+const KNOWN_LOCALES = new Set(SUPPORTED_LANGUAGES);
+
 export default function Header() {
   const { t, language } = useTranslations();
+  const router = useRouter();
+  const pathname = usePathname();
   const setLanguage = useLanguageStore((state) => state.setLanguage);
   const [langOpen, setLangOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -27,10 +36,35 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', handler);
   }, [langOpen]);
 
+  /**
+   * Replace the first path segment (current locale) with the new locale.
+   *
+   * Examples:
+   *   /en/phone-generator/US → /fr/phone-generator/US
+   *   /en                   → /fr
+   *   /en/about             → /fr/about
+   *   /generate?country=US  → /generate?country=US  (no locale prefix)
+   */
   const handleLangChange = (lang: SupportedLanguage) => {
     setLanguage(lang);
-    try { localStorage.setItem('language', lang); } catch { /* noop */ }
+    try {
+      localStorage.setItem('language', lang);
+    } catch {
+      /* noop */
+    }
     setLangOpen(false);
+
+    const segments = pathname.split('/').filter(Boolean);
+
+    if (segments.length > 0 && KNOWN_LOCALES.has(segments[0] as SupportedLanguage)) {
+      // Replace the locale segment at position 0
+      segments[0] = lang;
+      const newPath = '/' + segments.join('/');
+      router.push(newPath);
+    } else {
+      // No locale prefix in URL — just push with the new locale
+      router.push(`/${lang}${pathname === '/' ? '' : pathname}`);
+    }
   };
 
   return (
@@ -54,7 +88,8 @@ export default function Header() {
               />
             </div>
             <span className="font-heading text-xl font-bold tracking-tight hidden sm:inline">
-              <span className="text-primary">Phone</span><span className="text-accent">Gen</span>
+              <span className="text-primary">Phone</span>
+              <span className="text-accent">Gen</span>
             </span>
           </Link>
 

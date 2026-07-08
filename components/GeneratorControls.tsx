@@ -34,6 +34,13 @@ const FORMAT_OPTIONS: { id: PhoneFormat; labelKey: string }[] = [
   { id: 'e164', labelKey: 'generator.e164' },
   { id: 'rfc3966', labelKey: 'generator.rfc3966' },
 ];
+const TYPE_OPTIONS: { id: GenerationMode; labelKey: string }[] = [
+  { id: 'mobile', labelKey: 'generator.typeMobile' },
+  { id: 'fixedLine', labelKey: 'generator.typeFixedLine' },
+  { id: 'tollFree', labelKey: 'generator.typeTollFree' },
+  { id: 'voip', labelKey: 'generator.typeVoip' },
+];
+
 const MODE_OPTIONS: { id: GenerationMode; labelKey: string; recommended?: boolean }[] = [
   { id: 'random', labelKey: 'generator.modeRandom' },
   { id: 'valid', labelKey: 'generator.modeValid', recommended: true },
@@ -68,6 +75,9 @@ export default function GeneratorControls({
   const [seed, setSeed] = useState('');
   const [showSeed, setShowSeed] = useState(false);
 
+  const isTypeMode = mode === 'mobile' || mode === 'fixedLine' || mode === 'tollFree' || mode === 'voip';
+  const effectiveMode: GenerationMode = isTypeMode ? 'valid' : mode;
+
   const formatOptions = useMemo(
     () => FORMAT_OPTIONS.map((opt) => ({ id: opt.id, label: t(opt.labelKey) })),
     [t]
@@ -79,6 +89,11 @@ export default function GeneratorControls({
       label: opt.recommended ? `${t(opt.labelKey)} ★` : t(opt.labelKey),
       recommended: opt.recommended,
     })),
+    [t]
+  );
+
+  const typeOptions = useMemo(
+    () => TYPE_OPTIONS.map((opt) => ({ id: opt.id, label: t(opt.labelKey) })),
     [t]
   );
 
@@ -95,6 +110,12 @@ export default function GeneratorControls({
   };
 
   const handleModeChange = (value: string) => {
+    const m = value as GenerationMode;
+    setMode(m);
+    onModeChange?.(m);
+  };
+
+  const handleTypeChange = (value: string) => {
     const m = value as GenerationMode;
     setMode(m);
     onModeChange?.(m);
@@ -139,6 +160,29 @@ export default function GeneratorControls({
             </SelectTrigger>
             <SelectContent>
               {modeOptions.map((option) => (
+                <SelectItem key={option.id} value={option.id}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </fieldset>
+
+        {/* Number Type */}
+        <fieldset className="min-w-0">
+          <legend className="text-xs font-medium text-muted-foreground mb-1.5 ml-1">
+            {t('generator.numberType')}
+          </legend>
+          <Select
+            value={isTypeMode ? mode : 'valid'}
+            onValueChange={handleTypeChange}
+          >
+            <SelectTrigger className="h-10 w-36 sm:w-40 rounded-xl text-sm">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="valid">{t('generator.typeAll')}</SelectItem>
+              {typeOptions.map((option) => (
                 <SelectItem key={option.id} value={option.id}>
                   {option.label}
                 </SelectItem>

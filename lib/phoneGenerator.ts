@@ -1,5 +1,5 @@
 import { parsePhoneNumberFromString } from "libphonenumber-js";
-import { getPhoneMetadata } from './countryMetadata';
+import { getPhoneMetadata, COUNTRY_METADATA } from './countryMetadata';
 import type { GenerationMode, PhoneMetadata } from './countryMetadata';
 
 export type { GenerationMode };
@@ -1756,6 +1756,91 @@ export const COUNTRIES: Record<string, Country> = {
   },
 };
 
+/* ── Dynamic country lookup (hardcoded dict + metadata fallback) ─────── */
+
+/**
+ * Get flag emoji from ISO 3166-1 Alpha-2 code.
+ * Algorithmic — no lookup table needed.
+ */
+function getFlagEmoji(isoCode: string): string {
+  const base = 0x1f1e6;
+  const code = isoCode.toUpperCase();
+  return String.fromCodePoint(
+    ...code.split('').map((c) => base + c.charCodeAt(0) - 65),
+  );
+}
+
+/**
+ * Get a Country object for any supported region code.
+ *
+ * Returns the hardcoded entry when available (richer carrier-prefix data
+ * for generation), otherwise builds a dynamic Country from libphonenumber
+ * metadata so every supported region shows a correct name, flag, and
+ * country code in the UI.
+ *
+ * Never throws — falls back to US on unknown codes.
+ */
+export function getCountry(isoCode: string): Country {
+  const code = isoCode.toUpperCase();
+
+  // Hardcoded entries take priority
+  if (COUNTRIES[code]) return COUNTRIES[code];
+
+  // Dynamic fallback from metadata
+  const meta = getPhoneMetadata(code);
+  if (meta) {
+    return {
+      name: code,
+      code,
+      flag: getFlagEmoji(code),
+      countryCode: `+${meta.countryCode}`,
+      generateNumber: () => {
+        const len = meta.primaryLength;
+        return Array.from({ length: len }, () => Math.floor(Math.random() * 10)).join('');
+      },
+      formats: {
+        international: (n: string) => `+${meta.countryCode} ${n}`,
+        national: (n: string) => n,
+        e164: (n: string) => `+${meta.countryCode}${n}`,
+      },
+    };
+  }
+
+  // Ultimate fallback
+  return COUNTRIES['US']!;
+}
+
+/**
+ * Get Country objects for every supported region.
+ *
+ * Merges the ~80 hardcoded entries (which have richer carrier-prefix data)
+ * with all ~165 metadata-only regions from libphonenumber.
+ * Result is sorted alphabetically by ISO code.
+ */
+export function getAllCountries(): Country[] {
+  const seen = new Set<string>();
+  const result: Country[] = [];
+
+  /* Hardcoded entries first */
+  for (const code of Object.keys(COUNTRIES)) {
+    seen.add(code);
+    result.push(COUNTRIES[code]);
+  }
+
+  /* Metadata-only regions */
+  for (const code of Object.keys(COUNTRY_METADATA)) {
+    if (!seen.has(code)) {
+      seen.add(code);
+      // Use getCountry to get the dynamic Country object
+    }
+  }
+
+  /* Build dynamic Country objects for all seen codes and sort */
+  return [...seen]
+    .sort()
+    .map((code) => getCountry(code));
+}
+
 /**
  * Generate a single phone number without any validation (fast, for random mode).
  * Uses the primary NSN length from libphonenumber metadata to produce
@@ -1838,6 +1923,31 @@ function generateExampleNumber(meta: PhoneMetadata | undefined, isoCode: string)
   return country.generateNumber();
 }
 
+/**
+ * Fallback formatter for regions not in the hardcoded COUNTRIES dict.
+ * Uses libphonenumber metadata to produce basic formatting.
+ */
+function formatForMetadata(
+  rawNumber: string,
+  meta: import('./phoneMetadata').PhoneMetadata | undefined,
+  format: PhoneFormat,
+): string {
+  if (!meta) return rawNumber;
+
+  switch (format) {
+    case 'e164':
+      return `+${meta.countryCode}${rawNumber}`;
+    case 'international':
+      return `+${meta.countryCode} ${rawNumber}`;
+    case 'national':
+      return rawNumber;
+    case 'rfc3966':
+      return `tel:+${meta.countryCode}${rawNumber}`;
+    default:
+      return rawNumber;
+  }
+}
+
 export const generatePhoneNumbers = (
   countryCode: string,
   quantity: number,
@@ -1846,15 +1956,12 @@ export const generatePhoneNumbers = (
   mode: GenerationMode = 'valid',
 ): string[] => {
   const country = COUNTRIES[countryCode];
-  if (!country) {
-    throw new Error(`Country ${countryCode} not found`);
-  }
 
   const numbers: string[] = [];
   const originalRandom = Math.random;
   const meta = getPhoneMetadata(countryCode);
 
-  if (seed !== undefined && seed !== "") {
+  if (seed !== undefined && seed !== '') {
     Math.random = mulberry32(hashSeed(seed));
     // Reset example counters for deterministic example mode
     if (mode === 'example') {
@@ -1871,6 +1978,10 @@ export const generatePhoneNumbers = (
           rawNumber = generateRandomNumber(meta, countryCode);
           break;
         case 'valid':
+        case 'mobile':
+        case 'fixedLine':
+        case 'tollFree':
+        case 'voip':
           rawNumber = generateValidNumber(meta, countryCode);
           break;
         case 'example':
@@ -1881,10 +1992,14 @@ export const generatePhoneNumbers = (
       }
 
       let formattedNumber: string;
-      if (format === "rfc3966") {
-        formattedNumber = "tel:" + country.formats.e164(rawNumber);
+      if (country) {
+        if (format === 'rfc3966') {
+          formattedNumber = 'tel:' + country.formats.e164(rawNumber);
+        } else {
+          formattedNumber = country.formats[format](rawNumber);
+        }
       } else {
-        formattedNumber = country.formats[format](rawNumber);
+        formattedNumber = formatForMetadata(rawNumber, meta, format);
       }
       numbers.push(formattedNumber);
     }
@@ -1897,8 +2012,8 @@ export const generatePhoneNumbers = (
 
 /** @deprecated Use generatePhoneNumbers with mode parameter */
 export function getCountryInfo(countryCode: string): CountryInfo {
-  const country = COUNTRIES[countryCode];
-  if (!country) throw new Error(`Country ${countryCode} not found`);
+  const country = getCountry(countryCode);
+  const meta = getPhoneMetadata(countryCode);
 
   const originalRandom = Math.random;
   Math.random = mulberry32(hashSeed("country-info-example"));

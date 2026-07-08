@@ -13,7 +13,7 @@ export interface CredentialResult {
 /* ── Modes ──────────────────────────────────────────────────────────────── */
 
 export type PasswordMode = 'random' | 'human' | 'passphrase' | 'pronounceable';
-export type SecretMode = 'uuid' | 'jwt' | 'api-key' | 'webhook' | 'hex' | 'base64';
+export type SecretMode = 'uuid' | 'uuid-v7' | 'jwt' | 'api-key' | 'webhook' | 'hex' | 'base64' | 'token' | 'session' | 'oauth';
 export type ActiveTab = 'passwords' | 'pins-secrets' | 'dev-pairs' | 'history';
 
 /* ── Generator Options ──────────────────────────────────────────────────── */

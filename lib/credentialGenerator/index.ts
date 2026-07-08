@@ -17,12 +17,16 @@ export type { PinOptions } from './types';
 
 export {
   generateUUID,
+  generateUUIDv7,
   generateJWTSecret,
   generateApiKey,
   generateWebhookSecret,
   generateHex,
   generateBase64,
   generateDatabasePassword,
+  generateRandomToken,
+  generateSessionSecret,
+  generateOAuthSecret,
 } from './generateSecrets';
 
 export { generateCredentialPair, generateCredentialPairs } from './generatePair';

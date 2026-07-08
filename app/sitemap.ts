@@ -1,41 +1,21 @@
 import type { MetadataRoute } from 'next';
-import { BASE_URL } from '@/lib/seo';
+import { ALL_PRODUCTS, ALL_GENERATORS, SEO_LOCALES, BASE_URL } from '@/lib/config';
+import { ALL_SEO_PAGES } from '@/lib/config/credentialSEOPages';
+import { ALL_BARCODE_SEO_PAGES } from '@/lib/config/barcodeSEOPages';
+import { getAllRegionCodes } from '@/lib/countryRegistry';
 
 /**
- * Every supported locale — must match the locale layout's generateStaticParams.
- * Duplicated here to keep sitemap.ts a stand-alone module.
+ * Dynamic sitemap — builds every URL from the Products and Generators registries.
+ *
+ * Adding a new product or generator automatically adds it to the sitemap.
+ * No manual updates needed.
  */
-const LOCALES = ['en', 'fr', 'es', 'pt', 'de', 'ru'] as const;
-
-/**
- * Products that are enabled and have locale-prefixed pages.
- * Derived inline so the sitemap stays accurate without importing heavy modules.
- */
-const PRODUCT_SLUGS = [
-  'phone-generator',
-  'user-generator',
-  'credential-generator',
-  'password-generator',
-  'human-password-generator',
-  'passphrase-generator',
-  'pin-generator',
-  'wifi-password-generator',
-  'api-key-generator',
-  'uuid-generator',
-  'address-generator',
-  'email-generator',
-  'username-generator',
-  'company-generator',
-] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
 
-  /*
-   * ── Locale-prefixed homepages ─────────────────────────────────────
-   * Canonical landing page for each locale.
-   */
-  for (const locale of LOCALES) {
+  /* ── Homepages per locale ───────────────────────────────────────── */
+  for (const locale of SEO_LOCALES) {
     entries.push({
       url: `${BASE_URL}/${locale}`,
       lastModified: new Date(),
@@ -44,14 +24,48 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
-  /*
-   * ── Locale-prefixed product pages ──────────────────────────────────
-   * Each locale gets its own canonical URL for every product.
-   */
-  for (const locale of LOCALES) {
-    for (const slug of PRODUCT_SLUGS) {
+  /* ── Product landing pages per locale ────────────────────────────── */
+  for (const locale of SEO_LOCALES) {
+    for (const product of ALL_PRODUCTS) {
       entries.push({
-        url: `${BASE_URL}/${locale}/${slug}`,
+        url: `${BASE_URL}/${locale}/${product.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: product.seoPriority,
+      });
+    }
+  }
+
+  /* ── Generator / tool pages per locale ───────────────────────────── */
+  const productBySlug = new Map<string, (typeof ALL_PRODUCTS)[number]>();
+  for (const p of ALL_PRODUCTS) productBySlug.set(p.id, p);
+
+  const seenGeneratorUrls = new Set<string>();
+  for (const locale of SEO_LOCALES) {
+    for (const generator of ALL_GENERATORS) {
+      const product = productBySlug.get(generator.productId);
+      if (!product) continue;
+
+      const url = `${BASE_URL}/${locale}/${product.slug}/${generator.slug}`;
+      if (seenGeneratorUrls.has(url)) continue;
+      seenGeneratorUrls.add(url);
+
+      entries.push({
+        url,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: generator.seoPriority,
+      });
+    }
+  }
+
+  /* ── Credential SEO landing pages per locale ─────────────────────── */
+  const productSlugs = new Set(ALL_PRODUCTS.map((p) => p.slug));
+  for (const locale of SEO_LOCALES) {
+    for (const page of ALL_SEO_PAGES) {
+      if (productSlugs.has(page.slug)) continue; // skip SEO pages that share a slug with a product page
+      entries.push({
+        url: `${BASE_URL}/${locale}/${page.slug}`,
         lastModified: new Date(),
         changeFrequency: 'weekly',
         priority: 0.9,
@@ -59,16 +73,42 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  /*
-   * ── Locale-prefixed about pages ────────────────────────────────────────
-   */
-  for (const locale of LOCALES) {
+  /* ── Barcode SEO landing pages per locale ────────────────────────── */
+  for (const locale of SEO_LOCALES) {
+    for (const page of ALL_BARCODE_SEO_PAGES) {
+      entries.push({
+        url: `${BASE_URL}/${locale}/${page.slug}`,
+        lastModified: new Date(),
+        changeFrequency: 'weekly',
+        priority: 0.9,
+      });
+    }
+  }
+
+  /* ── About pages per locale ──────────────────────────────────────── */
+  for (const locale of SEO_LOCALES) {
     entries.push({
       url: `${BASE_URL}/${locale}/about`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     });
+  }
+
+  /* ── Country-specific phone generator pages ──────────────────────── */
+  const regions = getAllRegionCodes();
+  const phoneProduct = ALL_PRODUCTS.find((p) => p.id === 'phone');
+  if (phoneProduct) {
+    for (const locale of SEO_LOCALES) {
+      for (const region of regions) {
+        entries.push({
+          url: `${BASE_URL}/${locale}/${phoneProduct.slug}/${region}`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly',
+          priority: 0.7,
+        });
+      }
+    }
   }
 
   return entries;

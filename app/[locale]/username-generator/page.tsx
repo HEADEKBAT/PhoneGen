@@ -1,6 +1,14 @@
 import { type Metadata } from 'next';
-import { generateLocaleAlternates } from '@/lib/seo';
-import UsernameGeneratorPage from '@/features/username-generator/UsernameGenerator';
+import { getProduct, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
+import { getProductLandingConfig } from '@/lib/config/productLanding';
+import Breadcrumb from '@/components/Breadcrumb';
+import {
+  ProductHero,
+  FeatureGrid,
+  ExampleSection,
+  FAQSection,
+  CTASection,
+} from '@/components/product-landing';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -17,23 +25,66 @@ const TITLES: Record<string, string> = {
 
 const DESCRIPTIONS: Record<string, string> = {
   en: 'Generate unique usernames in 7 styles: classic, modern, developer, gaming, professional, corporate, and random. Free online username generator.',
-  fr: 'Générez des noms d\'utilisateur uniques en 7 styles : classique, moderne, développeur, gaming, professionnel, corporate et aléatoire. Générateur gratuit.',
-  es: 'Genere nombres de usuario únicos en 7 estilos: clásico, moderno, desarrollador, gaming, profesional, corporativo y aleatorio. Generador gratuito.',
-  pt: 'Gere nomes de usuário únicos em 7 estilos: clássico, moderno, desenvolvedor, gaming, profissional, corporativo e aleatório. Gerador gratuito.',
-  de: 'Generieren Sie einzigartige Benutzernamen in 7 Stilen: klassisch, modern, Entwickler, Gaming, professionell, Unternehmens- und zufällig. Kostenlos.',
-  ru: 'Генерируйте уникальные имена пользователей в 7 стилях: классический, современный, разработчик, игровой, профессиональный, корпоративный и случайный. Бесплатно.',
+  fr: 'Générez des noms d\'utilisateur uniques en 7 styles. Générateur gratuit.',
+  es: 'Genere nombres de usuario únicos en 7 estilos. Generador gratuito.',
+  pt: 'Gere nomes de usuário únicos em 7 estilos. Gerador gratuito.',
+  de: 'Generieren Sie einzigartige Benutzernamen in 7 Stilen. Kostenloser Generator.',
+  ru: 'Генерируйте уникальные имена пользователей в 7 стилях. Бесплатный генератор.',
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const alternates = generateLocaleAlternates(locale, '/username-generator');
-  return {
+  const product = getProduct('username')!;
+
+  return seoGenerateMetadata({
+    type: 'product',
+    locale,
+    product,
     title: TITLES[locale] || TITLES.en,
     description: DESCRIPTIONS[locale] || DESCRIPTIONS.en,
-    alternates,
-  };
+  } satisfies SEOProductPage);
 }
 
-export default async function UsernameGeneratorPageRoute() {
-  return <UsernameGeneratorPage />;
+export default async function UsernameGeneratorLanding({ params }: Props) {
+  const { locale } = await params;
+  const config = getProductLandingConfig('username');
+
+  return (
+    <div className="flex min-h-screen flex-col">
+      <Breadcrumb
+        items={[
+          { label: 'GenCore', href: `/${locale}` },
+          { label: 'Username Generator', href: `/${locale}/username-generator` },
+        ]}
+      />
+
+      <main className="flex-1">
+        {/* Hero */}
+        <ProductHero
+          titleKey={config.heroTitleKey}
+          descKey={config.heroDescKey}
+          ctaLabelKey={config.ctaLabelKey}
+          ctaHref={`/${locale}/username-generator/tool`}
+        />
+
+        {/* Features */}
+        <FeatureGrid features={config.features} />
+
+        {/* Example */}
+        <ExampleSection
+          labelKey={config.exampleLabelKey}
+          exampleText="johndoe_42"
+        />
+
+        {/* FAQ */}
+        <FAQSection faqs={config.faqs} />
+
+        {/* CTA */}
+        <CTASection
+          labelKey={config.ctaLabelKey}
+          href={`/${locale}/username-generator/tool`}
+        />
+      </main>
+    </div>
+  );
 }

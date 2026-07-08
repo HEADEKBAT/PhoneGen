@@ -1,24 +1,19 @@
 'use client';
 
 import { CheckCircle2, Grid3x3, Zap } from 'lucide-react';
-import { COUNTRIES, getCountryInfo } from '@/lib/phoneGenerator';
+import { getCountry, getCountryInfo } from '@/lib/phoneGenerator';
 import { useTranslations } from '@/lib/i18n';
+import { getCountryName } from '@/lib/i18n/countryNames';
 import Flag from 'react-world-flags';
 import { useMemo } from 'react';
 
 export default function InfoCard({ countryCode }: { countryCode: string }) {
-  const { t } = useTranslations();
-  const country = COUNTRIES[countryCode];
+  const { t, language } = useTranslations();
+  const country = getCountry(countryCode);
 
   const info = useMemo(() => {
-    try {
-      return getCountryInfo(countryCode);
-    } catch {
-      return null;
-    }
+    return getCountryInfo(countryCode);
   }, [countryCode]);
-
-  if (!country) return null;
 
   const adjective = t('countryAdjectives.' + countryCode);
 
@@ -41,15 +36,15 @@ export default function InfoCard({ countryCode }: { countryCode: string }) {
                   height: '100%',
                   objectFit: 'cover',
                 }}
-                title={t('countries.' + country.code)}
+                title={getCountryName(t, language, country.code)}
               />
             </div>
             <div className="min-w-0">
               <h3 className="font-heading text-lg font-semibold text-foreground">
-                {t('countries.' + country.code)}
+                {getCountryName(t, language, country.code)}
               </h3>
               <p className="text-sm text-muted-foreground mt-0.5">
-                +{country.countryCode} · {country.code}
+                {country.countryCode} · {country.code}
               </p>
             </div>
           </div>

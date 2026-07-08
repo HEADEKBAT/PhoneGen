@@ -14,4 +14,4 @@ export type {
   PhoneMetadata,
 } from './phoneMetadata';
 
-export type GenerationMode = 'random' | 'valid' | 'example';
+export type GenerationMode = 'random' | 'valid' | 'example' | 'mobile' | 'fixedLine' | 'tollFree' | 'voip';

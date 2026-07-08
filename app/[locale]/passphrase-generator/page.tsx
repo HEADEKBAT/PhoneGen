@@ -1,39 +1,46 @@
 import { type Metadata } from 'next';
-import { generateLocaleAlternates } from '@/lib/seo';
-import CredentialGeneratorClient from '../credential-generator/client';
+import { generateMetadata as seoGenerateMetadata, type SEOCustomPage } from '@/lib/config';
+import { SEO_PAGES } from '@/lib/config/credentialSEOPages';
+import SEOLandingPage from '@/components/credential-landing/SEOLandingTemplate';
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Passphrase Generator — XKCD-Style Secure Word Sequences',
-  fr: 'Générateur de phrases de passe — Séquences de mots sécurisées',
-  es: 'Generador de frases de contraseña — Secuencias de palabras seguras',
-  pt: 'Gerador de frases secretas — Sequências de palavras seguras',
-  de: 'Passphrasen-Generator — XKCD-Style sichere Wortfolgen',
-  ru: 'Генератор парольных фраз — Безопасные последовательности слов',
+  'en': 'Passphrase Generator — Memorable XKCD-Style Passphrases',
+  'ru': 'Генератор кодовых фраз — Запоминающиеся фразы-пароли',
+  'de': 'Passphrasen-Generator — Einprägsame XKCD-Phrasen',
+  'es': 'Generador de frases de contraseña — Frases memorables',
+  'fr': 'Générateur de phrases de passe — Phrases mémorables',
+  'pt': 'Gerador de frases secretas — Frases memoráveis',
 };
 
 const DESCRIPTIONS: Record<string, string> = {
-  en: 'Generate XKCD-style passphrases: random word sequences that are easy to remember but mathematically secure. Customizable word count, separator, and capitalization.',
-  fr: 'Générez des phrases de passe style XKCD : séquences de mots aléatoires faciles à retenir mais mathématiquement sécurisées.',
-  es: 'Genere frases de contraseña estilo XKCD: secuencias de palabras aleatorias fáciles de recordar pero matemáticamente seguras.',
-  pt: 'Gere frases secretas estilo XKCD: sequências de palavras aleatórias fáceis de lembrar mas matematicamente seguras.',
-  de: 'Generieren Sie XKCD-artige Passphrasen: zufällige Wortfolgen, die leicht zu merken, aber mathematisch sicher sind.',
-  ru: 'Создавайте парольные фразы в стиле XKCD: случайные последовательности слов, которые легко запомнить, но математически безопасны.',
+  'en': 'Generate memorable passphrases using random word lists. More secure than traditional passwords and easier to remember. Free passphrase generator.',
+  'ru': 'Создавайте запоминающиеся кодовые фразы. Бесплатный генератор.',
+  'de': 'Erstellen Sie einprägsame Passphrasen. Kostenloser Generator.',
+  'es': 'Cree frases de contraseña memorables. Generador gratuito.',
+  'fr': 'Créez des phrases de passe mémorables. Générateur gratuit.',
+  'pt': 'Crie frases secretas memoráveis. Gerador gratuito.',
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const alternates = generateLocaleAlternates(locale, '/passphrase-generator');
-  return {
-    title: TITLES[locale] || TITLES.en,
-    description: DESCRIPTIONS[locale] || DESCRIPTIONS.en,
-    alternates,
-  };
+  const title = TITLES[locale] || TITLES.en;
+  const description = DESCRIPTIONS[locale] || DESCRIPTIONS.en;
+
+  return seoGenerateMetadata({
+    type: 'custom',
+    locale,
+    path: '/passphrase-generator',
+    title,
+    description,
+  } satisfies SEOCustomPage);
 }
 
-export default async function PassphraseGeneratorPage() {
-  return <CredentialGeneratorClient initialMode={{ activeTab: 'passwords', passwordMode: 'passphrase' }} />;
+export default async function PassphraseGeneratorPage({ params }: Props) {
+  const { locale } = await params;
+  const config = SEO_PAGES['passphrase-generator'];
+  return <SEOLandingPage locale={locale} config={config} />;
 }

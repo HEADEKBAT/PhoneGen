@@ -65,15 +65,27 @@ export function proxy(request: NextRequest) {
    *
    *   / → /en  (platform homepage)
    *   /?country=US → /en/phone-generator/US
-   *   /generate → /en/phone-generator
+   *   /generate → /en/phone-generator/US
    *   /generate?country=US → /en/phone-generator/US
    *   /about → /en/about
+   *
+   *   /phone-generator        → /en/phone-generator/US
+   *   /phone-generator/DE     → /en/phone-generator/DE
    */
   const country = request.nextUrl.searchParams.get('country');
+  const DEFAULT_COUNTRY = 'US';
 
   let destination: string | null = null;
 
-  if (pathname === '/') {
+  // ── `/phone-generator` without locale ────────────────────────────────
+  if (pathname === '/phone-generator' || pathname.startsWith('/phone-generator/')) {
+    const rest = pathname.replace(/^\/phone-generator\/?/, '');
+    const targetCountry = rest && rest.length === 2 ? rest.toUpperCase() : DEFAULT_COUNTRY;
+    destination = `/${locale}/phone-generator/${targetCountry}`;
+  }
+
+  // ── `/` or `/?country=XX` ────────────────────────────────────────────
+  else if (pathname === '/') {
     if (country && country.length === 2) {
       destination = `/${locale}/phone-generator/${country.toUpperCase()}`;
     } else {
@@ -81,15 +93,17 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  if (pathname === '/generate') {
-    if (country && country.length === 2) {
-      destination = `/${locale}/phone-generator/${country.toUpperCase()}`;
-    } else {
-      destination = `/${locale}/phone-generator`;
-    }
+  // ── `/generate` or `/generate?country=XX` ────────────────────────────
+  else if (pathname === '/generate') {
+    const targetCountry =
+      country && country.length === 2
+        ? country.toUpperCase()
+        : DEFAULT_COUNTRY;
+    destination = `/${locale}/phone-generator/${targetCountry}`;
   }
 
-  if (pathname === '/about') {
+  // ── `/about` ─────────────────────────────────────────────────────────
+  else if (pathname === '/about') {
     destination = `/${locale}/about`;
   }
 

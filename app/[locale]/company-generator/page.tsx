@@ -1,6 +1,14 @@
 import { type Metadata } from 'next';
-import { generateLocaleAlternates } from '@/lib/seo';
-import CompanyGeneratorPage from '@/features/company-generator/CompanyGenerator';
+import { getProduct, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
+import { getProductLandingConfig } from '@/lib/config/productLanding';
+import Breadcrumb from '@/components/Breadcrumb';
+import {
+  ProductHero,
+  FeatureGrid,
+  ExampleSection,
+  FAQSection,
+  CTASection,
+} from '@/components/product-landing';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -26,14 +34,57 @@ const DESCRIPTIONS: Record<string, string> = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const alternates = generateLocaleAlternates(locale, '/company-generator');
-  return {
+  const product = getProduct('company')!;
+
+  return seoGenerateMetadata({
+    type: 'product',
+    locale,
+    product,
     title: TITLES[locale] || TITLES.en,
     description: DESCRIPTIONS[locale] || DESCRIPTIONS.en,
-    alternates,
-  };
+  } satisfies SEOProductPage);
 }
 
-export default async function CompanyGeneratorPageRoute() {
-  return <CompanyGeneratorPage />;
+export default async function CompanyGeneratorLanding({ params }: Props) {
+  const { locale } = await params;
+  const config = getProductLandingConfig('company');
+
+  return (
+    <div className="flex min-h-screen flex-col">
+      <Breadcrumb
+        items={[
+          { label: 'GenCore', href: `/${locale}` },
+          { label: 'Company Generator', href: `/${locale}/company-generator` },
+        ]}
+      />
+
+      <main className="flex-1">
+        {/* Hero */}
+        <ProductHero
+          titleKey={config.heroTitleKey}
+          descKey={config.heroDescKey}
+          ctaLabelKey={config.ctaLabelKey}
+          ctaHref={`/${locale}/company-generator/tool`}
+        />
+
+        {/* Features */}
+        <FeatureGrid features={config.features} />
+
+        {/* Example */}
+        <ExampleSection
+          labelKey={config.exampleLabelKey}
+          exampleText="Acme Corporation\nTechnology\nwww.acme-corp.com"
+        />
+
+        {/* FAQ */}
+        <FAQSection faqs={config.faqs} />
+
+        {/* CTA */}
+        <CTASection
+          labelKey={config.ctaLabelKey}
+          href={`/${locale}/company-generator/tool`}
+        />
+      </main>
+    </div>
+  );
 }

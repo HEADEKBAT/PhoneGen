@@ -207,6 +207,8 @@ const _ = {
   secretMode: 'uuid' as const,
   hexLength: 32,
   base64Length: 32,
+  tokenLength: 32,
+  tokenType: 'hex' as const,
   pairCountry: 'US',
 };
 
@@ -267,9 +269,13 @@ export interface CredentialGeneratorStore {
   secretMode: SecretMode;
   hexLength: number;
   base64Length: number;
+  tokenLength: number;
+  tokenType: 'hex' | 'base64' | 'base64url';
   setSecretMode: (m: SecretMode) => void;
   setHexLength: (n: number) => void;
   setBase64Length: (n: number) => void;
+  setTokenLength: (n: number) => void;
+  setTokenType: (t: 'hex' | 'base64' | 'base64url') => void;
 
   /* Pair settings */
   pairQuantity: number;
@@ -323,6 +329,8 @@ export const useCredentialGeneratorStore = create<CredentialGeneratorStore>()(
       base64Length: 32,
       pairQuantity: 5,
       pairCountry: 'US',
+      tokenLength: 32,
+      tokenType: 'hex' as const,
       setPasswordLength: (passwordLength) => set({ passwordLength }),
       setPasswordUppercase: (passwordUppercase) => set({ passwordUppercase }),
       setPasswordLowercase: (passwordLowercase) => set({ passwordLowercase }),
@@ -353,6 +361,8 @@ export const useCredentialGeneratorStore = create<CredentialGeneratorStore>()(
       setSecretMode: (secretMode) => set({ secretMode }),
       setHexLength: (hexLength) => set({ hexLength }),
       setBase64Length: (base64Length) => set({ base64Length }),
+      setTokenLength: (tokenLength) => set({ tokenLength }),
+      setTokenType: (tokenType) => set({ tokenType }),
 
       /* Pairs */
       setPairQuantity: (pairQuantity) => set({ pairQuantity }),
@@ -406,6 +416,8 @@ export const useCredentialGeneratorStore = create<CredentialGeneratorStore>()(
         secretMode: state.secretMode,
         hexLength: state.hexLength,
         base64Length: state.base64Length,
+        tokenLength: state.tokenLength,
+        tokenType: state.tokenType,
         pairQuantity: state.pairQuantity,
         pairCountry: state.pairCountry,
         history: state.history,

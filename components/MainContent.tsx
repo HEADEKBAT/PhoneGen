@@ -5,8 +5,9 @@ import { useState, useEffect, useCallback, useTransition } from 'react';
 import GeneratorControls from './GeneratorControls';
 import PhoneList from './PhoneList';
 import InfoCard from './InfoCard';
-import { COUNTRIES, generatePhoneNumbers, PhoneFormat, GenerationMode } from '@/lib/phoneGenerator';
+import { getCountry, generatePhoneNumbers, PhoneFormat, GenerationMode } from '@/lib/phoneGenerator';
 import { useTranslations } from '@/lib/i18n';
+import { getCountryName } from '@/lib/i18n/countryNames';
 import { useCountryStore, useRecentlyUsedStore } from '@/lib/store';
 import CountrySelect from './CountrySelect';
 import { Loader2 } from 'lucide-react';
@@ -24,27 +25,27 @@ export default function MainContent({
   initialFormat?: PhoneFormat | null;
   initialMode?: GenerationMode | null;
 }) {
-  const { t } = useTranslations();
+  const { t, language } = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
   /* ── Determine the base path for URL sync ──────────────────────────────
-   * On the legacy /generate route values are synced back to /generate.
-   * On locale-prefixed routes (/_en_/phone-generator) they sync to that same
-   * path so the URL stays consistent. */
+   * Country is now in the URL path (/{locale}/phone-generator/{country}),
+   * so the base path includes the selected country. Format/mode/count
+   * params are synced to query string alongside the path-based country. */
   const basePath = (() => {
     const seg = pathname.split('/').filter(Boolean);
     if (
       seg.length > 0 &&
       ['en', 'fr', 'es', 'pt', 'de', 'ru'].includes(seg[0])
     ) {
-      return `/${seg[0]}/phone-generator`;
+      return `/${seg[0]}/phone-generator/${selectedCountry}`;
     }
     return '/generate';
   })();
   const addRecentlyUsed = useRecentlyUsedStore((state) => state.addRecentlyUsed);
-  const country = COUNTRIES[selectedCountry] || COUNTRIES['NG'];
+  const country = getCountry(selectedCountry);
   const [quantity, setQuantity] = useState(initialCount || 10);
   const [format, setFormat] = useState<PhoneFormat>(initialFormat || 'international');
   const [mode, setMode] = useState<GenerationMode>(initialMode || 'valid');
@@ -121,10 +122,10 @@ export default function MainContent({
         <section aria-labelledby="country-heading">
           <div className="space-y-1">
             <h1 id="country-heading" className="font-heading text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
-              {t('mainContent.heading', { country: t('countries.' + country.code) })}
+              {t('mainContent.heading', { country: getCountryName(t, language, country.code) })}
             </h1>
             <p className="text-sm text-muted-foreground">
-              {t('mainContent.subtitle', { code: country.code, country: t('countries.' + country.code) })}
+              {t('mainContent.subtitle', { code: country.code, country: getCountryName(t, language, country.code) })}
             </p>
           </div>
         </section>

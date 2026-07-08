@@ -169,3 +169,96 @@ export function generateDatabasePassword(length: number = 20): string {
   }
   return result;
 }
+
+/**
+ * UUID v7 (time-ordered) per RFC 9562.
+ * Format: tttttttt-tttt-7xxx-yxxx-xxxxxxxxxxxx
+ * Where t = 48-bit Unix ms timestamp, x = random, y = RFC 4122 variant.
+ * Time-ordered UUIDs are sortable by generation time.
+ */
+export function generateUUIDv7(): string {
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+
+  // 48-bit Unix timestamp (ms since epoch)
+  const now = Date.now();
+  bytes[0] = (now >> 40) & 0xff;
+  bytes[1] = (now >> 32) & 0xff;
+  bytes[2] = (now >> 24) & 0xff;
+  bytes[3] = (now >> 16) & 0xff;
+  bytes[4] = (now >> 8) & 0xff;
+  bytes[5] = now & 0xff;
+
+  // Set version 7 (4 most significant bits of byte 6 = 0111)
+  bytes[6] = (bytes[6] & 0x0f) | 0x70;
+  // Set variant (2 most significant bits of byte 8 = 10)
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+
+  // Format as hex with dashes
+  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
+}
+
+/**
+ * Random Token generator.
+ * Creates a cryptographically random token in the specified encoding.
+ * @param length Number of output characters (default 32)
+ * @param type Encoding type: 'hex', 'base64', or 'base64url' (default 'hex')
+ */
+export function generateRandomToken(length: number = 32, type: 'hex' | 'base64' | 'base64url' = 'hex'): string {
+  if (type === 'hex') {
+    return generateHex(length);
+  }
+  const chars = type === 'base64url' ? BASE64_CHARS : BASE64_CHARS + '+/';
+  const randoms = getRandomValues(length);
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += pick(chars, randoms[i]);
+  }
+  return result;
+}
+
+/**
+ * Session Secret — 32-byte random value encoded as Base64URL.
+ * Suitable for session signing and cookie encryption.
+ * @param byteLength Number of random bytes (default 32)
+ */
+export function generateSessionSecret(byteLength: number = 32): string {
+  const bytes = new Uint8Array(byteLength);
+  crypto.getRandomValues(bytes);
+
+  let result = '';
+  for (let i = 0; i < bytes.length; i += 3) {
+    const b1 = bytes[i];
+    const b2 = i + 1 < bytes.length ? bytes[i + 1] : 0;
+    const b3 = i + 2 < bytes.length ? bytes[i + 2] : 0;
+
+    result += BASE64_CHARS[b1 >> 2];
+    result += BASE64_CHARS[((b1 & 0x3) << 4) | (b2 >> 4)];
+    if (i + 1 < bytes.length) {
+      result += BASE64_CHARS[((b2 & 0xf) << 2) | (b3 >> 6)];
+    }
+    if (i + 2 < bytes.length) {
+      result += BASE64_CHARS[b3 & 0x3f];
+    }
+  }
+
+  return result;
+}
+
+/**
+ * OAuth Client Secret — 32-byte URL-safe secret with `os_` prefix.
+ * Compatible with OAuth 2.0 client secret requirements.
+ * @param byteLength Number of random bytes for the suffix (default 32)
+ */
+export function generateOAuthSecret(byteLength: number = 32): string {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const randoms = getRandomValues(byteLength);
+
+  let suffix = '';
+  for (let i = 0; i < byteLength; i++) {
+    suffix += pick(chars, randoms[i]);
+  }
+
+  return `os_${suffix}`;
+}

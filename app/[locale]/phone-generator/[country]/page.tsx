@@ -1,76 +1,72 @@
-import { permanentRedirect, notFound } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import { type Metadata } from 'next';
-import { generateLocaleAlternates } from '@/lib/seo';
-import { COUNTRIES } from '@/lib/phoneGenerator';
+import { isSupportedRegion } from '@/lib/countryRegistry';
+import { LOCALES } from '@/lib/config';
+import { generatePhonePageMetadata } from '@/lib/generatePhoneMetadata';
+import PhoneGeneratorClient from '../client';
 
 type Props = {
   params: Promise<{ locale: string; country: string }>;
 };
 
-const TITLES: Record<string, string> = {
-  en: 'Phone Generator — Generate Valid Phone Numbers',
-  fr: 'Générateur de numéros de téléphone — Numéros valides',
-  es: 'Generador de números de teléfono — Números válidos',
-  pt: 'Gerador de números de telefone — Números válidos',
-  de: 'Telefonnummern-Generator — Gültige Nummern',
-  ru: 'Генератор номеров телефона — Валидные номера',
-};
+/**
+ * Pre-build every locale + country combination for SEO.
+ * All ~245 libphonenumber regions × 6 locales = ~1470 pages.
+ */
+export async function generateStaticParams() {
+  // We import dynamically so this only runs at build time,
+  // not on every request.
+  const { getAllRegionCodes } = await import('@/lib/countryRegistry');
+  const regions = getAllRegionCodes();
 
-const DESCRIPTIONS: Record<string, string> = {
-  en: 'Generate valid phone numbers that pass libphonenumber-js validation. Free generator for 85+ countries with international, national, and E.164 formats.',
-  fr: 'Générez des numéros de téléphone valides qui passent la validation libphonenumber-js. Générateur gratuit pour plus de 85 pays.',
-  es: 'Genere números de teléfono válidos que pasen la validación de libphonenumber-js. Generador gratuito para más de 85 países.',
-  pt: 'Gere números de telefone válidos que passam na validação libphonenumber-js. Gerador gratuito para mais de 85 países.',
-  de: 'Generieren Sie gültige Telefonnummern, die die libphonenumber-js-Validierung bestehen. Kostenloser Generator für über 85 Länder.',
-  ru: 'Генерируйте валидные номера телефонов, проходящие проверку libphonenumber-js. Бесплатный генератор для 85+ стран.',
-};
+  const params: { locale: string; country: string }[] = [];
+  for (const locale of LOCALES) {
+    for (const country of regions) {
+      params.push({ locale, country });
+    }
+  }
+  return params;
+}
 
 /**
- * Locale-aware metadata for a country-specific phone-generator page.
+ * Locale + country specific SEO metadata.
  *
- * Each country+locale combination gets:
- *  - A canonical URL (e.g. /en/phone-generator/US)
- *  - Hreflang alternates pointing to the same country in every locale
- *
- * When unique per-country content is added later, this page will render
- * it directly. For now it issues a permanent redirect to the main
- * phone-generator page with the country pre-selected via query param.
+ * Each combination gets unique title, description, canonical URL,
+ * hreflang alternates pointing to the SAME country in every locale,
+ * plus OpenGraph and Twitter cards.
  */
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, country } = await params;
+  const upper = country.toUpperCase();
 
-  /* Return 404 for unknown country codes */
-  if (!(country in COUNTRIES)) {
+  if (!isSupportedRegion(upper)) {
     return {};
   }
 
-  const countryName = COUNTRIES[country]!.name;
-  const title = `${TITLES[locale] || TITLES.en} — ${countryName}`;
-  const description = `${DESCRIPTIONS[locale] || DESCRIPTIONS.en} Free generator for ${countryName}.`;
-  const alternates = generateLocaleAlternates(locale, `/phone-generator/${country}`);
+  const seo = generatePhonePageMetadata(locale, upper);
 
   return {
-    title,
-    description,
-    alternates,
+    title: seo.title,
+    description: seo.description,
+    alternates: seo.alternates,
+    openGraph: seo.openGraph,
+    twitter: seo.twitter,
   };
 }
 
 /**
- * Country-specific phone-generator page.
+ * Country-specific phone generator page.
  *
- * @phase 3 — Redirect-only. Future phases will add unique per-country
- * content (localised descriptions, statistics, carrier info).
- *
- * The redirect preserves the pre-selected country via `?country=` so the
- * client component's existing URL-param logic works unchanged.
+ * The country is passed as a prop to the client component — no searchParams,
+ * no redirects. The URL is the single source of truth.
  */
-export default async function CountryPage({ params }: Props) {
+export default async function CountryPhonePage({ params }: Props) {
   const { locale, country } = await params;
+  const upper = country.toUpperCase();
 
-  if (!(country in COUNTRIES)) {
+  if (!isSupportedRegion(upper)) {
     notFound();
   }
 
-  permanentRedirect(`/${locale}/phone-generator?country=${country}`);
+  return <PhoneGeneratorClient country={upper} locale={locale} />;
 }

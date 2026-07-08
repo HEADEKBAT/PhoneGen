@@ -94,24 +94,8 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        {/* Prevent FOUC — apply dark class before paint if needed */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var theme = localStorage.getItem('theme');
-                  var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  if (theme === 'dark' || (!theme && systemDark)) {
-                    document.documentElement.classList.add('dark');
-                  }
-                } catch(e) {}
-              })();
-            `,
-          }}
-        />
-      </head>
+      <head />
+
       <body className="min-h-screen flex flex-col">
         <ThemeProvider>
           <LanguageInitializer />

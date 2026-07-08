@@ -1,39 +1,46 @@
 import { type Metadata } from 'next';
-import { generateLocaleAlternates } from '@/lib/seo';
-import CredentialGeneratorClient from '../credential-generator/client';
+import { generateMetadata as seoGenerateMetadata, type SEOCustomPage } from '@/lib/config';
+import { SEO_PAGES } from '@/lib/config/credentialSEOPages';
+import SEOLandingPage from '@/components/credential-landing/SEOLandingTemplate';
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Password Generator — Create Strong Random Passwords',
-  fr: 'Générateur de mot de passe — Créez des mots de passe forts',
-  es: 'Generador de contraseñas — Cree contraseñas seguras',
-  pt: 'Gerador de senhas — Crie senhas fortes',
-  de: 'Passwort-Generator — Erstellen Sie starke Passwörter',
-  ru: 'Генератор паролей — Создавайте надежные пароли',
+  'en': 'Password Generator — Create Strong Random Passwords',
+  'ru': 'Генератор паролей — Создайте надежные случайные пароли',
+  'de': 'Passwort-Generator — Erstellen Sie starke Zufallspasswörter',
+  'es': 'Generador de contraseñas — Cree contraseñas seguras',
+  'fr': 'Générateur de mots de passe — Créez des mots de passe forts',
+  'pt': 'Gerador de senhas — Crie senhas fortes e aleatórias',
 };
 
 const DESCRIPTIONS: Record<string, string> = {
-  en: 'Generate strong random passwords with custom length, uppercase, lowercase, numbers, symbols, and exclusions. Free client-side password generator.',
-  fr: 'Générez des mots de passe forts avec longueur personnalisée, majuscules, minuscules, chiffres, symboles et exclusions. Générateur gratuit côté client.',
-  es: 'Genere contraseñas seguras con longitud personalizada, mayúsculas, minúsculas, números, símbolos y exclusiones. Generador gratuito.',
-  pt: 'Gere senhas fortes com comprimento personalizado, maiúsculas, minúsculas, números, símbolos e exclusões. Gerador gratuito.',
-  de: 'Generieren Sie starke Passwörter mit benutzerdefinierter Länge, Großbuchstaben, Kleinbuchstaben, Zahlen, Symbolen und Ausschlüssen. Kostenloser Generator.',
-  ru: 'Генерируйте надежные случайные пароли с настраиваемой длиной, заглавными/строчными буквами, цифрами, символами и исключениями. Бесплатный генератор.',
+  'en': 'Generate strong, secure random passwords with configurable length, character types, and complexity. Free client-side password generator.',
+  'ru': 'Создавайте надежные случайные пароли с настраиваемой длиной и сложностью. Бесплатный генератор паролей.',
+  'de': 'Erstellen Sie starke, sichere Zufallspasswörter. Kostenloser Passwort-Generator.',
+  'es': 'Cree contraseñas seguras con longitud y tipos de caracteres configurables. Generador gratuito.',
+  'fr': 'Créez des mots de passe forts et sécurisés. Générateur gratuit.',
+  'pt': 'Crie senhas fortes e seguras. Gerador gratuito.',
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const alternates = generateLocaleAlternates(locale, '/password-generator');
-  return {
-    title: TITLES[locale] || TITLES.en,
-    description: DESCRIPTIONS[locale] || DESCRIPTIONS.en,
-    alternates,
-  };
+  const title = TITLES[locale] || TITLES.en;
+  const description = DESCRIPTIONS[locale] || DESCRIPTIONS.en;
+
+  return seoGenerateMetadata({
+    type: 'custom',
+    locale,
+    path: '/password-generator',
+    title,
+    description,
+  } satisfies SEOCustomPage);
 }
 
-export default async function PasswordGeneratorPage() {
-  return <CredentialGeneratorClient initialMode={{ activeTab: 'passwords', passwordMode: 'random' }} />;
+export default async function PasswordGeneratorPage({ params }: Props) {
+  const { locale } = await params;
+  const config = SEO_PAGES['password-generator'];
+  return <SEOLandingPage locale={locale} config={config} />;
 }

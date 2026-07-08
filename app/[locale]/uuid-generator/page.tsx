@@ -1,39 +1,46 @@
 import { type Metadata } from 'next';
-import { generateLocaleAlternates } from '@/lib/seo';
-import CredentialGeneratorClient from '../credential-generator/client';
+import { generateMetadata as seoGenerateMetadata, type SEOCustomPage } from '@/lib/config';
+import { SEO_PAGES } from '@/lib/config/credentialSEOPages';
+import SEOLandingPage from '@/components/credential-landing/SEOLandingTemplate';
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
 const TITLES: Record<string, string> = {
-  en: 'UUID Generator — Generate UUID v4 Online',
-  fr: 'Générateur d\'UUID — Générez des UUID v4 en ligne',
-  es: 'Generador de UUID — Genere UUID v4 en línea',
-  pt: 'Gerador de UUID — Gere UUID v4 online',
-  de: 'UUID-Generator — Generieren Sie UUID v4 online',
-  ru: 'Генератор UUID — Создавайте UUID v4 онлайн',
+  'en': 'UUID Generator — Create Unique Identifiers Online',
+  'ru': 'Генератор UUID — Создайте уникальные идентификаторы',
+  'de': 'UUID-Generator — Erstellen Sie eindeutige Identifikatoren',
+  'es': 'Generador de UUID — Cree identificadores únicos',
+  'fr': 'Générateur d’UUID — Créez des identifiants uniques',
+  'pt': 'Gerador de UUID — Crie identificadores únicos',
 };
 
 const DESCRIPTIONS: Record<string, string> = {
-  en: 'Generate random UUID v4 identifiers for databases, APIs, and distributed systems. Free client-side UUID generator with RFC 4122 compliance.',
-  fr: 'Générez des identifiants UUID v4 aléatoires pour bases de données, API et systèmes distribués. Conforme RFC 4122.',
-  es: 'Genere identificadores UUID v4 aleatorios para bases de datos, API y sistemas distribuidos. Cumplimiento RFC 4122.',
-  pt: 'Gere identificadores UUID v4 aleatórios para bancos de dados, APIs e sistemas distribuídos. Conformidade RFC 4122.',
-  de: 'Generieren Sie zufällige UUID-v4-Identifikatoren für Datenbanken, APIs und verteilte Systeme. RFC 4122-konform.',
-  ru: 'Генерируйте случайные UUID v4 идентификаторы для баз данных, API и распределенных систем. Соответствие RFC 4122.',
+  'en': 'Generate random UUID v4 identifiers for use as database primary keys, API identifiers, and distributed system identifiers. Free client-side UUID generator.',
+  'ru': 'Создавайте случайные UUID v4. Бесплатный генератор.',
+  'de': 'Erstellen Sie zufällige UUID v4. Kostenloser Generator.',
+  'es': 'Cree UUID v4 aleatorios. Generador gratuito.',
+  'fr': 'Créez des UUID v4 aléatoires. Générateur gratuit.',
+  'pt': 'Crie UUIDs v4 aleatórios. Gerador gratuito.',
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const alternates = generateLocaleAlternates(locale, '/uuid-generator');
-  return {
-    title: TITLES[locale] || TITLES.en,
-    description: DESCRIPTIONS[locale] || DESCRIPTIONS.en,
-    alternates,
-  };
+  const title = TITLES[locale] || TITLES.en;
+  const description = DESCRIPTIONS[locale] || DESCRIPTIONS.en;
+
+  return seoGenerateMetadata({
+    type: 'custom',
+    locale,
+    path: '/uuid-generator',
+    title,
+    description,
+  } satisfies SEOCustomPage);
 }
 
-export default async function UuidGeneratorPage() {
-  return <CredentialGeneratorClient initialMode={{ activeTab: 'pins-secrets', secretMode: 'uuid' }} />;
+export default async function UuidGeneratorPage({ params }: Props) {
+  const { locale } = await params;
+  const config = SEO_PAGES['uuid-generator'];
+  return <SEOLandingPage locale={locale} config={config} />;
 }

@@ -4,7 +4,7 @@ import { Copy, Check, CopyCheck, CheckCircle2, Loader2 } from 'lucide-react';
 import { useState, useRef, useCallback, useMemo, useEffect } from 'react';
 import { useTranslations } from '@/lib/i18n';
 import Flag from 'react-world-flags';
-import { COUNTRIES, GenerationMode } from '@/lib/phoneGenerator';
+import { getCountry, GenerationMode } from '@/lib/phoneGenerator';
 
 interface PhoneNumber {
   id: number;
@@ -92,7 +92,7 @@ export default function PhoneList({
     showToast('Exported JSON');
   }, [phones, downloadFile, showToast]);
 
-  const country = countryCode ? COUNTRIES[countryCode] : null;
+  const country = countryCode ? getCountry(countryCode) : null;
 
   const getCountryCode = (code: string) => {
     const codeMap: Record<string, string> = { UK: 'GB', US: 'US' };

@@ -2,7 +2,9 @@
 
 import { Search, ChevronDown, Star, Globe, Clock } from 'lucide-react';
 import { useState, useMemo, useRef, useEffect } from 'react';
-import { COUNTRIES } from '@/lib/phoneGenerator';
+import { getCountry, getAllCountries } from '@/lib/phoneGenerator';
+import type { Country } from '@/lib/phoneGenerator';
+import { getCountryName } from '@/lib/i18n/countryNames';
 import { useFavoritesStore, useRecentlyUsedStore } from '@/lib/store';
 import { useTranslations } from '@/lib/i18n';
 import Flag from 'react-world-flags';
@@ -14,7 +16,7 @@ interface CountrySelectProps {
 }
 
 export default function CountrySelect({ selectedCountry, onSelectCountry }: CountrySelectProps) {
-  const { t } = useTranslations();
+  const { t, language } = useTranslations();
   const [open, setOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [search, setSearch] = useState('');
@@ -28,7 +30,7 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
 
   // Memoize with `favorites` array, not `isFavorite` function (avoids breaking memo on every render)
   const sortedCountries = useMemo(() => {
-    const all = Object.values(COUNTRIES).sort((a, b) => a.name.localeCompare(b.name));
+    const all = getAllCountries().sort((a, b) => a.name.localeCompare(b.name));
     return all.sort((a, b) => {
       const aFav = favorites.includes(a.code) ? 0 : 1;
       const bFav = favorites.includes(b.code) ? 0 : 1;
@@ -41,7 +43,7 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
     if (!search) return sortedCountries;
     const q = search.toLowerCase();
     return sortedCountries.filter((c) => {
-      const name = t('countries.' + c.code).toLowerCase();
+      const name = getCountryName(t, language, c.code).toLowerCase();
       return name.includes(q) || c.code.toLowerCase().includes(q);
     });
   }, [sortedCountries, search, t]);
@@ -50,7 +52,7 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
     if (!dialogSearch) return sortedCountries;
     const q = dialogSearch.toLowerCase();
     return sortedCountries.filter((c) => {
-      const name = t('countries.' + c.code).toLowerCase();
+      const name = getCountryName(t, language, c.code).toLowerCase();
       return name.includes(q) || c.code.toLowerCase().includes(q);
     });
   }, [sortedCountries, dialogSearch, t]);
@@ -58,12 +60,12 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
   // Recently used countries (in order of recency, filtered to not repeat in main list)
   const recentCountries = useMemo(() => {
     return recentlyUsed
-      .map((code) => COUNTRIES[code])
+      .map((code) => getCountry(code))
       .filter(Boolean)
       .filter((c) => !search || c.name.toLowerCase().includes(search.toLowerCase()) || c.code.toLowerCase().includes(search.toLowerCase()));
   }, [recentlyUsed, search]);
 
-  const selected = COUNTRIES[selectedCountry];
+  const selected = getCountry(selectedCountry);
 
   useEffect(() => {
     if (open && inputRef.current) {
@@ -157,11 +159,11 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
             <Flag
               code={getCountryCode(selected.code)}
               style={{ width: '24px', height: '18px', borderRadius: '2px', objectFit: 'cover' }}
-              title={t('countries.' + selected.code)}
+              title={getCountryName(t, language, selected.code)}
             />
             <div className="flex-1 min-w-0">
               <div className="text-sm font-medium text-foreground truncate">
-                {t('countries.' + selected.code)}
+                {getCountryName(t, language, selected.code)}
               </div>
               <div className="text-xs text-muted-foreground">
                 {selected.countryCode} · {selected.code}
@@ -224,9 +226,9 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
                           className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors text-foreground hover:bg-muted"
                           onClick={() => { onSelectCountry(country.code); setOpen(false); setSearch(''); }}
                         >
-                          <Flag code={getCountryCode(country.code)} style={{ width: '22px', height: '16px', borderRadius: '2px', objectFit: 'cover', flexShrink: 0 }} title={t('countries.' + country.code)} />
+                          <Flag code={getCountryCode(country.code)} style={{ width: '22px', height: '16px', borderRadius: '2px', objectFit: 'cover', flexShrink: 0 }} title={getCountryName(t, language, country.code)} />
                           <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium truncate">{t('countries.' + country.code)}</div>
+                            <div className="text-sm font-medium truncate">{getCountryName(t, language, country.code)}</div>
                             <div className="text-xs text-muted-foreground">{country.countryCode}</div>
                           </div>
                           <button onClick={(e) => { e.stopPropagation(); toggleFavorite(country.code); }} aria-label={fav ? t('sidebar.removeFromFavorites') : t('sidebar.addToFavorites')} className="shrink-0 p-1 rounded-md hover:bg-background/50 transition-colors cursor-pointer">
@@ -262,10 +264,10 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
                       <Flag
                         code={getCountryCode(country.code)}
                         style={{ width: '22px', height: '16px', borderRadius: '2px', objectFit: 'cover', flexShrink: 0 }}
-                        title={t('countries.' + country.code)}
+                        title={getCountryName(t, language, country.code)}
                       />
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-medium truncate">{t('countries.' + country.code)}</div>
+                        <div className="text-sm font-medium truncate">{getCountryName(t, language, country.code)}</div>
                         <div className="text-xs text-muted-foreground">{country.countryCode} · {country.code}</div>
                       </div>
                       <button
@@ -335,10 +337,10 @@ export default function CountrySelect({ selectedCountry, onSelectCountry }: Coun
                     <Flag
                       code={getCountryCode(country.code)}
                       style={{ width: '22px', height: '16px', borderRadius: '2px', objectFit: 'cover', flexShrink: 0 }}
-                      title={t('countries.' + country.code)}
+                      title={getCountryName(t, language, country.code)}
                     />
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium truncate">{t('countries.' + country.code)}</div>
+                      <div className="text-sm font-medium truncate">{getCountryName(t, language, country.code)}</div>
                       <div className="text-[11px] text-muted-foreground">{country.countryCode}</div>
                     </div>
                     <span
