@@ -859,6 +859,30 @@
       "faq_a2": "Nein. Alles läuft in Ihrem Browser. Es werden keine Daten an Server gesendet.",
       "faq_q3": "Kann ich Barcodes drucken?",
       "faq_a3": "Ja. Exportieren Sie als SVG für professionelle Druckqualität oder PNG für den schnellen Gebrauch. SVGs skalieren ohne Qualitätsverlust."
+    },
+    "color": {
+      "heroTitle": "Color Studio — Theme Builder & Design-System-Generator",
+      "heroDesc": "Professionelles Farbset — Theme Builder, Design-System-Generator, Paletten, Verläufe, Konverter, WCAG-Barrierefreiheitsprüfung und Entwickler-Exports. Kostenloses Online-Studio.",
+      "ctaLabel": "Color Studio öffnen",
+      "feature1Title": "Theme Builder",
+      "feature1Desc": "Generieren Sie ein komplettes Design-System aus einer Farbe. Vollständige 50-950-Skalen für Primär, Sekundär, Akzent und Neutral mit automatischer WCAG-Konformität.",
+      "feature2Title": "Konverter",
+      "feature2Desc": "Konvertieren Sie zwischen HEX, RGB, HSL, HSV, CMYK, CIE Lab, OKLab und OKLCH mit einem Klick.",
+      "feature3Title": "Barrierefreiheitsprüfung",
+      "feature3Desc": "WCAG 2.1-Kontrastprüfung für AA/AAA. Automatische Farbkorrektur für Barrierefreiheit.",
+      "feature4Title": "Entwickler-Exporte",
+      "feature4Desc": "Export als CSS-Variablen, Tailwind-Konfiguration, SCSS, Style-Dictionary-Tokens oder SVG. Vollständige Design-Token-Generierung.",
+      "feature5Title": "Farbblindheitssimulator",
+      "feature5Desc": "Simulieren Sie Protanopie, Deuteranopie, Tritanopie und Achromatopsie zur Überprüfung Ihrer Designs.",
+      "exampleLabel": "Beispielfarben",
+      "faq_q1": "Wie funktioniert der Theme Builder?",
+      "faq_a1": "Geben Sie eine Primärfarbe ein und wir generieren ein komplettes Design-System: 11-stufige Farbskalen (50-950) für Primär, Sekundär, Akzent und Neutral, plus semantische Farben, Hell- und Dunkelmodus und Entwickler-Tokens. Wählen Sie aus 30+ Stilen, 20+ Projekttypen und 15+ Markenpersönlichkeiten.",
+      "faq_q2": "Kann ich Design-Tokens exportieren?",
+      "faq_a2": "Ja. Exportieren Sie das gesamte Design-System als CSS-Custom-Properties, Tailwind CSS v4-Konfiguration, SCSS-Variablen, LESS-Variablen oder Style-Dictionary-JSON — bereit zum Kopieren in Ihr Projekt.",
+      "faq_q3": "Werden meine Daten gespeichert?",
+      "faq_a3": "Nein. Alles läuft in Ihrem Browser. Favoriten werden im localStorage gespeichert und verlassen nie Ihr Gerät.",
+      "faq_q4": "Wie funktioniert die Barrierefreiheitsprüfung?",
+      "faq_a4": "Der Theme Builder prüft automatisch jedes Text-Hintergrund-Paar auf WCAG 2.1 AA-Konformität und passt Farben bei Bedarf an. Der Kontrastprüfungs-Tab bietet detaillierte AA/AAA-Analyse."
     }
   }
 }

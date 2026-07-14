@@ -1,5 +1,5 @@
-import UserGenClient from '../client';
+import { UserGenClientLoader } from '@/components/dynamic';
 
 export default async function UserGeneratorToolPage() {
-  return <UserGenClient />;
+  return <UserGenClientLoader />;
 }

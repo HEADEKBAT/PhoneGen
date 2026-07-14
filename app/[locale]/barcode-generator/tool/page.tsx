@@ -1,5 +1,5 @@
 import { type Metadata } from 'next';
-import BarcodeStudioClient from '@/components/barcode/BarcodeStudioClient';
+import { BarcodeStudioClientLoader } from '@/components/dynamic';
 import { getProduct, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
 import { getT } from '@/lib/i18n/server';
 import Breadcrumb from '@/components/Breadcrumb';
@@ -62,7 +62,7 @@ export default async function BarcodeStudioToolPage({ params }: Props) {
             {DESCRIPTIONS[locale] || DESCRIPTIONS.en}
           </p>
         </div>
-        <BarcodeStudioClient />
+        <BarcodeStudioClientLoader />
       </main>
     </div>
   );

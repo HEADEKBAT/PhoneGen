@@ -1,5 +1,5 @@
-import UsernameGeneratorPage from '@/features/username-generator/UsernameGenerator';
+import { UsernameGeneratorLoader } from '@/components/dynamic';
 
 export default async function UsernameGeneratorToolPage() {
-  return <UsernameGeneratorPage />;
+  return <UsernameGeneratorLoader />;
 }

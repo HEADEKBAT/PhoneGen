@@ -601,6 +601,24 @@ export const GENERATORS: Record<string, Generator> = {
     keywords: ['pharmacode', 'pharmaceutical', 'barcode', 'medicine'],
     schemaType: 'WebApplication',
   },
+
+  /* ── Color Studio Generator ─────────────────────────────────────────────── */
+  'color-studio': {
+    id: 'color-studio',
+    productId: 'color',
+    slug: 'tool',
+    title: 'Color Studio',
+    description: 'Professional color tools — palettes, gradients, converters, accessibility checks, and more.',
+    status: 'active',
+    featured: true,
+    seoPriority: 0.9,
+    supportedCountries: [],
+    supportedLocales: [],
+    category: 'design',
+    icon: 'Palette',
+    keywords: ['color generator', 'color palette', 'gradient generator', 'color converter', 'WCAG', 'design tools'],
+    schemaType: 'WebApplication',
+  },
 } as const;
 
 /** All generators as an array, sorted by title. */

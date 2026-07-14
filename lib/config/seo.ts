@@ -8,6 +8,7 @@
 
 import { type Metadata } from 'next';
 import { PLATFORM_CONFIG } from './platform';
+import { getProduct } from './products';
 import type { Product } from './products';
 import type { Generator } from './generators';
 
@@ -167,9 +168,11 @@ export function generateMetadata(page: SEOPage): Metadata {
       const { locale, generator, title: overrideTitle, description: overrideDesc, country } = page;
       const title = (overrideTitle || generator.title) + titleSuffix(locale);
       const description = overrideDesc || generator.description;
+      const product = getProduct(generator.productId);
+      const productSlug = product?.slug ?? generator.productId;
       const path = country
-        ? `/${generator.slug}/${country}`
-        : `/${generator.slug}/${generator.slug}`;
+        ? `/${productSlug}/${country}`
+        : `/${productSlug}/${generator.slug}`;
       const alternates = generateHreflang(locale, path);
 
       return {

@@ -68,7 +68,7 @@ export const PLATFORM_CONFIG: PlatformConfig = {
 
   stats: [
     { label: 'Countries', value: '245+' },
-    { label: 'Products', value: '7+' },
+    { label: 'Products', value: '8+' },
     { label: 'Formats', value: '4+' },
     { label: 'Free', value: '100%' },
   ],
@@ -132,6 +132,7 @@ export const PLATFORM_CONFIG: PlatformConfig = {
         { label: 'Address Generator', href: '/address-generator' },
         { label: 'Email Generator', href: '/email-generator' },
         { label: 'Username Generator', href: '/username-generator' },
+        { label: 'Color Studio', href: '/color-generator' },
         { label: 'Company Generator', href: '/company-generator' },
       ],
     },

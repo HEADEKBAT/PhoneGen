@@ -1,5 +1,5 @@
-import AddressGeneratorPage from '@/features/address-generator/AddressGenerator';
+import { AddressGeneratorLoader } from '@/components/dynamic';
 
 export default async function AddressGeneratorToolPage() {
-  return <AddressGeneratorPage />;
+  return <AddressGeneratorLoader />;
 }

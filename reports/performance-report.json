@@ -1,0 +1,259 @@
+{
+  "report": {
+    "title": "GenCore Performance & Architecture Audit",
+    "date": "2026-07-12",
+    "version": "1.0",
+    "overallScore": 60
+  },
+  "scores": [
+    { "category": "Architecture", "score": 7, "maxScore": 10, "status": "good" },
+    { "category": "Performance", "score": 4, "maxScore": 10, "status": "critical" },
+    { "category": "Bundle", "score": 3, "maxScore": 10, "status": "critical" },
+    { "category": "React", "score": 4, "maxScore": 10, "status": "critical" },
+    { "category": "SEO", "score": 9, "maxScore": 10, "status": "excellent" },
+    { "category": "Accessibility", "score": 5, "maxScore": 10, "status": "needs-work" },
+    { "category": "UX", "score": 3, "maxScore": 10, "status": "critical" },
+    { "category": "Scalability", "score": 6, "maxScore": 10, "status": "good" }
+  ],
+  "findings": [
+    {
+      "id": "A1",
+      "phase": 1,
+      "title": "No Middleware",
+      "priority": "medium",
+      "files": ["middleware.ts"],
+      "impact": "No edge-level security headers, locale redirect, bot detection",
+      "effort": "small"
+    },
+    {
+      "id": "A2",
+      "phase": 1,
+      "title": "Empty next.config.ts",
+      "priority": "medium",
+      "files": ["next.config.ts"],
+      "impact": "No CSP, HSTS, images config, or experimental flags",
+      "effort": "small"
+    },
+    {
+      "id": "A3",
+      "phase": 1,
+      "title": "Root Metadata References PhoneGen",
+      "priority": "high",
+      "files": ["app/layout.tsx"],
+      "impact": "Incorrect branding in search results, missing pt locale",
+      "effort": "small"
+    },
+    {
+      "id": "A4",
+      "phase": 1,
+      "title": "No Loading Infrastructure",
+      "priority": "high",
+      "files": ["**/loading.tsx", "**/error.tsx", "**/not-found.tsx"],
+      "impact": "Blank screens on every navigation",
+      "effort": "medium"
+    },
+    {
+      "id": "A5",
+      "phase": 1,
+      "title": "Root Page Bypasses Locale",
+      "priority": "medium",
+      "files": ["app/page.tsx"],
+      "impact": "SEO confusion, duplicate content",
+      "effort": "small"
+    },
+    {
+      "id": "C1",
+      "phase": 2,
+      "title": "63 Client Components — Excessive Hydration",
+      "priority": "high",
+      "files": ["**/*.tsx containing 'use client'"],
+      "impact": "Massive client JS bundle, slow initial load",
+      "effort": "large"
+    },
+    {
+      "id": "C2",
+      "phase": 2,
+      "title": "Presentational Sections Marked use client",
+      "priority": "high",
+      "files": [
+        "components/home/HeroSection.tsx",
+        "components/home/WhySection.tsx",
+        "components/home/StatsSection.tsx",
+        "components/home/FAQSection.tsx",
+        "components/home/CTASection.tsx",
+        "components/home/RoadmapSection.tsx",
+        "components/JsonLd.tsx",
+        "components/product-landing/*.tsx",
+        "components/credential-landing/CredentialFAQ.tsx"
+      ],
+      "impact": "-60% client components if fixed, massive bundle reduction",
+      "effort": "large"
+    },
+    {
+      "id": "R1",
+      "phase": 3,
+      "title": "No React.memo on Stable Components",
+      "priority": "medium",
+      "files": ["components/layout/AppHeader.tsx"],
+      "impact": "Unnecessary re-renders on scroll and state changes",
+      "effort": "small"
+    },
+    {
+      "id": "R2",
+      "phase": 3,
+      "title": "No startTransition for Generator Operations",
+      "priority": "high",
+      "files": ["components/barcode/BarcodeStudioClient.tsx"],
+      "impact": "UI freezes during bulk generation",
+      "effort": "small"
+    },
+    {
+      "id": "R3",
+      "phase": 3,
+      "title": "No Suspense Boundaries",
+      "priority": "high",
+      "files": ["app/[locale]/*/page.tsx"],
+      "impact": "No progressive rendering, blocks on data",
+      "effort": "medium"
+    },
+    {
+      "id": "R4",
+      "phase": 3,
+      "title": "No next/dynamic Usage",
+      "priority": "high",
+      "files": ["**/*.tsx"],
+      "impact": "All heavy code in initial bundle",
+      "effort": "medium"
+    },
+    {
+      "id": "B1",
+      "phase": 4,
+      "title": "All 6 Locale Files Imported Upfront",
+      "priority": "high",
+      "files": ["lib/i18n/useTranslations.ts", "lib/i18n/server.ts"],
+      "impact": "60KB+ unnecessary JSON in initial bundle",
+      "effort": "medium"
+    },
+    {
+      "id": "B2",
+      "phase": 4,
+      "title": "@faker-js/faker in Dependencies",
+      "priority": "high",
+      "files": ["package.json"],
+      "impact": "1.6MB+ library could end up in bundle",
+      "effort": "medium"
+    },
+    {
+      "id": "B4",
+      "phase": 4,
+      "title": "Heavy Libraries Not Lazy-Loaded",
+      "priority": "high",
+      "files": ["components/barcode/", "components/phone-generator/"],
+      "impact": "jsbarcode, libphonenumber-js bundled for all pages",
+      "effort": "medium"
+    },
+    {
+      "id": "E1",
+      "phase": 5,
+      "title": "Barrel Import Anti-Pattern",
+      "priority": "medium",
+      "files": ["lib/config/index.ts", "**/* importing from barrel"],
+      "impact": "Unnecessary module evaluation, larger bundle",
+      "effort": "medium"
+    },
+    {
+      "id": "L3",
+      "phase": 6,
+      "title": "No Lazy Locale Loading",
+      "priority": "medium",
+      "files": ["lib/i18n/useTranslations.ts"],
+      "impact": "60KB+ translation JSON always bundled",
+      "effort": "medium"
+    },
+    {
+      "id": "S2",
+      "phase": 7,
+      "title": "Generator Path Bug in SEO",
+      "priority": "high",
+      "files": ["lib/config/seo.ts:170-172"],
+      "impact": "Incorrect canonical/hreflang URLs for generators",
+      "effort": "small"
+    },
+    {
+      "id": "T1",
+      "phase": 8,
+      "title": "No Page Transition System",
+      "priority": "critical",
+      "files": ["app/*"],
+      "impact": "Janky navigation, blank screens, unpolished feel",
+      "effort": "large"
+    },
+    {
+      "id": "LO1",
+      "phase": 9,
+      "title": "No loading.tsx Anywhere",
+      "priority": "critical",
+      "files": ["**/loading.tsx"],
+      "impact": "Blank screen on every navigation",
+      "effort": "medium"
+    },
+    {
+      "id": "LO2",
+      "phase": 9,
+      "title": "No Skeleton Components",
+      "priority": "critical",
+      "files": ["components/skeleton/*"],
+      "impact": "No visual loading feedback",
+      "effort": "large"
+    }
+  ],
+  "recommendations": {
+    "phase1": [
+      "Add loading.tsx for all locale route segments",
+      "Create skeleton component system",
+      "Add Suspense boundaries around generator content",
+      "Lazy-load heavy libraries (jsbarcode, faker, libphonenumber)",
+      "Add error.tsx boundaries"
+    ],
+    "phase2": [
+      "Fix root metadata PhoneGen → GenCore",
+      "Create middleware for security headers",
+      "Configure next.config.ts",
+      "Convert presentational sections to Server Components",
+      "Separate locale loading per route"
+    ],
+    "phase3": [
+      "Add View Transitions API",
+      "Add global Progress Bar",
+      "Optimize AppHeader re-renders",
+      "Add prefers-reduced-motion support",
+      "Animated background during loading"
+    ],
+    "phase4": [
+      "Add next/dynamic for heavy components",
+      "Add bundle analyzer",
+      "Add memo() on stable component trees",
+      "Use startTransition for generator operations",
+      "Configure image optimization"
+    ],
+    "phase5": [
+      "Accessibility audit fixes",
+      "Keyboard navigation improvements",
+      "Color contrast check",
+      "Final Lighthouse optimization"
+    ]
+  },
+  "metrics": {
+    "lighthousePerformance": "~65 (estimated)",
+    "lighthouseAccessibility": "~80 (estimated)",
+    "lighthouseSEO": 95,
+    "lighthouseBestPractices": "~70 (estimated)",
+    "lcp": ">4s (estimated)",
+    "cls": "~0.3 (estimated)",
+    "inp": ">300ms (estimated)",
+    "clientComponents": 63,
+    "targetClientComponents": 25,
+    "initialJS": "~500KB+ (estimated)",
+    "targetInitialJS": "<200KB"
+  }
+}

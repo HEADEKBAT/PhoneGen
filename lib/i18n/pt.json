@@ -859,6 +859,30 @@
       "faq_a2": "Não. Tudo acontece no seu navegador. Nenhum dado é enviado para servidores.",
       "faq_q3": "Posso imprimir códigos de barras?",
       "faq_a3": "Sim. Exporte como SVG para qualidade profissional de impressão ou PNG para uso rápido."
+    },
+    "color": {
+      "heroTitle": "Color Studio — Construtor de temas e gerador de sistemas de design",
+      "heroDesc": "Kit de ferramentas de cores profissional — construtor de temas, gerador de sistemas de design, paletas, gradientes, conversores, verificação de acessibilidade WCAG e exportações para desenvolvedores. Estúdio gratuito.",
+      "ctaLabel": "Abrir Color Studio",
+      "feature1Title": "Construtor de temas",
+      "feature1Desc": "Gere um sistema de design completo a partir de uma cor. Escalas 50-950 para primary, secondary, accent e neutral com conformidade WCAG automática.",
+      "feature2Title": "Conversor",
+      "feature2Desc": "Converta entre HEX, RGB, HSL, HSV, CMYK, CIE Lab, OKLab e OKLCH com um clique.",
+      "feature3Title": "Verificador de acessibilidade",
+      "feature3Desc": "Verificação de contraste WCAG 2.1 para AA/AAA. Ajuste automático de cores para conformidade.",
+      "feature4Title": "Exportações para desenvolvedores",
+      "feature4Desc": "Exporte como variáveis CSS, configuração Tailwind, SCSS, tokens Style Dictionary ou SVG. Geração completa de tokens de design.",
+      "feature5Title": "Simulador de daltonismo",
+      "feature5Desc": "Simule protanopia, deuteranopia, tritanopia e acromatopsia para verificar seus designs.",
+      "exampleLabel": "Cores de exemplo",
+      "faq_q1": "Como funciona o Construtor de temas?",
+      "faq_a1": "Insira uma cor primária e geramos um sistema de design completo: escalas de 11 níveis (50-950) para primary, secondary, accent e neutral, mais cores semânticas, temas claro e escuro e tokens para desenvolvedores. Escolha entre 30+ estilos, 20+ tipos de projeto e 15+ personalidades de marca.",
+      "faq_q2": "Posso exportar tokens de design?",
+      "faq_a2": "Sim. Exporte o sistema de design completo como propriedades CSS personalizadas, configuração Tailwind CSS v4, variáveis SCSS, LESS ou JSON Style Dictionary — pronto para copiar e colar no seu projeto.",
+      "faq_q3": "Meus dados são armazenados?",
+      "faq_a3": "Não. Tudo acontece no seu navegador. Favoritos são armazenados no localStorage e nunca saem do seu dispositivo.",
+      "faq_q4": "Como funciona a verificação de acessibilidade?",
+      "faq_a4": "O Construtor de temas verifica automaticamente cada par texto-fundo para conformidade WCAG 2.1 AA e ajusta as cores quando necessário. A aba de verificação de contraste fornece análise detalhada AA/AAA."
     }
   }
 }

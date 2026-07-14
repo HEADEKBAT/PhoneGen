@@ -1,5 +1,5 @@
-import CredentialGeneratorClient from '../client';
+import { CredentialClientLoader } from '@/components/dynamic';
 
 export default async function CredentialGeneratorToolPage() {
-  return <CredentialGeneratorClient />;
+  return <CredentialClientLoader />;
 }

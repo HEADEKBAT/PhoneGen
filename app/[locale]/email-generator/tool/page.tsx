@@ -1,5 +1,5 @@
-import EmailGeneratorPage from '@/features/email-generator/EmailGenerator';
+import { EmailGeneratorLoader } from '@/components/dynamic';
 
 export default async function EmailGeneratorToolPage() {
-  return <EmailGeneratorPage />;
+  return <EmailGeneratorLoader />;
 }

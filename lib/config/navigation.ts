@@ -48,6 +48,7 @@ export const FOOTER_SECTIONS: NavSection[] = [
       { label: 'Email Generator', href: '/{locale}/email-generator' },
       { label: 'Username Generator', href: '/{locale}/username-generator' },
       { label: 'Barcode Generator', href: '/{locale}/barcode-generator' },
+      { label: 'Color Studio', href: '/{locale}/color-generator' },
       { label: 'Company Generator', href: '/{locale}/company-generator' },
     ],
   },

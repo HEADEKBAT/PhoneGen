@@ -1,5 +1,5 @@
-import CompanyGeneratorPage from '@/features/company-generator/CompanyGenerator';
+import { CompanyGeneratorLoader } from '@/components/dynamic';
 
 export default async function CompanyGeneratorToolPage() {
-  return <CompanyGeneratorPage />;
+  return <CompanyGeneratorLoader />;
 }

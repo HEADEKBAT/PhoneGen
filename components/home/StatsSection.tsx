@@ -1,36 +1,43 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { Globe, Zap, ShieldCheck, Users } from 'lucide-react';
 import { PLATFORM_CONFIG } from '@/lib/config';
 
-const STAT_ICONS: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
-  Globe, Zap, ShieldCheck, Users,
-};
+const STAGGER_DELAY = 0.1;
 
 /**
  * Statistics section — reads data from Platform Config.
  * Shows key metrics about the platform.
  */
 export default function StatsSection() {
+  const icons = [Globe, Zap, ShieldCheck, Users];
+
   return (
-    <section className="border-y border-border bg-muted/30">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-16">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
+    <section className="border-y border-border bg-muted/40 dark:bg-muted/20">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 py-16 sm:py-20">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-10">
           {PLATFORM_CONFIG.stats.map((stat, i) => {
-            const icons = [Globe, Zap, ShieldCheck, Users];
             const Icon = icons[i] || Users;
             return (
-              <div key={stat.label} className="text-center">
-                <div className="flex items-center justify-center size-10 mx-auto rounded-lg bg-primary/10 text-primary mb-3">
-                  <Icon size={18} />
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * STAGGER_DELAY, ease: [0.25, 0.1, 0.25, 1] }}
+                className="text-center"
+              >
+                <div className="flex items-center justify-center size-12 mx-auto rounded-2xl bg-primary/8 text-primary mb-4">
+                  <Icon size={20} />
                 </div>
-                <div className="font-heading text-2xl sm:text-3xl font-bold text-foreground">
+                <div className="font-heading text-3xl sm:text-4xl font-bold text-foreground tracking-tight">
                   {stat.value}
                 </div>
-                <div className="text-xs text-muted-foreground mt-1">
+                <div className="text-sm text-muted-foreground mt-1.5 font-light">
                   {stat.label}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>

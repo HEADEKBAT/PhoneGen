@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 
 const FAQS = [
@@ -27,13 +28,13 @@ const FAQS = [
 ];
 
 /**
- * FAQ accordion section with JSON-LD structured data.
+ * FAQ accordion section with JSON-LD structured data and smooth animations.
  */
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   return (
-    <section className="mx-auto max-w-3xl px-4 sm:px-6 py-16 sm:py-20">
+    <section className="mx-auto max-w-3xl px-4 sm:px-6 py-20 sm:py-28">
       {/* JSON-LD */}
       <script
         type="application/ld+json"
@@ -53,44 +54,69 @@ export default function FAQSection() {
         }}
       />
 
-      <div className="text-center mb-10">
-        <h2 className="font-heading text-2xl sm:text-3xl font-bold text-foreground">
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+        className="text-center mb-12"
+      >
+        <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground tracking-tight">
           Frequently Asked Questions
         </h2>
-      </div>
+      </motion.div>
 
-      <div className="space-y-2">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+        className="space-y-3"
+      >
         {FAQS.map((faq, i) => {
           const isOpen = openIndex === i;
           return (
             <div
               key={i}
-              className="rounded-xl border border-border bg-card overflow-hidden transition-colors"
+              className="rounded-2xl border border-border bg-card overflow-hidden transition-all duration-300 hover:shadow-elevated hover:border-primary/15"
             >
               <button
                 onClick={() => setOpenIndex(isOpen ? null : i)}
-                className="flex items-center justify-between w-full text-left px-5 py-4 cursor-pointer"
+                className="flex items-center justify-between w-full text-left px-6 py-5 cursor-pointer"
                 aria-expanded={isOpen}
               >
                 <span className="text-sm font-medium text-foreground pr-4">
                   {faq.q}
                 </span>
-                <ChevronDown
-                  size={14}
-                  className={`shrink-0 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`}
-                />
+                <motion.div
+                  animate={{ rotate: isOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+                >
+                  <ChevronDown size={14} className="shrink-0 text-muted-foreground" />
+                </motion.div>
               </button>
-              {isOpen && (
-                <div className="px-5 pb-4">
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {faq.a}
-                  </p>
-                </div>
-              )}
+              <AnimatePresence initial={false}>
+                {isOpen && (
+                  <motion.div
+                    key="content"
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="px-6 pb-5">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {faq.a}
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           );
         })}
-      </div>
+      </motion.div>
     </section>
   );
 }

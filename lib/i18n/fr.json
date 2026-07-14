@@ -859,6 +859,30 @@
       "faq_a2": "Non. Tout se passe dans votre navigateur. Aucune donnée n'est envoyée à un serveur.",
       "faq_q3": "Puis-je imprimer des codes-barres ?",
       "faq_a3": "Oui. Exportez en SVG pour une qualité d'impression professionnelle ou en PNG pour une utilisation rapide."
+    },
+    "color": {
+      "heroTitle": "Color Studio — Constructeur de thèmes et générateur de systèmes de design",
+      "heroDesc": "Boîte à outils couleur professionnelle — constructeur de thèmes, générateur de systèmes de design, palettes, dégradés, convertisseurs, vérification d'accessibilité WCAG et exports pour développeurs. Studio gratuit.",
+      "ctaLabel": "Ouvrir Color Studio",
+      "feature1Title": "Constructeur de thèmes",
+      "feature1Desc": "Générez un système de design complet à partir d'une couleur. Échelles 50-950 pour primary, secondary, accent et neutral avec conformité WCAG automatique.",
+      "feature2Title": "Convertisseur",
+      "feature2Desc": "Convertissez entre HEX, RGB, HSL, HSV, CMYK, CIE Lab, OKLab et OKLCH en un clic.",
+      "feature3Title": "Vérificateur d'accessibilité",
+      "feature3Desc": "Vérification du contraste WCAG 2.1 pour AA/AAA. Ajustement automatique des couleurs pour la conformité.",
+      "feature4Title": "Exports pour développeurs",
+      "feature4Desc": "Exportez en variables CSS, configuration Tailwind, SCSS, jetons Style Dictionary ou SVG. Génération complète de jetons de design.",
+      "feature5Title": "Simulateur de daltonisme",
+      "feature5Desc": "Simulez la protanopie, la deutéranopie, la tritanopie et l'achromatopsie pour vérifier vos conceptions.",
+      "exampleLabel": "Couleurs d'exemple",
+      "faq_q1": "Comment fonctionne le Constructeur de thèmes ?",
+      "faq_a1": "Entrez une couleur primaire et nous générons un système de design complet : échelles de 11 niveaux (50-950) pour primary, secondary, accent et neutral, plus des couleurs sémantiques, des thèmes clair et sombre, et des jetons pour développeurs. Choisissez parmi 30+ styles, 20+ types de projets et 15+ personnalités de marque.",
+      "faq_q2": "Puis-je exporter des jetons de design ?",
+      "faq_a2": "Oui. Exportez le système de design complet en propriétés personnalisées CSS, configuration Tailwind CSS v4, variables SCSS, LESS ou JSON Style Dictionary — prêt à copier-coller dans votre projet.",
+      "faq_q3": "Mes données sont-elles stockées ?",
+      "faq_a3": "Non. Tout se passe dans votre navigateur. Les favoris sont stockés dans localStorage et ne quittent jamais votre appareil.",
+      "faq_q4": "Comment fonctionne la vérification d'accessibilité ?",
+      "faq_a4": "Le Constructeur de thèmes vérifie automatiquement chaque paire texte-fond pour la conformité WCAG 2.1 AA et ajuste les couleurs si nécessaire. L'onglet de vérification du contraste fournit une analyse AA/AAA détaillée."
     }
   }
 }

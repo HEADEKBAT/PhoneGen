@@ -25,49 +25,49 @@ const siteUrl = rawSiteUrl.startsWith("http") ? rawSiteUrl : `https://${rawSiteU
 
 export const metadata: Metadata = {
   title: {
-    default: "PhoneGen — Valid Phone Number Generator | libphonenumber Test Data",
-    template: "%s | PhoneGen — Valid Phone Number Generator",
+    default: "GenCore — Free Online Generator Suite | Phone, Barcode & Credential Tools",
+    template: "%s | GenCore — Free Online Generator Suite",
   },
   description:
-    "Generate valid phone numbers that pass libphonenumber-js validation. Free generator for 85+ countries with international, national, E.164 formats. Official test numbers included. For developers, QA engineers, and testers.",
+    "GenCore is a free online generator suite with tools for phone numbers, barcodes, passwords, credentials, and more. Generate valid test data for developers, QA engineers, and professionals.",
   keywords: [
-    "valid phone number generator",
-    "libphonenumber test data",
-    "libphonenumber-js validator",
-    "phone number validation testing",
-    "realistic test phone numbers",
-    "generate valid phone numbers",
-    "valid E.164 number generator",
-    "phone number testing generator",
-    "генератор валидных номеров",
-    "тестовые номера телефонов",
-    "проверка валидации номеров",
+    "online generator suite",
+    "phone number generator",
+    "barcode generator",
+    "password generator",
+    "test data generator",
+    "developer tools",
+    "free online tools",
+    "генератор номеров",
+    "генератор штрихкодов",
+    "генератор паролей",
   ],
   metadataBase: new URL(siteUrl),
   alternates: {
     canonical: CANONICAL_URL,
     languages: {
-      ru: CANONICAL_URL + "/",
       en: CANONICAL_URL + "/",
+      ru: CANONICAL_URL + "/",
       de: CANONICAL_URL + "/",
       es: CANONICAL_URL + "/",
       fr: CANONICAL_URL + "/",
+      pt: CANONICAL_URL + "/",
     },
   },
   openGraph: {
-    title: "PhoneGen — Valid Phone Number Generator",
+    title: "GenCore — Free Online Generator Suite",
     description:
-      "Generate valid phone numbers that pass libphonenumber-js validation. Free generator for 85+ countries with multiple formats. Official test numbers for developers and QA.",
+      "Free online generator suite — phone numbers, barcodes, passwords, credentials, and more. For developers, QA engineers, and professionals.",
     url: CANONICAL_URL,
-    siteName: "PhoneGen",
+    siteName: "GenCore",
     locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "PhoneGen — Valid Phone Number Generator",
+    title: "GenCore — Free Online Generator Suite",
     description:
-      "Generate valid phone numbers that pass libphonenumber-js validation. Free generator for 85+ countries.",
+      "Free online generator suite — phone numbers, barcodes, passwords, credentials, and more. For developers, QA engineers, and professionals.",
   },
   robots: {
     index: true,
@@ -95,7 +95,7 @@ export default function RootLayout({
     >
       <head />
 
-      <body className="min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col grain-overlay">
         <ThemeProvider>
           <LanguageInitializer />
           <JsonLd />

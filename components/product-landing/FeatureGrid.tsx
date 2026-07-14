@@ -14,6 +14,11 @@ import {
   Sparkles,
   Key,
   Briefcase,
+  Palette,
+  Layers,
+  Droplets,
+  Eye,
+  Scan,
 } from 'lucide-react';
 import type { Feature } from '@/lib/config/productLanding';
 import { useTranslations } from '@/lib/i18n';
@@ -33,6 +38,11 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Sparkles,
   Key,
   Briefcase,
+  Palette,
+  Layers,
+  Droplets,
+  Eye,
+  Scan,
 };
 
 interface FeatureGridProps {

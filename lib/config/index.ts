@@ -33,6 +33,12 @@ export type { NavItem, NavSection } from './navigation';
 export { FEATURES, isFeatureEnabled } from './features';
 export type { FeatureFlag } from './features';
 export {
+  getProductLandingConfig,
+  LANDING_CONFIGS,
+  LANDING_PRODUCT_IDS,
+} from './productLanding';
+export type { ProductLandingConfig, ToolType, Feature, FAQ } from './productLanding';
+export {
   generateMetadata,
   SEO_LOCALES,
   BASE_URL,

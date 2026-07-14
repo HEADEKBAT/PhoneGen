@@ -170,6 +170,25 @@ const BARCODE_FAQS: FAQ[] = [
   { qKey: 'productLanding.barcode.faq_q3', aKey: 'productLanding.barcode.faq_a3' },
 ];
 
+/* ── Color Studio Features ─────────────────────────────────────────────────── */
+
+const COLOR_FEATURES: Feature[] = [
+  { iconName: 'Palette', titleKey: 'productLanding.color.feature1Title', descKey: 'productLanding.color.feature1Desc' },
+  { iconName: 'Layers', titleKey: 'productLanding.color.feature2Title', descKey: 'productLanding.color.feature2Desc' },
+  { iconName: 'Droplets', titleKey: 'productLanding.color.feature3Title', descKey: 'productLanding.color.feature3Desc' },
+  { iconName: 'Eye', titleKey: 'productLanding.color.feature4Title', descKey: 'productLanding.color.feature4Desc' },
+  { iconName: 'Download', titleKey: 'productLanding.color.feature5Title', descKey: 'productLanding.color.feature5Desc' },
+];
+
+/* ── Color Studio FAQs ───────────────────────────────────────────────────────── */
+
+const COLOR_FAQS: FAQ[] = [
+  { qKey: 'productLanding.color.faq_q1', aKey: 'productLanding.color.faq_a1' },
+  { qKey: 'productLanding.color.faq_q2', aKey: 'productLanding.color.faq_a2' },
+  { qKey: 'productLanding.color.faq_q3', aKey: 'productLanding.color.faq_a3' },
+  { qKey: 'productLanding.color.faq_q4', aKey: 'productLanding.color.faq_a4' },
+];
+
 /* ── Popular countries ──────────────────────────────────────────────────────── */
 
 const POPULAR_PHONE_COUNTRIES = ['US', 'GB', 'DE', 'FR', 'RU', 'CN', 'IN', 'BR', 'JP', 'KR', 'IT', 'ES'];
@@ -276,6 +295,17 @@ export const LANDING_CONFIGS: Record<string, ProductLandingConfig> = {
     heroDescKey: 'productLanding.barcode.heroDesc',
     ctaLabelKey: 'productLanding.barcode.ctaLabel',
     exampleLabelKey: 'productLanding.barcode.exampleLabel',
+  },
+  color: {
+    productId: 'color',
+    hasCountries: false,
+    toolTypes: [],
+    features: COLOR_FEATURES,
+    faqs: COLOR_FAQS,
+    heroTitleKey: 'productLanding.color.heroTitle',
+    heroDescKey: 'productLanding.color.heroDesc',
+    ctaLabelKey: 'productLanding.color.ctaLabel',
+    exampleLabelKey: 'productLanding.color.exampleLabel',
   },
 };
 

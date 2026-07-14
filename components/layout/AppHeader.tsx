@@ -61,10 +61,15 @@ export default function AppHeader() {
             className="flex items-center gap-2 shrink-0"
             aria-label="GenCore Home"
           >
+            <div className='relative size-9 overflow-hidden'>
+            <img src="/logo.png" alt="" />
+
+            </div>
             <span className="font-heading text-lg font-bold text-foreground tracking-tight">
-              Gen<span className="text-primary">Core</span>
+          <span className='text-accent'>Gen</span><span className="text-primary">Core</span>
             </span>
           </Link>
+
 
           {/* Desktop nav — center */}
           <nav className="hidden md:flex items-center gap-1">

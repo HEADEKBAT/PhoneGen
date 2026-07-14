@@ -49,83 +49,119 @@
   --radius-xl: calc(var(--radius) * 1.5);
 }
 
-/* ─────────── Light Theme ─────────── */
+/* ─────────── Light Theme — Cool & Airy ─────────── */
 :root {
-  --background: #fafafa;
-  --foreground: #0f172a;
-  --card: #ffffff;
-  --card-foreground: #0f172a;
+  /* Surface system: Background → Section → Card → Elevated → Floating */
+  --background: #f8fafc;
+  --foreground: #0b1221;
+  --card: #fcfcfd;
+  --card-foreground: #0b1221;
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  --primary: #4ade80;
+  --popover-foreground: #0b1221;
+
+  /* Primary — soft green that doesn't dominate */
+  --primary: #22c55e;
   --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #0f172a;
-  --muted: #f1f5f9;
+
+  /* Secondary / Muted */
+  --secondary: #f0f2f5;
+  --secondary-foreground: #0b1221;
+  --muted: #f0f2f5;
   --muted-foreground: #64748b;
-  --accent: #fb923c;
+
+  /* Accent — warm but restrained */
+  --accent: #f59e0b;
   --accent-foreground: #ffffff;
+
+  /* Semantic */
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #4ade80;
+
+  /* Borders with subtle primary tint instead of flat gray */
+  --border: rgba(34, 197, 94, 0.08);
+  --input: rgba(34, 197, 94, 0.10);
+  --ring: rgba(34, 197, 94, 0.25);
+
+  /* Radius */
   --radius: 1rem;
-  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.06);
-  --shadow-dropdown: 0 8px 24px rgba(0, 0, 0, 0.08);
 
-  --sidebar: #fafafa;
-  --sidebar-foreground: #0f172a;
-  --sidebar-primary: #4ade80;
+  /* Depth shadows — light theme, very soft */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-floating: 0 8px 30px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-dropdown: 0 12px 40px rgba(0, 0, 0, 0.08);
+
+  /* Sidebar — same surface hierarchy */
+  --sidebar: #f8fafc;
+  --sidebar-foreground: #0b1221;
+  --sidebar-primary: #22c55e;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f1f5f9;
-  --sidebar-accent-foreground: #0f172a;
-  --sidebar-border: #e2e8f0;
-  --sidebar-ring: #4ade80;
+  --sidebar-accent: #f0f2f5;
+  --sidebar-accent-foreground: #0b1221;
+  --sidebar-border: rgba(34, 197, 94, 0.08);
+  --sidebar-ring: rgba(34, 197, 94, 0.25);
 
-  --chart-1: #4ade80;
-  --chart-2: #22c55e;
-  --chart-3: #fb923c;
+  /* Charts */
+  --chart-1: #22c55e;
+  --chart-2: #16a34a;
+  --chart-3: #f59e0b;
   --chart-4: #f97316;
   --chart-5: #ef4444;
 }
 
-/* ─────────── Dark Theme ─────────── */
+/* ─────────── Dark Theme — Deep & Rich ─────────── */
 .dark {
-  --background: #09090b;
-  --foreground: #fafafa;
-  --card: #18181b;
-  --card-foreground: #fafafa;
-  --popover: #18181b;
-  --popover-foreground: #fafafa;
+  /* Surface system: deeper, more atmospheric than simple inversion */
+  --background: #08090e;
+  --foreground: #f0f1f5;
+  --card: #111218;
+  --card-foreground: #f0f1f5;
+  --popover: #16171f;
+  --popover-foreground: #f0f1f5;
+
+  /* Primary — glowing green */
   --primary: #4ade80;
-  --primary-foreground: #09090b;
-  --secondary: #27272a;
-  --secondary-foreground: #fafafa;
-  --muted: #27272a;
-  --muted-foreground: #a1a1aa;
-  --accent: #fb923c;
-  --accent-foreground: #09090b;
+  --primary-foreground: #08090e;
+
+  /* Secondary / Muted — subtle, layered */
+  --secondary: #1a1b23;
+  --secondary-foreground: #f0f1f5;
+  --muted: #1a1b23;
+  --muted-foreground: #8b8d97;
+
+  /* Accent */
+  --accent: #fbbf24;
+  --accent-foreground: #08090e;
+
+  /* Semantic */
   --destructive: #ef4444;
-  --destructive-foreground: #09090b;
-  --border: #27272a;
-  --input: #27272a;
-  --ring: #4ade80;
-  --shadow-card: none;
-  --shadow-dropdown: none;
+  --destructive-foreground: #f0f1f5;
 
-  --sidebar: #18181b;
-  --sidebar-foreground: #fafafa;
+  /* Borders — subtle, no harsh lines */
+  --border: rgba(74, 222, 128, 0.06);
+  --input: rgba(74, 222, 128, 0.08);
+  --ring: rgba(74, 222, 128, 0.20);
+
+  /* Depth shadows — dark theme uses luminous depth (glow, not cast shadow) */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-floating: 0 8px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-dropdown: 0 12px 48px rgba(0, 0, 0, 0.6);
+
+  /* Sidebar */
+  --sidebar: #111218;
+  --sidebar-foreground: #f0f1f5;
   --sidebar-primary: #4ade80;
-  --sidebar-primary-foreground: #09090b;
-  --sidebar-accent: #27272a;
-  --sidebar-accent-foreground: #fafafa;
-  --sidebar-border: #27272a;
-  --sidebar-ring: #4ade80;
+  --sidebar-primary-foreground: #08090e;
+  --sidebar-accent: #1a1b23;
+  --sidebar-accent-foreground: #f0f1f5;
+  --sidebar-border: rgba(74, 222, 128, 0.06);
+  --sidebar-ring: rgba(74, 222, 128, 0.20);
 
+  /* Charts */
   --chart-1: #4ade80;
   --chart-2: #22c55e;
-  --chart-3: #fb923c;
+  --chart-3: #fbbf24;
   --chart-4: #f97316;
   --chart-5: #ef4444;
 }
@@ -141,7 +177,21 @@
   }
   html {
     @apply font-sans;
-    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  /* Enhanced typography defaults */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    line-height: 1.7;
   }
 }
 
@@ -164,14 +214,19 @@ body {
   scrollbar-width: none;
 }
 
-/* Subtle shimmer animation for loading */
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+/* ─────────── Subtle grain texture overlay ─────────── */
+.grain-overlay::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.015;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
 }
 
-.shimmer {
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%);
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
+.dark .grain-overlay::before {
+  opacity: 0.025;
 }

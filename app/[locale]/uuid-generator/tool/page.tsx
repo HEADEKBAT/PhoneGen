@@ -1,5 +1,5 @@
 import { type Metadata } from 'next';
-import CredentialGeneratorClient from '../../credential-generator/client';
+import { CredentialClientLoader } from '@/components/dynamic';
 import { getProduct, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
 import { getT } from '@/lib/i18n/server';
 import Breadcrumb from '@/components/Breadcrumb';
@@ -55,7 +55,7 @@ export default async function UuidGeneratorToolPage({ params }: Props) {
         ]}
       />
 
-      <CredentialGeneratorClient initialMode={{ activeTab: 'pins-secrets', secretMode: 'uuid' }} />
+      <CredentialClientLoader initialMode={{ activeTab: 'pins-secrets', secretMode: 'uuid' }} />
     </div>
   );
 }
