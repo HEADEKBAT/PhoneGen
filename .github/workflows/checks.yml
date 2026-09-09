@@ -58,6 +58,9 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Tests
+        run: pnpm test
+
       # ── Build last: slowest, and the steps above localise most failures ──
 
       - name: Build
