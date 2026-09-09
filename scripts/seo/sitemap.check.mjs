@@ -10,6 +10,13 @@
  *      in lib/config/legacyRedirects.ts. Their real URLs are already listed
  *      under the product folder, so the old entry only dilutes the file.
  *
+ *   3. Pages whose canonical URL points at a different page. A page that builds
+ *      its metadata from a product record inherits that product's slug as its
+ *      canonical unless it passes an explicit `path`. Twenty-six pages did
+ *      exactly that and told search engines they were duplicates of their
+ *      product landing page, which keeps them out of the index no matter how
+ *      well they are linked.
+ *
  * It reconstructs the sitemap's URL set by reading the same registries
  * app/sitemap.ts imports, rather than executing it — the sitemap is TypeScript
  * with Next.js imports, so running it needs the whole toolchain. The PREFIXES
@@ -165,6 +172,47 @@ for (const [file, prefixes] of PREFIXES) {
   }
 }
 
+/* ── Canonical URLs ───────────────────────────────────────────────────────── */
+
+/**
+ * A page using `type: 'product'` metadata must either live at the product's own
+ * slug or declare `path`. Anything else is a page that calls itself a duplicate
+ * of another page.
+ */
+function findForeignCanonicals() {
+  const productSlugById = new Map();
+  {
+    const text = readFileSync(join(CONFIG_DIR, 'products.ts'), 'utf8');
+    const ENTRY = /\bid:\s*'([^']+)',\s*\n\s*slug:\s*'([^']+)'/g;
+    let match;
+    while ((match = ENTRY.exec(text)) !== null) productSlugById.set(match[1], match[2]);
+  }
+
+  const offenders = [];
+  for (const route of staticRoutes) {
+    const file = join(APP_DIR, route, 'page.tsx');
+    if (!existsSync(file)) continue;
+
+    const source = readFileSync(file, 'utf8');
+    if (!/type:\s*'product'/.test(source)) continue;
+    if (/\bpath:\s*'/.test(source)) continue; // declares its own canonical
+
+    const product = /getProduct\('([^']+)'\)/.exec(source);
+    if (!product) continue;
+
+    const slug = productSlugById.get(product[1]);
+    if (!slug || route === slug) continue;
+
+    // A redirected page is never served, so its canonical cannot be reached.
+    if (redirected.has(route)) continue;
+
+    offenders.push({ route, canonical: slug });
+  }
+  return offenders;
+}
+
+const foreignCanonicals = findForeignCanonicals();
+
 /* ── Diff ─────────────────────────────────────────────────────────────────── */
 
 /* A redirected page is expected to be absent from the sitemap, so it is not a
@@ -193,6 +241,7 @@ if (asJson) {
         uncovered,
         excludedAsRedirects: excluded,
         advertisedRedirects,
+        foreignCanonicals,
         dynamic: dynamicRoutes,
       },
       null,
@@ -217,6 +266,14 @@ if (asJson) {
     }
   }
 
+  if (foreignCanonicals.length) {
+    console.log(`\n✗ ${foreignCanonicals.length} page(s) name another page as their canonical URL:`);
+    for (const { route, canonical } of foreignCanonicals) {
+      console.log(`      /${route}  →  /${canonical}`);
+    }
+    console.log('  Pass `path` to generateMetadata so each page claims its own URL.');
+  }
+
   if (advertisedRedirects.length) {
     console.log(`\n✗ ${advertisedRedirects.length} sitemap URL(s) answer with a redirect:`);
     for (const route of advertisedRedirects) console.log(`      /${route}`);
@@ -229,4 +286,8 @@ if (asJson) {
   }
 }
 
-process.exit(uncovered.length > 0 || advertisedRedirects.length > 0 ? 1 : 0);
+process.exit(
+  uncovered.length > 0 || advertisedRedirects.length > 0 || foreignCanonicals.length > 0
+    ? 1
+    : 0,
+);
