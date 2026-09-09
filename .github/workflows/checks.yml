@@ -1,0 +1,66 @@
+name: checks
+
+# Everything here is runnable locally as `pnpm check`. The workflow exists so a
+# push cannot quietly skip it.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # ── Fast, dependency-free audits first ──────────────────────────────
+      # These need no build and fail in seconds, so a broken registry or a
+      # missing translation is reported before the slow steps run.
+
+      - name: Translations
+        # Fails when a key the code uses is missing from en.json, or when a
+        # locale has drifted from it. Both render as raw key strings in the UI.
+        run: node scripts/i18n/check.mjs
+
+      - name: Sitemap coverage
+        # Fails when a page exists but the sitemap never emits it, or when the
+        # sitemap advertises a URL that answers with a redirect.
+        run: node scripts/seo/sitemap.check.mjs
+
+      - name: Background removal
+        # Pure-logic checks for the segmentation core, including the regression
+        # where a global colour threshold punched a hole through a white subject.
+        run: node scripts/image-studio/segmentation.check.mjs
+
+      # ── Compiler and linter ─────────────────────────────────────────────
+
+      - name: Types
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      # ── Build last: slowest, and the steps above localise most failures ──
+
+      - name: Build
+        run: pnpm build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
