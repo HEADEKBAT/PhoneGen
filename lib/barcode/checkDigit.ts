@@ -35,14 +35,28 @@ function algoForType(type: BarcodeType): CheckDigitAlgo | null {
 }
 
 /**
+ * Weight for one data digit in the EAN/UPC family.
+ *
+ * The alternation is anchored at the RIGHT: the digit closest to the check
+ * digit always carries weight 3, and weights alternate 3, 1, 3, 1 leaving it.
+ *
+ * Anchoring at the left instead — which this used to do — is only correct when
+ * the data length happens to be odd. UPC-A (11 data digits) and EAN-8 (7) are
+ * odd and came out right; EAN-13, ISBN-13, ISSN and ISMN all carry 12 data
+ * digits and came out wrong roughly nine times in ten. See GS1 General
+ * Specifications, section 7.9.
+ */
+function eanUpcWeight(index: number, length: number): number {
+  return (length - 1 - index) % 2 === 0 ? 3 : 1;
+}
+
+/**
  * Calculate check digit using the EAN/UPC algorithm (weights 1/3).
  */
 function eanUpcCheckDigit(digits: number[]): number {
   let sum = 0;
   for (let i = 0; i < digits.length; i++) {
-    // Weights: 3 for odd positions (1-indexed), 1 for even positions
-    const weight = (i % 2 === 0) ? 3 : 1;
-    sum += digits[i] * weight;
+    sum += digits[i] * eanUpcWeight(i, digits.length);
   }
   const mod = (10 - (sum % 10)) % 10;
   return mod;
@@ -121,12 +135,14 @@ export function explainCheckDigit(code: string, type: BarcodeType): CheckDigitEx
     steps.push(`1. Take the first ${digits.length} digits: ${dataWithoutCd}`);
 
     const weighted = digits.map((d, i) => {
-      const weight = (i % 2 === 0) ? 3 : 1;
+      const weight = eanUpcWeight(i, digits.length);
       return { d, weight, product: d * weight };
     });
 
     const weightDesc = weighted.map(w => `${w.d} × ${w.weight}`).join(' + ');
-    steps.push(`2. Apply weights (alternating 3, 1, 3, 1…): ${weightDesc}`);
+    steps.push(
+      `2. Apply weights, alternating from the right so the last data digit is ×3: ${weightDesc}`,
+    );
 
     const sum = weighted.reduce((s, w) => s + w.product, 0);
     steps.push(`3. Sum of weighted digits: ${sum}`);
