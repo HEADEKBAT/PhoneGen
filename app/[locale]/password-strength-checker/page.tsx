@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return seoGenerateMetadata({
     type: 'custom',
     locale,
-    path: '/password-strength-checker',
+    path: '/credential-generator/password-strength-checker',
     title,
     description,
   } satisfies SEOCustomPage);

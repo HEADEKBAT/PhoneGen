@@ -26,6 +26,8 @@ export interface LandingTool {
   desc: string;
   icon: string;
   mode: string;
+  /** Optional slug for the new /credential-generator/{slug} URL. Falls back to legacy tool?mode=xxx. */
+  slug?: string;
 }
 
 export interface UseCase {
@@ -130,17 +132,17 @@ const AUDIENCE: AudienceCard[] = [
 /* ── Popular Tools ─────────────────────────────────────────────────────────── */
 
 const TOOLS: LandingTool[] = [
-  { id: 'password', label: 'Password Generator', desc: 'Secure random passwords with full control', icon: 'Key', mode: 'random' },
-  { id: 'passphrase', label: 'Passphrase Generator', desc: 'Memorable XKCD-style word lists', icon: 'KeyRound', mode: 'passphrase' },
-  { id: 'uuid', label: 'UUID Generator', desc: 'UUID v4 random identifiers', icon: 'Hash', mode: 'uuid' },
-  { id: 'uuid-v7', label: 'UUID v7 Generator', desc: 'Time-ordered UUID v7 identifiers', icon: 'Clock', mode: 'uuid-v7' },
-  { id: 'pin', label: 'Random PIN Generator', desc: 'Numeric PIN codes of any length', icon: 'Scan', mode: 'pin' },
-  { id: 'jwt', label: 'JWT Secret Generator', desc: 'Base64URL-encoded HMAC secrets', icon: 'Lock', mode: 'jwt' },
-  { id: 'webhook', label: 'Webhook Secret Generator', desc: 'whsec_-prefixed signing secrets', icon: 'Webhook', mode: 'webhook' },
-  { id: 'api-key', label: 'API Key Generator', desc: 'Stripe-style prefixed API keys', icon: 'Key', mode: 'api-key' },
-  { id: 'token', label: 'Random Token Generator', desc: 'Hex, Base64, or Base64URL tokens', icon: 'Shuffle', mode: 'token' },
+  { id: 'password', label: 'Password Generator', desc: 'Secure random passwords with full control', icon: 'Key', mode: 'random', slug: 'password-generator' },
+  { id: 'passphrase', label: 'Passphrase Generator', desc: 'Memorable XKCD-style word lists', icon: 'KeyRound', mode: 'passphrase', slug: 'passphrase-generator' },
+  { id: 'uuid', label: 'UUID Generator', desc: 'UUID v4 random identifiers', icon: 'Hash', mode: 'uuid', slug: 'uuid-generator' },
+  { id: 'uuid-v7', label: 'UUID v7 Generator', desc: 'Time-ordered UUID v7 identifiers', icon: 'Clock', mode: 'uuid-v7', slug: 'uuid-v7-generator' },
+  { id: 'pin', label: 'Random PIN Generator', desc: 'Numeric PIN codes of any length', icon: 'Scan', mode: 'pin', slug: 'random-pin-generator' },
+  { id: 'jwt', label: 'JWT Secret Generator', desc: 'Base64URL-encoded HMAC secrets', icon: 'Lock', mode: 'jwt', slug: 'jwt-secret-generator' },
+  { id: 'webhook', label: 'Webhook Secret Generator', desc: 'whsec_-prefixed signing secrets', icon: 'Webhook', mode: 'webhook', slug: 'webhook-secret-generator' },
+  { id: 'api-key', label: 'API Key Generator', desc: 'Stripe-style prefixed API keys', icon: 'Key', mode: 'api-key', slug: 'api-key-generator' },
+  { id: 'token', label: 'Random Token Generator', desc: 'Hex, Base64, or Base64URL tokens', icon: 'Shuffle', mode: 'token', slug: 'random-token-generator' },
   { id: 'hash', label: 'Hash Generator', desc: 'MD5, SHA-1, SHA-256, SHA-512 hashes', icon: 'Fingerprint', mode: 'hash' },
-  { id: 'analyzer', label: 'Password Analyzer', desc: 'Check strength, entropy, and crack time', icon: 'ShieldCheck', mode: 'strength' },
+  { id: 'analyzer', label: 'Password Analyzer', desc: 'Check strength, entropy, and crack time', icon: 'ShieldCheck', mode: 'strength', slug: 'password-strength-checker' },
 ];
 
 /* ── Use Cases ─────────────────────────────────────────────────────────────── */

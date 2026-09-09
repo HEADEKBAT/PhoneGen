@@ -10,12 +10,14 @@ export interface CredentialClientProps {
   initialMode?: {
     activeTab?: 'passwords' | 'pins-secrets' | 'dev-pairs' | 'history';
     passwordMode?: 'random' | 'human' | 'passphrase' | 'pronounceable';
-    secretMode?: 'uuid' | 'jwt' | 'api-key' | 'webhook' | 'hex' | 'base64';
+    secretMode?: 'uuid' | 'uuid-v7' | 'jwt' | 'api-key' | 'webhook' | 'token' | 'session' | 'oauth' | 'hex' | 'base64';
     pinLength?: 4 | 6 | 8;
   };
+  /** When false, renders only CredentialTabs (no page chrome — for ToolShell embedding). */
+  standalone?: boolean;
 }
 
-function CredentialContent({ initialMode }: CredentialClientProps) {
+function CredentialContent({ initialMode, standalone = true }: CredentialClientProps) {
   const store = useCredentialGeneratorStore();
   const searchParams = useSearchParams();
 
@@ -105,9 +107,22 @@ function CredentialContent({ initialMode }: CredentialClientProps) {
     if (!initialMode) return;
     if (initialMode.activeTab) store.setActiveTab(initialMode.activeTab);
     if (initialMode.passwordMode) store.setPasswordMode(initialMode.passwordMode);
-    if (initialMode.secretMode) store.setSecretMode(initialMode.secretMode);
+    if (initialMode.secretMode) {
+      // Map extended secret modes to store-compatible values
+      const modeMap: Record<string, string> = {
+        'token': 'uuid',
+        'session': 'session',
+        'uuid-v7': 'uuid-v7',
+        'oauth': 'oauth',
+      };
+      store.setSecretMode((modeMap[initialMode.secretMode] || initialMode.secretMode) as any);
+    }
     if (initialMode.pinLength) store.setPinLength(initialMode.pinLength);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (!standalone) {
+    return <CredentialTabs />;
+  }
 
   return (
     <main className="flex-1">

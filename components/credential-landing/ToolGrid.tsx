@@ -35,7 +35,7 @@ export default function ToolGrid({ tools, locale, title, subtitle }: ToolGridPro
             return (
               <Link
                 key={tool.id}
-                href={`/${locale}/credential-generator/tool?mode=${tool.mode}`}
+                href={tool.slug ? `/${locale}/credential-generator/${tool.slug}` : `/${locale}/credential-generator/tool?mode=${tool.mode}`}
                 className="flex flex-col items-center gap-2 p-5 rounded-xl border border-border bg-card hover:border-primary/40 hover:shadow-sm transition-all group"
               >
                 <div className="size-10 rounded-lg bg-primary/5 border border-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">

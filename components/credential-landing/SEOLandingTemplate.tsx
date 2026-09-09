@@ -28,7 +28,7 @@ export default function SEOLandingPage({ locale, config }: SEOLandingPageProps) 
         <SEOHero
           title={config.heroTitle}
           subtitle={config.heroSubtitle}
-          ctaHref={`/${locale}/credential-generator/tool?mode=${config.mode}`}
+          ctaHref={`/${locale}/credential-generator/${config.slug}`}
         />
 
         <ToolQuickPreview mode={config.mode} />
@@ -37,7 +37,7 @@ export default function SEOLandingPage({ locale, config }: SEOLandingPageProps) 
 
         <CTASection
           labelKey={`Generate ${config.heroTitle}`}
-          href={`/${locale}/credential-generator/tool?mode=${config.mode}`}
+          href={`/${locale}/credential-generator/${config.slug}`}
         />
       </main>
     </div>

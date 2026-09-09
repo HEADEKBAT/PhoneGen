@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return seoGenerateMetadata({
     type: 'custom',
     locale,
-    path: '/session-secret-generator',
+    path: '/credential-generator/session-secret-generator',
     title,
     description,
   } satisfies SEOCustomPage);

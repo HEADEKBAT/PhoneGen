@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return seoGenerateMetadata({
     type: 'custom',
     locale,
-    path: '/random-token-generator',
+    path: '/credential-generator/random-token-generator',
     title,
     description,
   } satisfies SEOCustomPage);
