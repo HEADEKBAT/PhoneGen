@@ -29,6 +29,16 @@ export interface SEOProductPage {
   title?: string;
   /** Override description (defaults to product.description) */
   description?: string;
+  /**
+   * The page's own path, without the locale prefix, when it is not the
+   * product's landing page — for example '/linear-gradient-generator'.
+   *
+   * Without this the canonical URL defaults to `/{product.slug}`, which told
+   * search engines that every standalone landing page was a duplicate of its
+   * product page. Twenty of them declared themselves duplicates of
+   * /color-generator and so could never be indexed on their own.
+   */
+  path?: string;
 }
 
 export interface SEOGeneratorPage {
@@ -151,7 +161,9 @@ export function generateMetadata(page: SEOPage): Metadata {
       const { locale, product, title: overrideTitle, description: overrideDesc } = page;
       const title = (overrideTitle || product.title) + titleSuffix(locale);
       const description = overrideDesc || product.description;
-      const path = `/${product.slug}`;
+      // A page that lives somewhere other than the product root must say so,
+      // or it declares itself a duplicate of the product landing page.
+      const path = page.path ?? `/${product.slug}`;
       const alternates = generateHreflang(locale, path);
 
       return {
