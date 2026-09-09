@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return seoGenerateMetadata({
     type: 'custom',
     locale,
-    path: '/upc-generator',
+    path: '/barcode-generator/upc-generator',
     title,
     description,
   } satisfies SEOCustomPage);

@@ -48,7 +48,7 @@ export default function BarcodeSEOPage({ locale, config, title, description }: B
         items={[
           { label: 'GenCore', href: `/${locale}` },
           { label: 'Barcode Generator', href: `/${locale}/barcode-generator` },
-          { label: config.heroTitle, href: `/${locale}/${config.slug}` },
+          { label: config.heroTitle, href: `/${locale}/barcode-generator/${config.slug}` },
         ]}
       />
 
@@ -100,7 +100,7 @@ export default function BarcodeSEOPage({ locale, config, title, description }: B
         {/* CTA */}
         <CTASection
           labelKey={config.ctaLabel || `Generate ${config.heroTitle}`}
-          href={`/${locale}/barcode-generator/tool?type=${config.barcodeType}`}
+          href={`/${locale}/barcode-generator/${config.slug}`}
         />
       </main>
     </div>

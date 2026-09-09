@@ -83,9 +83,19 @@ const TABS: { id: TabName; label: string; icon: typeof Scan }[] = [
 
 /* ── Main Component ─────────────────────────────────────────────────────── */
 
-export default function BarcodeStudioClient() {
-  const [activeTab, setActiveTab] = useState<TabName>('product');
-  const [barcodeType, setBarcodeType] = useState<BarcodeType>('ean13');
+interface BarcodeStudioClientProps {
+  standalone?: boolean;
+  initialBarcodeType?: BarcodeType;
+  initialTab?: TabName;
+}
+
+export default function BarcodeStudioClient({
+  standalone = true,
+  initialBarcodeType = 'ean13',
+  initialTab,
+}: BarcodeStudioClientProps) {
+  const [activeTab, setActiveTab] = useState<TabName>(initialTab ?? (initialBarcodeType === 'ean13' || initialBarcodeType === 'ean8' || initialBarcodeType === 'upca' || initialBarcodeType === 'upce' || initialBarcodeType === 'gtin' || initialBarcodeType === 'isbn13' || initialBarcodeType === 'issn' || initialBarcodeType === 'ismn' ? 'product' : 'industrial'));
+  const [barcodeType, setBarcodeType] = useState<BarcodeType>(initialBarcodeType);
   const [dataInput, setDataInput] = useState('');
   const [settings, setSettings] = useState<SettingsState>(DEFAULT_SETTINGS);
   const [bulkCount, setBulkCount] = useState(10);
@@ -236,7 +246,7 @@ export default function BarcodeStudioClient() {
   }, [dataInput, barcodeType]);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 sm:px-6 py-8">
+    <div className={standalone ? "mx-auto max-w-5xl px-4 sm:px-6 py-8" : ""}>
       {/* ── Tabs ───────────────────────────────────────────────────── */}
       <div className="flex flex-wrap gap-1 mb-6 border-b border-border pb-2">
         {TABS.map((tab) => {

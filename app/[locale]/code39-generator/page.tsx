@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return seoGenerateMetadata({
     type: 'custom',
     locale,
-    path: '/code39-generator',
+    path: '/barcode-generator/code39-generator',
     title,
     description,
   } satisfies SEOCustomPage);

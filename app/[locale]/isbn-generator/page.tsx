@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return seoGenerateMetadata({
     type: 'custom',
     locale,
-    path: '/isbn-generator',
+    path: '/barcode-generator/isbn-generator',
     title,
     description,
   } satisfies SEOCustomPage);

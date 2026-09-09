@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return seoGenerateMetadata({
     type: 'custom',
     locale,
-    path: '/gtin-generator',
+    path: '/barcode-generator/gtin-generator',
     title,
     description,
   } satisfies SEOCustomPage);
