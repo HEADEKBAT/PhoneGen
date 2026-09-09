@@ -101,11 +101,13 @@ export function GradientCollectionsTab() {
       {viewMode === 'grid' ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
           {presets.slice(0, 50).map((preset) => (
-            <button
+            <div
               key={preset.id}
-              type="button"
+              role="button"
+              tabIndex={0}
               onClick={() => handleSelectPreset(preset)}
-              className="group text-left rounded-xl border border-border/50 overflow-hidden hover:border-primary/50 transition-colors bg-card"
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleSelectPreset(preset); } }}
+              className="group text-left rounded-xl border border-border/50 overflow-hidden hover:border-primary/50 transition-colors bg-card cursor-pointer"
             >
               <div className="relative">
                 <GradientPreviewCard gradient={preset.gradient} height={80} />
@@ -125,7 +127,7 @@ export function GradientCollectionsTab() {
                   </span>
                 </div>
               </div>
-            </button>
+            </div>
           ))}
         </div>
       ) : (

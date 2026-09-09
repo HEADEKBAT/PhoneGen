@@ -5,9 +5,18 @@ interface GradientPositionControlProps {
   y: number;
   onChangeX: (x: number) => void;
   onChangeY: (y: number) => void;
+  onCommitX?: (x: number) => void;
+  onCommitY?: (y: number) => void;
 }
 
-export function GradientPositionControl({ x, y, onChangeX, onChangeY }: GradientPositionControlProps) {
+export function GradientPositionControl({
+  x, y, onChangeX, onChangeY, onCommitX, onCommitY,
+}: GradientPositionControlProps) {
+  const handleCommit = () => {
+    onCommitX?.(x);
+    onCommitY?.(y);
+  };
+
   return (
     <div className="space-y-2">
       <label className="text-xs font-medium text-muted-foreground">Position</label>
@@ -17,8 +26,12 @@ export function GradientPositionControl({ x, y, onChangeX, onChangeY }: Gradient
         className="relative w-full h-24 rounded-lg border border-border/50 bg-muted/20 cursor-crosshair overflow-hidden"
         onClick={(e) => {
           const rect = e.currentTarget.getBoundingClientRect();
-          onChangeX((e.clientX - rect.left) / rect.width);
-          onChangeY((e.clientY - rect.top) / rect.height);
+          const nx = (e.clientX - rect.left) / rect.width;
+          const ny = (e.clientY - rect.top) / rect.height;
+          onChangeX(nx);
+          onChangeY(ny);
+          onCommitX?.(nx);
+          onCommitY?.(ny);
         }}
       >
         {/* Crosshair */}
@@ -38,6 +51,8 @@ export function GradientPositionControl({ x, y, onChangeX, onChangeY }: Gradient
             max={100}
             value={Math.round(x * 100)}
             onChange={(e) => onChangeX(parseInt(e.target.value) / 100)}
+            onMouseUp={(e) => onCommitX?.(parseInt(e.currentTarget.value) / 100)}
+            onTouchEnd={(e) => onCommitX?.(parseInt(e.currentTarget.value) / 100)}
             className="w-full h-1 accent-primary"
           />
         </div>
@@ -49,6 +64,8 @@ export function GradientPositionControl({ x, y, onChangeX, onChangeY }: Gradient
             max={100}
             value={Math.round(y * 100)}
             onChange={(e) => onChangeY(parseInt(e.target.value) / 100)}
+            onMouseUp={(e) => onCommitY?.(parseInt(e.currentTarget.value) / 100)}
+            onTouchEnd={(e) => onCommitY?.(parseInt(e.currentTarget.value) / 100)}
             className="w-full h-1 accent-primary"
           />
         </div>

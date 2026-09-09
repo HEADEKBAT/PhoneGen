@@ -82,15 +82,33 @@ function TabLoader() {
   );
 }
 
+/* ─── Props ─────────────────────────────────────────────────────────------ */
+
+interface ColorStudioClientProps {
+  standalone?: boolean;
+  initialMode?: ColorMode;
+}
+
 /* ─── Main Component ─────────────────────────────────────────────────────── */
 
-export default function ColorStudioClient() {
+export default function ColorStudioClient({
+  standalone = true,
+  initialMode,
+}: ColorStudioClientProps) {
   const { mode, setMode } = useColorStudioStore();
   const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
 
   // Read ?mode=X from URL on mount for deep-linking from SEO pages
   useEffect(() => {
+    if (initialMode) {
+      const validModes = TABS.map((t) => t.id) as string[];
+      if (validModes.includes(initialMode)) {
+        setMode(initialMode as ColorMode);
+        setMounted(true);
+        return;
+      }
+    }
     const modeParam = searchParams?.get('mode');
     if (modeParam) {
       const validModes = TABS.map((t) => t.id) as string[];
@@ -99,7 +117,7 @@ export default function ColorStudioClient() {
       }
     }
     setMounted(true);
-  }, [searchParams, setMode]);
+  }, [searchParams, setMode, initialMode]);
 
   if (!mounted) {
     return (
@@ -109,8 +127,8 @@ export default function ColorStudioClient() {
     );
   }
 
-  return (
-    <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 py-6">
+  const content = (
+    <>
       {/* ── Tabs ──────────────────────────────────────────────────────────── */}
       <div className="flex overflow-x-auto gap-1 border-b border-border pb-0 no-scrollbar">
         {TABS.map((tab) => (
@@ -136,6 +154,12 @@ export default function ColorStudioClient() {
           <TabContent mode={mode} />
         </Suspense>
       </div>
-    </div>
+    </>
   );
+
+  if (standalone) {
+    return <div className="mx-auto w-full max-w-5xl px-4 sm:px-6 py-6">{content}</div>;
+  }
+
+  return content;
 }

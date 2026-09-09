@@ -2,9 +2,8 @@
 
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { useGradientStudioStore } from '@/lib/stores/gradientStudio';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Copy, Check } from 'lucide-react';
 import { ColorPicker } from '../shared/ColorPicker';
-import { DEFAULT_AURORA_STYLES } from '@/lib/color-studio/gradientTypes';
 import type { MeshPoint } from '@/lib/color-studio/gradientTypes';
 
 const DEFAULT_COLORS = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a'];
@@ -96,6 +95,18 @@ function hexToRGBA(hex: string, alpha: number): string {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
+/** Generate a CSS gradient string that approximates the mesh from its outermost points. */
+function meshToCSS(points: MeshPoint[]): string {
+  if (points.length === 0) return '/* no mesh points */';
+  if (points.length === 1) return `background: ${points[0].color};`;
+
+  // Sort stops by their position on the canvas (top-left to bottom-right)
+  const sorted = [...points].sort((a, b) => (a.x + a.y) - (b.x + b.y));
+  const stops = sorted.map((p) => `${p.color} ${Math.round((p.x + p.y) / 2 * 100)}%`).join(', ');
+
+  return `background: radial-gradient(ellipse at center, ${stops});`;
+}
+
 export function GradientMeshTab() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -112,8 +123,8 @@ export function GradientMeshTab() {
   );
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const [canvasSize, setCanvasSize] = useState({ w: 600, h: 340 });
-  const [isDragging, setIsDragging] = useState(false);
   const isDraggingRef = useRef(false);
+  const [cssCopied, setCssCopied] = useState(false);
 
   // Handle resize
   useEffect(() => {
@@ -135,6 +146,8 @@ export function GradientMeshTab() {
     canvas.height = canvasSize.h;
     renderMesh(canvas, points);
   }, [canvasSize, points]);
+
+  const cssCode = meshToCSS(points);
 
   const handleCanvasClick = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
@@ -170,7 +183,6 @@ export function GradientMeshTab() {
 
   const handleMouseDown = useCallback(() => {
     isDraggingRef.current = true;
-    setIsDragging(true);
   }, []);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -194,7 +206,6 @@ export function GradientMeshTab() {
 
   const handleMouseUp = useCallback(() => {
     isDraggingRef.current = false;
-    setIsDragging(false);
   }, []);
 
   const handleRemovePoint = (idx: number) => {
@@ -220,6 +231,12 @@ export function GradientMeshTab() {
     setPoints((prev) => [...prev, newPoint]);
   };
 
+  const handleCopyCss = useCallback(async () => {
+    await navigator.clipboard.writeText(cssCode);
+    setCssCopied(true);
+    setTimeout(() => setCssCopied(false), 1500);
+  }, [cssCode]);
+
   return (
     <div className="space-y-4">
       {/* Canvas mesh editor */}
@@ -242,7 +259,7 @@ export function GradientMeshTab() {
       {/* Toolbar */}
       <div className="flex items-center justify-between">
         <p className="text-xs text-muted-foreground">
-          {points.length} points · Click to add · Drag to move
+          {points.length} points · Click canvas to add point · Drag to move
         </p>
         <button
           type="button"
@@ -322,6 +339,24 @@ export function GradientMeshTab() {
           </div>
         </div>
       )}
+
+      {/* ── Code Output ──────────────────────────────────────────────── */}
+      <div className="rounded-xl border border-border/50 bg-card overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-2 border-b border-border/30">
+          <h4 className="text-xs font-semibold text-foreground">Generated CSS</h4>
+          <button
+            type="button"
+            onClick={handleCopyCss}
+            className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+          >
+            {cssCopied ? <Check size={12} /> : <Copy size={12} />}
+            {cssCopied ? 'Copied!' : 'Copy'}
+          </button>
+        </div>
+        <pre className="text-[12px] font-mono p-4 overflow-x-auto text-foreground leading-relaxed bg-muted/30 select-all cursor-text">
+          {cssCode}
+        </pre>
+      </div>
     </div>
   );
 }

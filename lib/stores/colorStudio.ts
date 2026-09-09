@@ -11,6 +11,9 @@ import type { DesignSystem } from '@/lib/color-studio/themeBuilder';
 
 /* ── Types ───────────────────────────────────────────────────────────────── */
 
+export type PaletteSubMode = 'harmony' | 'style' | 'random';
+export type ContrastView = 'simple' | 'text-roles' | 'components' | 'audit';
+
 export type ColorMode =
   | 'random'
   | 'palette'
@@ -62,6 +65,10 @@ interface ColorStudioState {
   setFgColor: (hex: string) => void;
   setBgColor: (hex: string) => void;
 
+  /* ── Contrast view mode ── */
+  contrastView: ContrastView;
+  setContrastView: (view: ContrastView) => void;
+
   /* ── Undo / Redo ── */
   history: string[][];
   historyIndex: number;
@@ -84,6 +91,14 @@ interface ColorStudioState {
   setThemePersonality: (personality: string) => void;
   setThemeMode: (mode: 'light' | 'dark') => void;
   setDesignSystem: (ds: DesignSystem | null) => void;
+
+  /* ── Palette Generator ── */
+  paletteSubMode: PaletteSubMode;
+  paletteStyleId: string;
+  paletteHarmonyType: HarmonyType;
+  setPaletteSubMode: (mode: PaletteSubMode) => void;
+  setPaletteStyleId: (id: string) => void;
+  setPaletteHarmonyType: (type: HarmonyType) => void;
 }
 
 /* ── Helpers ─────────────────────────────────────────────────────────────── */
@@ -153,6 +168,10 @@ export const useColorStudioStore = create<ColorStudioState>((set, get) => ({
   setFgColor: (hex) => set({ fgColor: hex }),
   setBgColor: (hex) => set({ bgColor: hex }),
 
+  /* ── Contrast view ── */
+  contrastView: 'simple',
+  setContrastView: (view) => set({ contrastView: view }),
+
   /* ── Theme Builder ── */
   themePrimary: '#4F46E5',
   themeStyle: 'modern',
@@ -166,6 +185,14 @@ export const useColorStudioStore = create<ColorStudioState>((set, get) => ({
   setThemePersonality: (personality) => set({ themePersonality: personality }),
   setThemeMode: (mode) => set({ themeMode: mode }),
   setDesignSystem: (ds) => set({ designSystem: ds }),
+
+  /* ── Palette Generator ── */
+  paletteSubMode: 'harmony',
+  paletteStyleId: 'modern',
+  paletteHarmonyType: 'complementary',
+  setPaletteSubMode: (mode) => set({ paletteSubMode: mode }),
+  setPaletteStyleId: (id) => set({ paletteStyleId: id }),
+  setPaletteHarmonyType: (type) => set({ paletteHarmonyType: type }),
 
   /* ── History ── */
   history: [DEFAULT_COLORS],
