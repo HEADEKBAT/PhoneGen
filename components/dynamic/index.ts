@@ -7,3 +7,8 @@ export { default as CompanyGeneratorLoader } from './CompanyGeneratorLoader';
 export { default as EmailGeneratorLoader } from './EmailGeneratorLoader';
 export { default as UsernameGeneratorLoader } from './UsernameGeneratorLoader';
 export { default as ColorStudioLoader } from './ColorStudioLoader';
+export { default as ImageStudioLoader } from './ImageStudioLoader';
+export { default as PaymentStudioLoader } from './PaymentStudioLoader';
+export { default as QRStudioLoader } from './QRStudioLoader';
+export { default as CryptoPlaygroundLoader } from './CryptoPlaygroundLoader';
+export { default as MediaStudioLoader } from './MediaStudioLoader';

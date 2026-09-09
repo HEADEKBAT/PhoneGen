@@ -3,6 +3,11 @@
 import dynamic from 'next/dynamic';
 import ColorStudioSkeleton from '@/components/skeleton/ColorStudioSkeleton';
 
+interface ColorStudioLoaderProps {
+  standalone?: boolean;
+  initialMode?: 'random' | 'palette' | 'theme' | 'gradient' | 'converter' | 'contrast' | 'names' | 'brands' | 'tokens' | 'history' | 'favorites';
+}
+
 /**
  * Dynamic loader for ColorStudioClient.
  *
@@ -23,4 +28,4 @@ const ColorStudioLoader = dynamic(
   },
 );
 
-export default ColorStudioLoader;
+export default ColorStudioLoader as unknown as React.FC<ColorStudioLoaderProps>;

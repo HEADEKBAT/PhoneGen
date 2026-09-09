@@ -2,6 +2,13 @@
 
 import dynamic from 'next/dynamic';
 import BarcodeSkeleton from '@/components/skeleton/BarcodeSkeleton';
+import type { BarcodeType } from '@/lib/barcode/types';
+
+interface BarcodeStudioClientLoaderProps {
+  standalone?: boolean;
+  initialBarcodeType?: BarcodeType;
+  initialTab?: 'product' | 'industrial' | 'validator' | 'bulk' | 'settings';
+}
 
 /**
  * Dynamic loader for BarcodeStudioClient.
@@ -21,4 +28,4 @@ const BarcodeStudioClientLoader = dynamic(
   },
 );
 
-export default BarcodeStudioClientLoader;
+export default BarcodeStudioClientLoader as unknown as React.FC<BarcodeStudioClientLoaderProps>;
