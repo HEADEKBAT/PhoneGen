@@ -93,6 +93,7 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
+     
       <head />
 
       <body className="min-h-screen flex flex-col grain-overlay">

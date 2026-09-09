@@ -170,6 +170,25 @@ const BARCODE_FAQS: FAQ[] = [
   { qKey: 'productLanding.barcode.faq_q3', aKey: 'productLanding.barcode.faq_a3' },
 ];
 
+/* ── Image Studio Features ─────────────────────────────────────────────────── */
+
+const IMAGE_FEATURES: Feature[] = [
+  { iconName: 'Image', titleKey: 'productLanding.image.feature1Title', descKey: 'productLanding.image.feature1Desc' },
+  { iconName: 'Scan', titleKey: 'productLanding.image.feature2Title', descKey: 'productLanding.image.feature2Desc' },
+  { iconName: 'Palette', titleKey: 'productLanding.image.feature3Title', descKey: 'productLanding.image.feature3Desc' },
+  { iconName: 'Download', titleKey: 'productLanding.image.feature4Title', descKey: 'productLanding.image.feature4Desc' },
+  { iconName: 'Zap', titleKey: 'productLanding.image.feature5Title', descKey: 'productLanding.image.feature5Desc' },
+];
+
+/* ── Image Studio FAQs ────────────────────────────────────────────────────── */
+
+const IMAGE_FAQS: FAQ[] = [
+  { qKey: 'productLanding.image.faq_q1', aKey: 'productLanding.image.faq_a1' },
+  { qKey: 'productLanding.image.faq_q2', aKey: 'productLanding.image.faq_a2' },
+  { qKey: 'productLanding.image.faq_q3', aKey: 'productLanding.image.faq_a3' },
+  { qKey: 'productLanding.image.faq_q4', aKey: 'productLanding.image.faq_a4' },
+];
+
 /* ── Color Studio Features ─────────────────────────────────────────────────── */
 
 const COLOR_FEATURES: Feature[] = [
@@ -187,6 +206,92 @@ const COLOR_FAQS: FAQ[] = [
   { qKey: 'productLanding.color.faq_q2', aKey: 'productLanding.color.faq_a2' },
   { qKey: 'productLanding.color.faq_q3', aKey: 'productLanding.color.faq_a3' },
   { qKey: 'productLanding.color.faq_q4', aKey: 'productLanding.color.faq_a4' },
+];
+
+/* ── QR Studio Features ─────────────────────────────────────────────────────── */
+
+const QR_FEATURES: Feature[] = [
+  { iconName: 'QrCode', titleKey: 'productLanding.qr.feature1Title', descKey: 'productLanding.qr.feature1Desc' },
+  { iconName: 'Smartphone', titleKey: 'productLanding.qr.feature2Title', descKey: 'productLanding.qr.feature2Desc' },
+  { iconName: 'Palette', titleKey: 'productLanding.qr.feature3Title', descKey: 'productLanding.qr.feature3Desc' },
+  { iconName: 'ShieldCheck', titleKey: 'productLanding.qr.feature4Title', descKey: 'productLanding.qr.feature4Desc' },
+  { iconName: 'Download', titleKey: 'productLanding.qr.feature5Title', descKey: 'productLanding.qr.feature5Desc' },
+];
+
+/* ── Media Studio Features ──────────────────────────────────────────────────── */
+
+const MEDIA_FEATURES: Feature[] = [
+  { iconName: 'Video', titleKey: 'productLanding.media.feature1Title', descKey: 'productLanding.media.feature1Desc' },
+  { iconName: 'ShieldCheck', titleKey: 'productLanding.media.feature2Title', descKey: 'productLanding.media.feature2Desc' },
+  { iconName: 'Grid3x3', titleKey: 'productLanding.media.feature3Title', descKey: 'productLanding.media.feature3Desc' },
+  { iconName: 'Settings2', titleKey: 'productLanding.media.feature4Title', descKey: 'productLanding.media.feature4Desc' },
+  { iconName: 'Lock', titleKey: 'productLanding.media.feature5Title', descKey: 'productLanding.media.feature5Desc' },
+  { iconName: 'BookOpen', titleKey: 'productLanding.media.feature6Title', descKey: 'productLanding.media.feature6Desc' },
+];
+
+/* ── Media Studio FAQs ──────────────────────────────────────────────────────────── */
+
+const MEDIA_FAQS: FAQ[] = [
+  { qKey: 'productLanding.media.faq_q1', aKey: 'productLanding.media.faq_a1' },
+  { qKey: 'productLanding.media.faq_q2', aKey: 'productLanding.media.faq_a2' },
+  { qKey: 'productLanding.media.faq_q3', aKey: 'productLanding.media.faq_a3' },
+  { qKey: 'productLanding.media.faq_q4', aKey: 'productLanding.media.faq_a4' },
+  { qKey: 'productLanding.media.faq_q5', aKey: 'productLanding.media.faq_a5' },
+  { qKey: 'productLanding.media.faq_q6', aKey: 'productLanding.media.faq_a6' },
+  { qKey: 'productLanding.media.faq_q7', aKey: 'productLanding.media.faq_a7' },
+  { qKey: 'productLanding.media.faq_q8', aKey: 'productLanding.media.faq_a8' },
+];
+
+/* ── QR Studio FAQs ──────────────────────────────────────────────────────────── */
+
+const QR_FAQS: FAQ[] = [
+  { qKey: 'productLanding.qr.faq_q1', aKey: 'productLanding.qr.faq_a1' },
+  { qKey: 'productLanding.qr.faq_q2', aKey: 'productLanding.qr.faq_a2' },
+  { qKey: 'productLanding.qr.faq_q3', aKey: 'productLanding.qr.faq_a3' },
+  { qKey: 'productLanding.qr.faq_q4', aKey: 'productLanding.qr.faq_a4' },
+];
+
+/* ── Crypto Wallet Features ─────────────────────────────────────────────────── */
+
+const CRYPTO_FEATURES: Feature[] = [
+  { iconName: 'Wallet', titleKey: 'productLanding.cryptoWallet.feature1Title', descKey: 'productLanding.cryptoWallet.feature1Desc' },
+  { iconName: 'Grid3x3', titleKey: 'productLanding.cryptoWallet.feature2Title', descKey: 'productLanding.cryptoWallet.feature2Desc' },
+  { iconName: 'ShieldCheck', titleKey: 'productLanding.cryptoWallet.feature3Title', descKey: 'productLanding.cryptoWallet.feature3Desc' },
+  { iconName: 'Scan', titleKey: 'productLanding.cryptoWallet.feature4Title', descKey: 'productLanding.cryptoWallet.feature4Desc' },
+  { iconName: 'BookOpen', titleKey: 'productLanding.cryptoWallet.feature5Title', descKey: 'productLanding.cryptoWallet.feature5Desc' },
+  { iconName: 'Download', titleKey: 'productLanding.cryptoWallet.feature6Title', descKey: 'productLanding.cryptoWallet.feature6Desc' },
+  { iconName: 'Globe', titleKey: 'productLanding.cryptoWallet.feature7Title', descKey: 'productLanding.cryptoWallet.feature7Desc' },
+  { iconName: 'Zap', titleKey: 'productLanding.cryptoWallet.feature8Title', descKey: 'productLanding.cryptoWallet.feature8Desc' },
+];
+
+/* ── Crypto Wallet FAQs ─────────────────────────────────────────────────────────── */
+
+const CRYPTO_FAQS: FAQ[] = [
+  { qKey: 'productLanding.cryptoWallet.faq_q1', aKey: 'productLanding.cryptoWallet.faq_a1' },
+  { qKey: 'productLanding.cryptoWallet.faq_q2', aKey: 'productLanding.cryptoWallet.faq_a2' },
+  { qKey: 'productLanding.cryptoWallet.faq_q3', aKey: 'productLanding.cryptoWallet.faq_a3' },
+  { qKey: 'productLanding.cryptoWallet.faq_q4', aKey: 'productLanding.cryptoWallet.faq_a4' },
+  { qKey: 'productLanding.cryptoWallet.faq_q5', aKey: 'productLanding.cryptoWallet.faq_a5' },
+  { qKey: 'productLanding.cryptoWallet.faq_q6', aKey: 'productLanding.cryptoWallet.faq_a6' },
+];
+
+/* ── Payment Studio Features ────────────────────────────────────────────────── */
+
+const PAYMENT_FEATURES: Feature[] = [
+  { iconName: 'CreditCard', titleKey: 'productLanding.payment.feature1Title', descKey: 'productLanding.payment.feature1Desc' },
+  { iconName: 'ShieldCheck', titleKey: 'productLanding.payment.feature2Title', descKey: 'productLanding.payment.feature2Desc' },
+  { iconName: 'Grid3x3', titleKey: 'productLanding.payment.feature3Title', descKey: 'productLanding.payment.feature3Desc' },
+  { iconName: 'Download', titleKey: 'productLanding.payment.feature4Title', descKey: 'productLanding.payment.feature4Desc' },
+  { iconName: 'Zap', titleKey: 'productLanding.payment.feature5Title', descKey: 'productLanding.payment.feature5Desc' },
+];
+
+/* ── Payment Studio FAQs ─────────────────────────────────────────────────────── */
+
+const PAYMENT_FAQS: FAQ[] = [
+  { qKey: 'productLanding.payment.faq_q1', aKey: 'productLanding.payment.faq_a1' },
+  { qKey: 'productLanding.payment.faq_q2', aKey: 'productLanding.payment.faq_a2' },
+  { qKey: 'productLanding.payment.faq_q3', aKey: 'productLanding.payment.faq_a3' },
+  { qKey: 'productLanding.payment.faq_q4', aKey: 'productLanding.payment.faq_a4' },
 ];
 
 /* ── Popular countries ──────────────────────────────────────────────────────── */
@@ -306,6 +411,61 @@ export const LANDING_CONFIGS: Record<string, ProductLandingConfig> = {
     heroDescKey: 'productLanding.color.heroDesc',
     ctaLabelKey: 'productLanding.color.ctaLabel',
     exampleLabelKey: 'productLanding.color.exampleLabel',
+  },
+  image: {
+    productId: 'image',
+    hasCountries: false,
+    toolTypes: [],
+    features: IMAGE_FEATURES,
+    faqs: IMAGE_FAQS,
+    heroTitleKey: 'productLanding.image.heroTitle',
+    heroDescKey: 'productLanding.image.heroDesc',
+    ctaLabelKey: 'productLanding.image.ctaLabel',
+    exampleLabelKey: 'productLanding.image.exampleLabel',
+  },
+  payment: {
+    productId: 'payment',
+    hasCountries: false,
+    toolTypes: [],
+    features: PAYMENT_FEATURES,
+    faqs: PAYMENT_FAQS,
+    heroTitleKey: 'productLanding.payment.heroTitle',
+    heroDescKey: 'productLanding.payment.heroDesc',
+    ctaLabelKey: 'productLanding.payment.ctaLabel',
+    exampleLabelKey: 'productLanding.payment.exampleLabel',
+  },
+  qr: {
+    productId: 'qr',
+    hasCountries: false,
+    toolTypes: [],
+    features: QR_FEATURES,
+    faqs: QR_FAQS,
+    heroTitleKey: 'productLanding.qr.heroTitle',
+    heroDescKey: 'productLanding.qr.heroDesc',
+    ctaLabelKey: 'productLanding.qr.ctaLabel',
+    exampleLabelKey: 'productLanding.qr.exampleLabel',
+  },
+  cryptoWallet: {
+    productId: 'cryptoWallet',
+    hasCountries: false,
+    toolTypes: [],
+    features: CRYPTO_FEATURES,
+    faqs: CRYPTO_FAQS,
+    heroTitleKey: 'productLanding.cryptoWallet.heroTitle',
+    heroDescKey: 'productLanding.cryptoWallet.heroDesc',
+    ctaLabelKey: 'productLanding.cryptoWallet.ctaLabel',
+    exampleLabelKey: 'productLanding.cryptoWallet.exampleLabel',
+  },
+  media: {
+    productId: 'media',
+    hasCountries: false,
+    toolTypes: [],
+    features: MEDIA_FEATURES,
+    faqs: MEDIA_FAQS,
+    heroTitleKey: 'productLanding.media.heroTitle',
+    heroDescKey: 'productLanding.media.heroDesc',
+    ctaLabelKey: 'productLanding.media.ctaLabel',
+    exampleLabelKey: 'productLanding.media.exampleLabel',
   },
 };
 

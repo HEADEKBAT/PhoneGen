@@ -44,3 +44,27 @@ export {
   BASE_URL,
 } from './seo';
 export type { SEOPage, SEOProductPage, SEOGeneratorPage, SEOHomePage, SEOAboutPage, SEOCustomPage } from './seo';
+export { IMAGE_TOOL_ROUTES } from './imageRoutes';
+export type { ImageRouteEntry } from './imageRoutes';
+export { QR_TOOL_ROUTES } from './qrRoutes';
+export type { QRRouteEntry } from './qrRoutes';
+export { CRYPTO_TOOL_ROUTES } from './cryptoRoutes';
+export type { CryptoRouteEntry } from './cryptoRoutes';
+export { CRYPTO_SEO_PAGES, ALL_CRYPTO_SEO_PAGES } from './cryptoSEOPages';
+export type { CryptoSEOPageConfig } from './cryptoSEOPages';
+export { PAYMENT_SEO_PAGES, ALL_PAYMENT_SEO_PAGES } from './paymentSEOPages';
+export type { PaymentSEOPageConfig } from './paymentSEOPages';
+export { MEDIA_TOOL_ROUTES } from './mediaRoutes';
+export type { MediaRouteEntry } from './mediaRoutes';
+export { MEDIA_SEO_PAGES, ALL_MEDIA_SEO_PAGES } from './mediaSEOPages';
+export type { MediaSEOPageConfig } from './mediaSEOPages';
+export {
+  LEGACY_BARCODE_SLUGS,
+  LEGACY_CREDENTIAL_SLUGS,
+  LEGACY_ONE_OFF_REDIRECTS,
+  REDIRECTED_TOP_LEVEL_SLUGS,
+  isRedirectedSlug,
+  buildLegacyRedirects,
+} from './legacyRedirects';
+export { TOOL_PAGE_PRODUCT_IDS, STANDALONE_SEO_ROUTES } from './staticRoutes';
+export type { StandaloneRouteEntry } from './staticRoutes';
