@@ -92,7 +92,7 @@ const QUALITY_PROFILES: Record<ProcessQuality, QualityProfile> = {
  *
  * Range: 0 (identical) to ~765 (black vs. white).
  */
-function colorDistance(
+export function colorDistance(
   r1: number, g1: number, b1: number,
   r2: number, g2: number, b2: number,
 ): number {
@@ -107,7 +107,7 @@ function colorDistance(
 
 /* ── Background sampling ──────────────────────────────────────────────────── */
 
-interface ColorCluster {
+export interface ColorCluster {
   r: number;
   g: number;
   b: number;
@@ -120,7 +120,7 @@ interface ColorCluster {
  * JPEG ringing collapse into one bucket, then the heaviest buckets are kept
  * and refined to the mean colour of their members.
  */
-function sampleBackgroundClusters(
+export function sampleBackgroundClusters(
   data: Uint8ClampedArray,
   w: number,
   h: number,
@@ -227,6 +227,116 @@ function despeckleMask(alpha: Uint8Array, w: number, h: number): Uint8Array {
   return out;
 }
 
+/* ── Mask computation (pure, canvas-free) ─────────────────────────────────── */
+
+export interface AlphaMaskOptions {
+  /** 5–90. Mapped onto MAX_TOLERANCE_DISTANCE. */
+  tolerance: number;
+  /** Emit partial alpha in the transition band instead of a hard cut. */
+  softBand: boolean;
+  /** Run a 3×3 majority filter to knock out single-pixel speckle. */
+  despeckle: boolean;
+  /** Progress within the fill, 0–1. */
+  onProgress?: (fraction: number) => void;
+  signal?: AbortSignal;
+}
+
+/**
+ * Turn raw RGBA pixels into an alpha mask: 0 is background, 255 is subject,
+ * values between are the soft transition band.
+ *
+ * Takes and returns plain typed arrays — no canvas, no DOM — so the algorithm
+ * can be exercised directly by tests on synthetic images.
+ *
+ * The fill is 4-connected and starts from the border. That connectivity is the
+ * whole point: a global colour threshold removes every pixel that merely
+ * resembles the backdrop, which punches holes through a white shirt on a white
+ * background. Pixels the fill cannot reach stay opaque no matter their colour.
+ */
+export async function computeAlphaMask(
+  data: Uint8ClampedArray,
+  width: number,
+  height: number,
+  options: AlphaMaskOptions,
+): Promise<Uint8Array> {
+  const { softBand, despeckle, onProgress, signal } = options;
+
+  const tolerance = Math.min(90, Math.max(5, options.tolerance));
+  const threshold = (tolerance / 100) * MAX_TOLERANCE_DISTANCE;
+  const softThreshold = softBand ? threshold * SOFT_BAND_FACTOR : threshold;
+
+  const clusters = sampleBackgroundClusters(data, width, height);
+
+  const pixelCount = width * height;
+  let alpha: Uint8Array = new Uint8Array(pixelCount).fill(255);
+  const visited = new Uint8Array(pixelCount);
+  const queue = new Int32Array(pixelCount);
+  let head = 0;
+  let tail = 0;
+
+  const seed = (idx: number) => {
+    if (visited[idx]) return;
+    if (distanceToBackground(data, idx, clusters) <= threshold) {
+      visited[idx] = 1;
+      alpha[idx] = 0;
+      queue[tail++] = idx;
+    }
+  };
+
+  for (let x = 0; x < width; x++) {
+    seed(x);
+    seed((height - 1) * width + x);
+  }
+  for (let y = 0; y < height; y++) {
+    seed(y * width);
+    seed(y * width + width - 1);
+  }
+
+  let visits = 0;
+  while (head < tail) {
+    const idx = queue[head++];
+    const x = idx % width;
+    const y = (idx / width) | 0;
+
+    // 4-connected neighbours; 8-connectivity leaks through diagonal gaps.
+    for (let n = 0; n < 4; n++) {
+      const nx = x + (n === 0 ? -1 : n === 1 ? 1 : 0);
+      const ny = y + (n === 2 ? -1 : n === 3 ? 1 : 0);
+      if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+
+      const nIdx = ny * width + nx;
+      if (visited[nIdx]) continue;
+
+      const d = distanceToBackground(data, nIdx, clusters);
+
+      if (d <= threshold) {
+        visited[nIdx] = 1;
+        alpha[nIdx] = 0;
+        queue[tail++] = nIdx;
+      } else if (d <= softThreshold) {
+        // Transition band: partially transparent, but the fill stops here so
+        // it cannot creep along a gradient into the subject.
+        visited[nIdx] = 1;
+        alpha[nIdx] = Math.round(((d - threshold) / (softThreshold - threshold)) * 255);
+      }
+    }
+
+    if (++visits % YIELD_INTERVAL === 0) {
+      onProgress?.(head / Math.max(1, tail));
+      await yieldToBrowser();
+      throwIfAborted(signal);
+    }
+  }
+
+  if (despeckle) {
+    alpha = despeckleMask(alpha, width, height);
+    throwIfAborted(signal);
+  }
+
+  onProgress?.(1);
+  return alpha;
+}
+
 /* ── Canvas-based background remover ──────────────────────────────────────── */
 
 export class CanvasBackgroundRemover implements BackgroundRemoverService {
@@ -269,87 +379,18 @@ export class CanvasBackgroundRemover implements BackgroundRemoverService {
     await yieldToBrowser();
     throwIfAborted(signal);
 
-    /* ── 3. Cluster the border ──────────────────────────────────────────── */
-    const clusters = sampleBackgroundClusters(workData, workW, workH);
-    onProgress?.(12);
-
-    /* ── 4. Flood fill inward ───────────────────────────────────────────── */
+    /* ── 3–5. Cluster, flood fill, despeckle ────────────────────────────── */
+    // The whole pixel-level part of the algorithm lives in computeAlphaMask,
+    // which takes raw RGBA and returns an alpha mask. Keeping it free of any
+    // canvas means it can be tested directly — see lib/image-studio/__tests__.
     const pixelCount = workW * workH;
-    // Annotated: despeckleMask returns the default Uint8Array<ArrayBufferLike>,
-    // while the initialiser infers the narrower Uint8Array<ArrayBuffer>, and the
-    // reassignment in step 5 would not typecheck against it.
-    let alpha: Uint8Array = new Uint8Array(pixelCount).fill(255);
-    const visited = new Uint8Array(pixelCount);
-    const queue = new Int32Array(pixelCount);
-    let head = 0;
-    let tail = 0;
-
-    const seed = (idx: number) => {
-      if (visited[idx]) return;
-      const d = distanceToBackground(workData, idx, clusters);
-      if (d <= threshold) {
-        visited[idx] = 1;
-        alpha[idx] = 0;
-        queue[tail++] = idx;
-      }
-    };
-
-    for (let x = 0; x < workW; x++) {
-      seed(x);
-      seed((workH - 1) * workW + x);
-    }
-    for (let y = 0; y < workH; y++) {
-      seed(y * workW);
-      seed(y * workW + workW - 1);
-    }
-
-    let visits = 0;
-    while (head < tail) {
-      const idx = queue[head++];
-      const x = idx % workW;
-      const y = (idx / workW) | 0;
-
-      // 4-connected neighbours; 8-connectivity leaks through diagonal gaps.
-      for (let n = 0; n < 4; n++) {
-        const nx = x + (n === 0 ? -1 : n === 1 ? 1 : 0);
-        const ny = y + (n === 2 ? -1 : n === 3 ? 1 : 0);
-        if (nx < 0 || ny < 0 || nx >= workW || ny >= workH) continue;
-
-        const nIdx = ny * workW + nx;
-        if (visited[nIdx]) continue;
-
-        const d = distanceToBackground(workData, nIdx, clusters);
-
-        if (d <= threshold) {
-          visited[nIdx] = 1;
-          alpha[nIdx] = 0;
-          queue[tail++] = nIdx;
-        } else if (d <= softThreshold) {
-          // Transition band: partially transparent, but the fill stops here so
-          // it cannot creep along a gradient into the subject.
-          visited[nIdx] = 1;
-          alpha[nIdx] = Math.round(((d - threshold) / (softThreshold - threshold)) * 255);
-        }
-      }
-
-      if (++visits % YIELD_INTERVAL === 0) {
-        onProgress?.(12 + Math.round((head / Math.max(1, tail)) * 60));
-        await yieldToBrowser();
-        throwIfAborted(signal);
-      }
-    }
-
-    onProgress?.(75);
-    await yieldToBrowser();
-    throwIfAborted(signal);
-
-    /* ── 5. Despeckle ───────────────────────────────────────────────────── */
-    if (profile.despeckle) {
-      alpha = despeckleMask(alpha, workW, workH);
-      onProgress?.(80);
-      await yieldToBrowser();
-      throwIfAborted(signal);
-    }
+    const alpha = await computeAlphaMask(workData, workW, workH, {
+      tolerance,
+      softBand: profile.softBand,
+      despeckle: profile.despeckle,
+      signal,
+      onProgress: (fraction) => onProgress?.(12 + Math.round(fraction * 68)),
+    });
 
     /* ── 6. Build the mask at working size ──────────────────────────────── */
     // Alpha-carrying variant: RGB is white, alpha is the mask. Drawing this
