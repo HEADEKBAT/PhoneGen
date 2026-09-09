@@ -68,3 +68,4 @@ export {
 } from './legacyRedirects';
 export { TOOL_PAGE_PRODUCT_IDS, STANDALONE_SEO_ROUTES } from './staticRoutes';
 export type { StandaloneRouteEntry } from './staticRoutes';
+export { LANDING_PAGES, getLandingPage } from './landingPages';

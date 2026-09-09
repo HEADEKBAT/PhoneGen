@@ -44,3 +44,5 @@ export { createToolPage, createPresetPage } from './page-factory';
 /* ── Tool Shell ─────────────────────────────────────────────────────────────── */
 
 export { default as ToolShell } from './tool-shell';
+export { createLandingPage } from './landing-factory';
+export type { LandingPageManifest, LandingLocaleCopy } from './landing-factory';
