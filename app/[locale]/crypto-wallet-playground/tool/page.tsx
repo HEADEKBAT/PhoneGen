@@ -36,6 +36,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     product,
     title: TITLES[locale] || TITLES.en,
     description: DESCRIPTIONS[locale] || DESCRIPTIONS.en,
+    // This page is not the product landing page, so it declares its own
+    // canonical URL rather than inheriting the product slug.
+    path: '/crypto-wallet-playground/tool',
   } satisfies SEOProductPage);
 }
 

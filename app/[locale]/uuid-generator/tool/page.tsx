@@ -38,6 +38,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     product,
     title,
     description,
+    // This page is not the product landing page, so it declares its own
+    // canonical URL rather than inheriting the product slug.
+    path: '/uuid-generator/tool',
   } satisfies SEOProductPage);
 }
 
