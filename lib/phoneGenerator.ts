@@ -43,8 +43,43 @@ function hashSeed(seed: string): number {
   return Math.abs(hash) || 1;
 }
 
+/**
+ * Source of randomness for this module.
+ *
+ * Every generator below reads `rng()` rather than `Math.random` directly, so a
+ * seeded run can swap it for a deterministic sequence. The swap is scoped to
+ * this module: it used to be done by assigning to the global `Math.random`,
+ * which meant a seeded generation silently changed the behaviour of every
+ * other piece of code that happened to run during it.
+ *
+ * The binding is module-level rather than a parameter because the ~80 curated
+ * country entries in COUNTRIES close over it 150+ times; threading an argument
+ * through all of them would touch far more data than logic. `withSeed` below
+ * is the only thing that reassigns it, and it always restores the previous
+ * value.
+ */
+let rng: () => number = Math.random;
+
+/**
+ * Run `fn` with a deterministic RNG derived from `seed`.
+ *
+ * An empty or absent seed runs `fn` unchanged, so unseeded generation keeps
+ * using Math.random. The previous source is restored even if `fn` throws.
+ */
+function withSeed<T>(seed: string | undefined, fn: () => T): T {
+  if (seed === undefined || seed === '') return fn();
+
+  const previous = rng;
+  rng = mulberry32(hashSeed(seed));
+  try {
+    return fn();
+  } finally {
+    rng = previous;
+  }
+}
+
 const generateRandomDigits = (length: number): string => {
-  return Array.from({ length }, () => Math.floor(Math.random() * 10)).join("");
+  return Array.from({ length }, () => Math.floor(rng() * 10)).join("");
 };
 
 export const COUNTRIES: Record<string, Country> = {
@@ -54,7 +89,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇳🇬",
     countryCode: "+234",
     generateNumber: () => {
-      const areaCode = ["701", "702", "703", "704", "705", "706", "707", "708", "709", "810", "811", "812", "813", "814", "815", "816", "817", "818", "819", "909"][Math.floor(Math.random() * 20)];
+      const areaCode = ["701", "702", "703", "704", "705", "706", "707", "708", "709", "810", "811", "812", "813", "814", "815", "816", "817", "818", "819", "909"][Math.floor(rng() * 20)];
       const middleDigits = generateRandomDigits(3);
       const lastDigits = generateRandomDigits(4);
       return areaCode + middleDigits + lastDigits;
@@ -71,7 +106,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇺🇸",
     countryCode: "+1",
     generateNumber: () => {
-      const nxx = () => (Math.floor(Math.random() * 8) + 2).toString() + generateRandomDigits(2);
+      const nxx = () => (Math.floor(rng() * 8) + 2).toString() + generateRandomDigits(2);
       const areaCode = nxx();
       const exchange = nxx();
       const number = generateRandomDigits(4);
@@ -89,7 +124,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇩🇪",
     countryCode: "+49",
     generateNumber: () => {
-      const prefix = ["151", "152", "155", "156", "157", "159", "160", "162", "163", "170", "171", "172", "173", "174", "175", "176", "177", "178", "179"][Math.floor(Math.random() * 19)];
+      const prefix = ["151", "152", "155", "156", "157", "159", "160", "162", "163", "170", "171", "172", "173", "174", "175", "176", "177", "178", "179"][Math.floor(rng() * 19)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -105,7 +140,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇷🇺",
     countryCode: "+7",
     generateNumber: () => {
-      const areaCode = ["901", "902", "903", "904", "905", "906", "908", "909", "910", "911", "912", "913", "914", "915", "916", "917", "918", "919", "920", "921", "922", "923", "924", "925", "926", "927", "928", "929", "930", "931", "932", "933", "934", "935", "936", "937", "938", "939"][Math.floor(Math.random() * 38)];
+      const areaCode = ["901", "902", "903", "904", "905", "906", "908", "909", "910", "911", "912", "913", "914", "915", "916", "917", "918", "919", "920", "921", "922", "923", "924", "925", "926", "927", "928", "929", "930", "931", "932", "933", "934", "935", "936", "937", "938", "939"][Math.floor(rng() * 38)];
       const middleDigits = generateRandomDigits(3);
       const lastDigits = generateRandomDigits(2);
       const lastTwo = generateRandomDigits(2);
@@ -123,7 +158,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇨🇳",
     countryCode: "+86",
     generateNumber: () => {
-      const prefix = ["130", "131", "132", "133", "134", "135", "136", "137", "138", "139", "150", "151", "152", "153", "155", "156", "157", "158", "159", "186", "187", "188", "189", "176", "177", "178", "180", "181", "182", "183", "184", "185", "170", "171", "172", "173", "175", "190", "191", "192", "193", "195", "196", "197", "198", "199"][Math.floor(Math.random() * 46)];
+      const prefix = ["130", "131", "132", "133", "134", "135", "136", "137", "138", "139", "150", "151", "152", "153", "155", "156", "157", "158", "159", "186", "187", "188", "189", "176", "177", "178", "180", "181", "182", "183", "184", "185", "170", "171", "172", "173", "175", "190", "191", "192", "193", "195", "196", "197", "198", "199"][Math.floor(rng() * 46)];
       const subscriber = generateRandomDigits(8);
       return prefix + subscriber;
     },
@@ -139,7 +174,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇮🇳",
     countryCode: "+91",
     generateNumber: () => {
-      const firstDigit = (Math.floor(Math.random() * 4) + 6).toString();
+      const firstDigit = (Math.floor(rng() * 4) + 6).toString();
       const rest = generateRandomDigits(9);
       return firstDigit + rest;
     },
@@ -172,7 +207,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇫🇷",
     countryCode: "+33",
     generateNumber: () => {
-      const areaCode = ["6", "7", "9"][Math.floor(Math.random() * 3)];
+      const areaCode = ["6", "7", "9"][Math.floor(rng() * 3)];
       const middleDigits = generateRandomDigits(4);
       const lastDigits = generateRandomDigits(4);
       return areaCode + middleDigits + lastDigits;
@@ -189,7 +224,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇪🇸",
     countryCode: "+34",
     generateNumber: () => {
-      const prefix = ["6", "7"][Math.floor(Math.random() * 2)];
+      const prefix = ["6", "7"][Math.floor(rng() * 2)];
       const subscriber = generateRandomDigits(8);
       return prefix + subscriber;
     },
@@ -205,7 +240,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇵🇹",
     countryCode: "+351",
     generateNumber: () => {
-      const prefix = ["91", "92", "93", "96"][Math.floor(Math.random() * 4)];
+      const prefix = ["91", "92", "93", "96"][Math.floor(rng() * 4)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -237,7 +272,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇯🇵",
     countryCode: "+81",
     generateNumber: () => {
-      const prefix = ["70", "80", "90"][Math.floor(Math.random() * 3)];
+      const prefix = ["70", "80", "90"][Math.floor(rng() * 3)];
       const subscriber = generateRandomDigits(8);
       return prefix + subscriber;
     },
@@ -269,7 +304,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇸🇪",
     countryCode: "+46",
     generateNumber: () => {
-      const prefix = ["70", "71", "72", "73", "76", "79"][Math.floor(Math.random() * 6)];
+      const prefix = ["70", "71", "72", "73", "76", "79"][Math.floor(rng() * 6)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -317,7 +352,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇮🇹",
     countryCode: "+39",
     generateNumber: () => {
-      const prefix = ["320", "322", "323", "327", "328", "329", "330", "331", "333", "334", "335", "336", "337", "338", "339", "340", "341", "342", "343", "344", "345", "346", "347", "348", "349", "350", "351", "352", "353", "354", "355", "356", "357", "358", "359", "360", "366", "368", "370", "371", "372", "373", "374", "375", "376", "377", "378", "379", "380", "381", "383", "385", "388", "389", "391", "392", "393"][Math.floor(Math.random() * 57)];
+      const prefix = ["320", "322", "323", "327", "328", "329", "330", "331", "333", "334", "335", "336", "337", "338", "339", "340", "341", "342", "343", "344", "345", "346", "347", "348", "349", "350", "351", "352", "353", "354", "355", "356", "357", "358", "359", "360", "366", "368", "370", "371", "372", "373", "374", "375", "376", "377", "378", "379", "380", "381", "383", "385", "388", "389", "391", "392", "393"][Math.floor(rng() * 57)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -348,8 +383,8 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇧🇪",
     countryCode: "+32",
     generateNumber: () => {
-      const prefix = ["45", "46", "47", "48", "49"][Math.floor(Math.random() * 5)];
-      const thirdDigit = Math.floor(Math.random() * 10).toString();
+      const prefix = ["45", "46", "47", "48", "49"][Math.floor(rng() * 5)];
+      const thirdDigit = Math.floor(rng() * 10).toString();
       const subscriber = generateRandomDigits(6);
       return prefix + thirdDigit + subscriber;
     },
@@ -365,7 +400,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇨🇦",
     countryCode: "+1",
     generateNumber: () => {
-      const nxx = () => (Math.floor(Math.random() * 8) + 2).toString() + generateRandomDigits(2);
+      const nxx = () => (Math.floor(rng() * 8) + 2).toString() + generateRandomDigits(2);
       const areaCode = nxx();
       const exchange = nxx();
       const number = generateRandomDigits(4);
@@ -431,7 +466,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇿🇦",
     countryCode: "+27",
     generateNumber: () => {
-      const prefix = ["71", "72", "73", "74", "76", "78", "79", "81", "82", "83", "84"][Math.floor(Math.random() * 11)];
+      const prefix = ["71", "72", "73", "74", "76", "78", "79", "81", "82", "83", "84"][Math.floor(rng() * 11)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -463,7 +498,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇰🇷",
     countryCode: "+82",
     generateNumber: () => {
-      const carrier = ["10", "11", "16", "17", "18", "19"][Math.floor(Math.random() * 6)];
+      const carrier = ["10", "11", "16", "17", "18", "19"][Math.floor(rng() * 6)];
       const subscriber = generateRandomDigits(8);
       return carrier + subscriber;
     },
@@ -527,7 +562,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇵🇭",
     countryCode: "+63",
     generateNumber: () => {
-      const prefix = ["905", "906", "907", "908", "909", "915", "916", "917", "918", "919", "920", "921", "922", "923", "925", "926", "927", "928", "929", "930", "935", "936", "937", "938", "939", "940", "942", "943", "944", "945", "946", "947", "948", "949", "955", "956", "957", "958", "959", "965", "966", "967", "968", "969", "970", "973", "975", "976", "977", "978", "979", "980", "985", "986", "987", "988", "989", "994", "995", "996", "997", "998", "999"][Math.floor(Math.random() * 63)];
+      const prefix = ["905", "906", "907", "908", "909", "915", "916", "917", "918", "919", "920", "921", "922", "923", "925", "926", "927", "928", "929", "930", "935", "936", "937", "938", "939", "940", "942", "943", "944", "945", "946", "947", "948", "949", "955", "956", "957", "958", "959", "965", "966", "967", "968", "969", "970", "973", "975", "976", "977", "978", "979", "980", "985", "986", "987", "988", "989", "994", "995", "996", "997", "998", "999"][Math.floor(rng() * 63)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -591,8 +626,8 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇵🇱",
     countryCode: "+48",
     generateNumber: () => {
-      const prefix = ["45", "50", "51", "53", "57", "60", "66", "69", "72", "73", "78", "79", "88"][Math.floor(Math.random() * 13)];
-      const thirdDigit = Math.floor(Math.random() * 10).toString();
+      const prefix = ["45", "50", "51", "53", "57", "60", "66", "69", "72", "73", "78", "79", "88"][Math.floor(rng() * 13)];
+      const thirdDigit = Math.floor(rng() * 10).toString();
       const subscriber = generateRandomDigits(6);
       return prefix + thirdDigit + subscriber;
     },
@@ -608,7 +643,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇺🇦",
     countryCode: "+380",
     generateNumber: () => {
-      const prefix = ["39", "50", "63", "66", "67", "68", "73", "91", "92", "93", "94", "95", "96", "97", "98", "99"][Math.floor(Math.random() * 16)];
+      const prefix = ["39", "50", "63", "66", "67", "68", "73", "91", "92", "93", "94", "95", "96", "97", "98", "99"][Math.floor(rng() * 16)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -640,7 +675,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇨🇿",
     countryCode: "+420",
     generateNumber: () => {
-      const prefix = ["601", "602", "603", "604", "605", "606", "607", "608", "609", "70", "72", "73", "77", "79"][Math.floor(Math.random() * 14)];
+      const prefix = ["601", "602", "603", "604", "605", "606", "607", "608", "609", "70", "72", "73", "77", "79"][Math.floor(rng() * 14)];
       if (prefix.length === 2) return prefix + generateRandomDigits(7);
       return prefix + generateRandomDigits(6);
     },
@@ -656,7 +691,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇭🇺",
     countryCode: "+36",
     generateNumber: () => {
-      const prefix = ["20", "30", "31", "50", "70"][Math.floor(Math.random() * 5)];
+      const prefix = ["20", "30", "31", "50", "70"][Math.floor(rng() * 5)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -672,7 +707,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇷🇴",
     countryCode: "+40",
     generateNumber: () => {
-      const prefix = ["72", "73", "74", "75", "76", "77", "78"][Math.floor(Math.random() * 7)];
+      const prefix = ["72", "73", "74", "75", "76", "77", "78"][Math.floor(rng() * 7)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -688,7 +723,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇧🇬",
     countryCode: "+359",
     generateNumber: () => {
-      const prefix = ["87", "88", "89", "98", "99"][Math.floor(Math.random() * 5)];
+      const prefix = ["87", "88", "89", "98", "99"][Math.floor(rng() * 5)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -704,7 +739,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇭🇷",
     countryCode: "+385",
     generateNumber: () => {
-      const prefix = ["91", "92", "95", "97", "98", "99"][Math.floor(Math.random() * 6)];
+      const prefix = ["91", "92", "95", "97", "98", "99"][Math.floor(rng() * 6)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -720,7 +755,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇷🇸",
     countryCode: "+381",
     generateNumber: () => {
-      const prefix = ["60", "61", "62", "63", "64", "65", "66", "68", "69"][Math.floor(Math.random() * 9)];
+      const prefix = ["60", "61", "62", "63", "64", "65", "66", "68", "69"][Math.floor(rng() * 9)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -736,7 +771,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇸🇮",
     countryCode: "+386",
     generateNumber: () => {
-      const prefix = ["30", "31", "40", "41", "49", "50", "51", "61", "64", "65", "66", "67", "68", "69", "70"][Math.floor(Math.random() * 15)];
+      const prefix = ["30", "31", "40", "41", "49", "50", "51", "61", "64", "65", "66", "67", "68", "69", "70"][Math.floor(rng() * 15)];
       const subscriber = generateRandomDigits(6);
       return prefix + subscriber;
     },
@@ -752,7 +787,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇸🇰",
     countryCode: "+421",
     generateNumber: () => {
-      const prefix = ["90", "91", "94", "95", "99"][Math.floor(Math.random() * 5)];
+      const prefix = ["90", "91", "94", "95", "99"][Math.floor(rng() * 5)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -784,7 +819,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇨🇭",
     countryCode: "+41",
     generateNumber: () => {
-      const prefix = ["74", "75", "76", "77", "78", "79"][Math.floor(Math.random() * 6)];
+      const prefix = ["74", "75", "76", "77", "78", "79"][Math.floor(rng() * 6)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -800,7 +835,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇮🇪",
     countryCode: "+353",
     generateNumber: () => {
-      const prefix = ["82", "83", "84", "85", "86", "87", "88", "89"][Math.floor(Math.random() * 8)];
+      const prefix = ["82", "83", "84", "85", "86", "87", "88", "89"][Math.floor(rng() * 8)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -816,7 +851,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇮🇱",
     countryCode: "+972",
     generateNumber: () => {
-      const prefix = ["50", "51", "52", "53", "54", "55", "56", "57", "58", "59"][Math.floor(Math.random() * 10)];
+      const prefix = ["50", "51", "52", "53", "54", "55", "56", "57", "58", "59"][Math.floor(rng() * 10)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -848,7 +883,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇲🇦",
     countryCode: "+212",
     generateNumber: () => {
-      const prefix = ["6", "7"][Math.floor(Math.random() * 2)];
+      const prefix = ["6", "7"][Math.floor(rng() * 2)];
       const subscriber = generateRandomDigits(8);
       return prefix + subscriber;
     },
@@ -864,7 +899,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇩🇿",
     countryCode: "+213",
     generateNumber: () => {
-      const prefix = ["551", "552", "553", "554", "555", "556", "557", "558", "559", "561", "562", "563", "564", "565", "566", "567", "568", "569", "661", "662", "663", "664", "665", "666", "667", "668", "669", "671", "672", "673", "674", "675", "676", "677", "678", "679", "690", "691", "692", "693", "694", "695", "696", "697", "698", "699", "770", "771", "772", "773", "774", "775", "776", "777", "778", "779", "780", "781", "782", "783", "784", "785", "786", "787", "788", "789", "790", "791", "792", "793", "794", "795", "796", "797", "798", "799"][Math.floor(Math.random() * 75)];
+      const prefix = ["551", "552", "553", "554", "555", "556", "557", "558", "559", "561", "562", "563", "564", "565", "566", "567", "568", "569", "661", "662", "663", "664", "665", "666", "667", "668", "669", "671", "672", "673", "674", "675", "676", "677", "678", "679", "690", "691", "692", "693", "694", "695", "696", "697", "698", "699", "770", "771", "772", "773", "774", "775", "776", "777", "778", "779", "780", "781", "782", "783", "784", "785", "786", "787", "788", "789", "790", "791", "792", "793", "794", "795", "796", "797", "798", "799"][Math.floor(rng() * 75)];
       const subscriber = generateRandomDigits(6);
       return prefix + subscriber;
     },
@@ -880,7 +915,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇹🇳",
     countryCode: "+216",
     generateNumber: () => {
-      const prefix = ["20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "50", "52", "55", "56", "57", "58", "59", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"][Math.floor(Math.random() * 27)];
+      const prefix = ["20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "50", "52", "55", "56", "57", "58", "59", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99"][Math.floor(rng() * 27)];
       const subscriber = generateRandomDigits(6);
       return prefix + subscriber;
     },
@@ -944,7 +979,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇰🇭",
     countryCode: "+855",
     generateNumber: () => {
-      const prefix = ["10", "11", "12", "15", "16", "17", "60", "66", "67", "68", "69", "77", "78", "81", "85", "86", "87", "88", "89", "90", "92", "95", "96", "97", "98", "99"][Math.floor(Math.random() * 26)];
+      const prefix = ["10", "11", "12", "15", "16", "17", "60", "66", "67", "68", "69", "77", "78", "81", "85", "86", "87", "88", "89", "90", "92", "95", "96", "97", "98", "99"][Math.floor(rng() * 26)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -992,7 +1027,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇱🇰",
     countryCode: "+94",
     generateNumber: () => {
-      const prefix = ["71", "72", "74", "75", "76", "77", "78", "79"][Math.floor(Math.random() * 8)];
+      const prefix = ["71", "72", "74", "75", "76", "77", "78", "79"][Math.floor(rng() * 8)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1008,7 +1043,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇳🇵",
     countryCode: "+977",
     generateNumber: () => {
-      const prefix = ["970", "971", "972", "973", "974", "975", "976", "977", "978", "979", "980", "981", "982", "984", "985", "986"][Math.floor(Math.random() * 16)];
+      const prefix = ["970", "971", "972", "973", "974", "975", "976", "977", "978", "979", "980", "981", "982", "984", "985", "986"][Math.floor(rng() * 16)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1040,7 +1075,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇺🇿",
     countryCode: "+998",
     generateNumber: () => {
-      const prefix = ["90", "91", "93", "94", "95", "97", "98", "99"][Math.floor(Math.random() * 8)];
+      const prefix = ["90", "91", "93", "94", "95", "97", "98", "99"][Math.floor(rng() * 8)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1056,7 +1091,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇹🇲",
     countryCode: "+993",
     generateNumber: () => {
-      const prefix = ["61", "62", "63", "64", "65", "66", "67", "68"][Math.floor(Math.random() * 8)];
+      const prefix = ["61", "62", "63", "64", "65", "66", "67", "68"][Math.floor(rng() * 8)];
       const subscriber = generateRandomDigits(6);
       return prefix + subscriber;
     },
@@ -1072,7 +1107,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇬🇪",
     countryCode: "+995",
     generateNumber: () => {
-      const prefix = ["51", "55", "56", "57", "58", "59", "79", "95"][Math.floor(Math.random() * 8)];
+      const prefix = ["51", "55", "56", "57", "58", "59", "79", "95"][Math.floor(rng() * 8)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1088,7 +1123,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇦🇲",
     countryCode: "+374",
     generateNumber: () => {
-      const prefix = ["33", "41", "43", "44", "77", "91", "93", "94", "95", "96", "97", "98", "99"][Math.floor(Math.random() * 13)];
+      const prefix = ["33", "41", "43", "44", "77", "91", "93", "94", "95", "96", "97", "98", "99"][Math.floor(rng() * 13)];
       const subscriber = generateRandomDigits(6);
       return prefix + subscriber;
     },
@@ -1104,7 +1139,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇱🇧",
     countryCode: "+961",
     generateNumber: () => {
-      const prefix = ["70", "71", "76", "78", "79", "80", "81"][Math.floor(Math.random() * 7)];
+      const prefix = ["70", "71", "76", "78", "79", "80", "81"][Math.floor(rng() * 7)];
       const subscriber = generateRandomDigits(6);
       return prefix + subscriber;
     },
@@ -1120,7 +1155,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇯🇴",
     countryCode: "+962",
     generateNumber: () => {
-      const prefix = ["77", "78", "79"][Math.floor(Math.random() * 3)];
+      const prefix = ["77", "78", "79"][Math.floor(rng() * 3)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1136,7 +1171,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇮🇶",
     countryCode: "+964",
     generateNumber: () => {
-      const prefix = ["73", "74", "75", "76", "77", "78", "79"][Math.floor(Math.random() * 7)];
+      const prefix = ["73", "74", "75", "76", "77", "78", "79"][Math.floor(rng() * 7)];
       const subscriber = generateRandomDigits(8);
       return prefix + subscriber;
     },
@@ -1216,7 +1251,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇾🇪",
     countryCode: "+967",
     generateNumber: () => {
-      const prefix = ["71", "73", "77"][Math.floor(Math.random() * 3)];
+      const prefix = ["71", "73", "77"][Math.floor(rng() * 3)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1248,7 +1283,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇰🇪",
     countryCode: "+254",
     generateNumber: () => {
-      const prefix = ["71", "74", "75", "76", "77", "78", "79"][Math.floor(Math.random() * 7)];
+      const prefix = ["71", "74", "75", "76", "77", "78", "79"][Math.floor(rng() * 7)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1264,7 +1299,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇺🇬",
     countryCode: "+256",
     generateNumber: () => {
-      const prefix = ["70", "71", "72", "74", "75", "76", "77", "78"][Math.floor(Math.random() * 8)];
+      const prefix = ["70", "71", "72", "74", "75", "76", "77", "78"][Math.floor(rng() * 8)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1280,7 +1315,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇹🇿",
     countryCode: "+255",
     generateNumber: () => {
-      const prefix = ["71", "74", "75", "76", "77", "78"][Math.floor(Math.random() * 6)];
+      const prefix = ["71", "74", "75", "76", "77", "78"][Math.floor(rng() * 6)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1296,7 +1331,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇪🇹",
     countryCode: "+251",
     generateNumber: () => {
-      const prefix = ["91", "92", "93", "94", "96", "97", "98"][Math.floor(Math.random() * 7)];
+      const prefix = ["91", "92", "93", "94", "96", "97", "98"][Math.floor(rng() * 7)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1312,7 +1347,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇬🇭",
     countryCode: "+233",
     generateNumber: () => {
-      const prefix = ["20", "23", "24", "26", "27", "50", "54", "55", "56", "57", "59"][Math.floor(Math.random() * 11)];
+      const prefix = ["20", "23", "24", "26", "27", "50", "54", "55", "56", "57", "59"][Math.floor(rng() * 11)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1328,7 +1363,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇨🇲",
     countryCode: "+237",
     generateNumber: () => {
-      const prefix = ["6", "7", "8"][Math.floor(Math.random() * 3)];
+      const prefix = ["6", "7", "8"][Math.floor(rng() * 3)];
       const subscriber = generateRandomDigits(8);
       return prefix + subscriber;
     },
@@ -1344,7 +1379,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇨🇮",
     countryCode: "+225",
     generateNumber: () => {
-      const prefix = ["01", "02", "03", "04", "05", "06", "07", "08"][Math.floor(Math.random() * 8)];
+      const prefix = ["01", "02", "03", "04", "05", "06", "07", "08"][Math.floor(rng() * 8)];
       const subscriber = generateRandomDigits(6);
       return prefix + subscriber;
     },
@@ -1360,7 +1395,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇸🇳",
     countryCode: "+221",
     generateNumber: () => {
-      const prefix = ["70", "75", "76", "77", "78"][Math.floor(Math.random() * 5)];
+      const prefix = ["70", "75", "76", "77", "78"][Math.floor(rng() * 5)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1376,7 +1411,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇵🇪",
     countryCode: "+51",
     generateNumber: () => {
-      const prefix = ["9"][Math.floor(Math.random() * 1)];
+      const prefix = ["9"][Math.floor(rng() * 1)];
       const subscriber = generateRandomDigits(8);
       return prefix + subscriber;
     },
@@ -1392,7 +1427,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇨🇴",
     countryCode: "+57",
     generateNumber: () => {
-      const prefix = ["300", "301", "302", "310", "311", "312", "313", "314", "315", "316", "317", "318", "319", "320", "321", "322"][Math.floor(Math.random() * 16)];
+      const prefix = ["300", "301", "302", "310", "311", "312", "313", "314", "315", "316", "317", "318", "319", "320", "321", "322"][Math.floor(rng() * 16)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1408,7 +1443,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇪🇨",
     countryCode: "+593",
     generateNumber: () => {
-      const prefix = ["9"][Math.floor(Math.random() * 1)];
+      const prefix = ["9"][Math.floor(rng() * 1)];
       const subscriber = generateRandomDigits(8);
       return prefix + subscriber;
     },
@@ -1440,7 +1475,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇧🇴",
     countryCode: "+591",
     generateNumber: () => {
-      const prefix = ["7"][Math.floor(Math.random() * 1)];
+      const prefix = ["7"][Math.floor(rng() * 1)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1456,7 +1491,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇨🇱",
     countryCode: "+56",
     generateNumber: () => {
-      const prefix = ["9"][Math.floor(Math.random() * 1)];
+      const prefix = ["9"][Math.floor(rng() * 1)];
       const subscriber = generateRandomDigits(8);
       return prefix + subscriber;
     },
@@ -1488,7 +1523,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇵🇾",
     countryCode: "+595",
     generateNumber: () => {
-      const prefix = ["961", "962", "963", "964", "965", "966", "967", "968", "969", "971", "972", "973", "974", "975", "976", "977", "978", "979", "981", "982", "983", "984", "985", "986", "987", "988", "989", "991", "992", "993", "994", "995", "996", "997", "998", "999"][Math.floor(Math.random() * 36)];
+      const prefix = ["961", "962", "963", "964", "965", "966", "967", "968", "969", "971", "972", "973", "974", "975", "976", "977", "978", "979", "981", "982", "983", "984", "985", "986", "987", "988", "989", "991", "992", "993", "994", "995", "996", "997", "998", "999"][Math.floor(rng() * 36)];
       const subscriber = generateRandomDigits(6);
       return prefix + subscriber;
     },
@@ -1504,7 +1539,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇺🇾",
     countryCode: "+598",
     generateNumber: () => {
-      const prefix = ["9"][Math.floor(Math.random() * 1)];
+      const prefix = ["9"][Math.floor(rng() * 1)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1520,7 +1555,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇨🇺",
     countryCode: "+53",
     generateNumber: () => {
-      const prefix = ["5"][Math.floor(Math.random() * 1)];
+      const prefix = ["5"][Math.floor(rng() * 1)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1570,7 +1605,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇹🇼",
     countryCode: "+886",
     generateNumber: () => {
-      const prefix = ["9"][Math.floor(Math.random() * 1)];
+      const prefix = ["9"][Math.floor(rng() * 1)];
       const subscriber = generateRandomDigits(8);
       return prefix + subscriber;
     },
@@ -1616,7 +1651,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇲🇳",
     countryCode: "+976",
     generateNumber: () => {
-      const prefix = ["8", "9"][Math.floor(Math.random() * 2)];
+      const prefix = ["8", "9"][Math.floor(rng() * 2)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1632,7 +1667,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇦🇿",
     countryCode: "+994",
     generateNumber: () => {
-      const prefix = ["50", "51", "55", "60", "70", "77"][Math.floor(Math.random() * 6)];
+      const prefix = ["50", "51", "55", "60", "70", "77"][Math.floor(rng() * 6)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1648,7 +1683,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇱🇺",
     countryCode: "+352",
     generateNumber: () => {
-      const prefix = ["6"][Math.floor(Math.random() * 1)];
+      const prefix = ["6"][Math.floor(rng() * 1)];
       const subscriber = generateRandomDigits(8);
       return prefix + subscriber;
     },
@@ -1664,7 +1699,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇨🇾",
     countryCode: "+357",
     generateNumber: () => {
-      const prefix = ["9"][Math.floor(Math.random() * 1)];
+      const prefix = ["9"][Math.floor(rng() * 1)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1712,7 +1747,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇬🇮",
     countryCode: "+350",
     generateNumber: () => {
-      const prefix = ["2", "5"][Math.floor(Math.random() * 2)];
+      const prefix = ["2", "5"][Math.floor(rng() * 2)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1728,7 +1763,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇦🇫",
     countryCode: "+93",
     generateNumber: () => {
-      const prefix = ["70", "71", "72", "73", "74", "75", "76", "77", "78", "79"][Math.floor(Math.random() * 10)];
+      const prefix = ["70", "71", "72", "73", "74", "75", "76", "77", "78", "79"][Math.floor(rng() * 10)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1744,7 +1779,7 @@ export const COUNTRIES: Record<string, Country> = {
     flag: "🇰🇬",
     countryCode: "+996",
     generateNumber: () => {
-      const prefix = ["500", "501", "502", "503", "504", "505", "506", "507", "508", "509", "550", "551", "552", "553", "554", "555", "556", "557", "558", "559", "700", "701", "702", "703", "704", "705", "706", "707", "708", "709", "770", "771", "772", "773", "774", "775", "776", "777", "778", "779", "990", "991", "992", "993", "994", "995", "996", "997", "998", "999"][Math.floor(Math.random() * 50)];
+      const prefix = ["500", "501", "502", "503", "504", "505", "506", "507", "508", "509", "550", "551", "552", "553", "554", "555", "556", "557", "558", "559", "700", "701", "702", "703", "704", "705", "706", "707", "708", "709", "770", "771", "772", "773", "774", "775", "776", "777", "778", "779", "990", "991", "992", "993", "994", "995", "996", "997", "998", "999"][Math.floor(rng() * 50)];
       const subscriber = generateRandomDigits(7);
       return prefix + subscriber;
     },
@@ -1796,7 +1831,7 @@ export function getCountry(isoCode: string): Country {
       countryCode: `+${meta.countryCode}`,
       generateNumber: () => {
         const len = meta.primaryLength;
-        return Array.from({ length: len }, () => Math.floor(Math.random() * 10)).join('');
+        return Array.from({ length: len }, () => Math.floor(rng() * 10)).join('');
       },
       formats: {
         international: (n: string) => `+${meta.countryCode} ${n}`,
@@ -1849,7 +1884,7 @@ export function getAllCountries(): Country[] {
 function generateRandomNumber(meta: PhoneMetadata | undefined, isoCode: string): string {
   if (meta) {
     const len = meta.primaryLength;
-    return Array.from({ length: len }, () => Math.floor(Math.random() * 10)).join('');
+    return Array.from({ length: len }, () => Math.floor(rng() * 10)).join('');
   }
   // Fallback: use existing generateNumber
   return COUNTRIES[isoCode].generateNumber();
@@ -1888,11 +1923,11 @@ function generateValidNumber(meta: PhoneMetadata | undefined, isoCode: string): 
       if (round === 0 && examplePrefix) {
         // First round: seed with example prefix
         const restLen = len - examplePrefix.length;
-        const rest = Array.from({ length: restLen }, () => Math.floor(Math.random() * 10)).join('');
+        const rest = Array.from({ length: restLen }, () => Math.floor(rng() * 10)).join('');
         nsn = examplePrefix + rest;
       } else {
         // Subsequent rounds: fully random
-        nsn = Array.from({ length: len }, () => Math.floor(Math.random() * 10)).join('');
+        nsn = Array.from({ length: len }, () => Math.floor(rng() * 10)).join('');
       }
       const e164 = '+' + cc + nsn;
       const parsed = parsePhoneNumberFromString(e164);
@@ -1958,18 +1993,15 @@ export const generatePhoneNumbers = (
   const country = COUNTRIES[countryCode];
 
   const numbers: string[] = [];
-  const originalRandom = Math.random;
   const meta = getPhoneMetadata(countryCode);
 
-  if (seed !== undefined && seed !== '') {
-    Math.random = mulberry32(hashSeed(seed));
-    // Reset example counters for deterministic example mode
-    if (mode === 'example') {
-      exampleCounters[countryCode] = 0;
-    }
+  if (seed !== undefined && seed !== '' && mode === 'example') {
+    // Example mode walks a per-country counter; reset it so the same seed
+    // yields the same sequence rather than continuing where the last run left off.
+    exampleCounters[countryCode] = 0;
   }
 
-  try {
+  return withSeed(seed, () => {
     for (let i = 0; i < quantity; i++) {
       let rawNumber: string;
 
@@ -2003,11 +2035,9 @@ export const generatePhoneNumbers = (
       }
       numbers.push(formattedNumber);
     }
-  } finally {
-    Math.random = originalRandom;
-  }
 
-  return numbers;
+    return numbers;
+  });
 };
 
 /** @deprecated Use generatePhoneNumbers with mode parameter */
@@ -2015,10 +2045,7 @@ export function getCountryInfo(countryCode: string): CountryInfo {
   const country = getCountry(countryCode);
   const meta = getPhoneMetadata(countryCode);
 
-  const originalRandom = Math.random;
-  Math.random = mulberry32(hashSeed("country-info-example"));
-  const example = country.generateNumber();
-  Math.random = originalRandom;
+  const example = withSeed('country-info-example', () => country.generateNumber());
 
   return {
     countryCode: country.countryCode,
