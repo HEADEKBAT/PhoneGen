@@ -34,6 +34,15 @@ import { getAllRegionCodes } from '@/lib/countryRegistry';
  * page which exists is actually reachable from here.
  */
 
+/**
+ * A product with a page behind it. 'coming-soon' and 'planned' products are
+ * roadmap entries: they appear on the home page as disabled cards and have no
+ * route, so the sitemap must not promise them.
+ */
+function isShipped(status: string): boolean {
+  return status === 'active' || status === 'beta';
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
   const seen = new Set<string>();
@@ -56,8 +65,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }
 
   /* ── Product landing pages per locale ────────────────────────────── */
+  /* Only products that are actually shipped. PRODUCTS also describes the
+     roadmap — seven entries are `status: 'planned'` with no page behind them
+     (IBAN, vehicle, license plate, mock API, JSON, text, lorem ipsum), and
+     listing those advertised 42 URLs that answered 404. The home page has
+     always gated its links on the same condition; the sitemap did not. */
   for (const locale of SEO_LOCALES) {
     for (const product of ALL_PRODUCTS) {
+      if (!isShipped(product.status)) continue;
       add(`/${locale}/${product.slug}`, product.seoPriority);
     }
   }
