@@ -1,131 +1,162 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { ArrowRight, Sparkles } from 'lucide-react';
-import AnimatedBackground from '@/components/background/AnimatedBackground';
-import { PLATFORM_CONFIG } from '@/lib/config';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Search, X } from 'lucide-react';
+import { useEffect, useRef } from 'react';
+import { useTranslations } from '@/lib/i18n';
+import { EASE } from './motion';
+
+interface HeroSectionProps {
+  /** Search text, owned by the page so the catalogue can filter on it. */
+  query: string;
+  onQuery: (value: string) => void;
+  /** Counts read from the registries, so the copy cannot drift from reality. */
+  generatorCount: number;
+  countryCount: number;
+}
+
+/** The searches people arrive with, in the order they arrive with them. */
+const CHIPS: { key: string; q: string }[] = [
+  { key: 'phone', q: 'phone' },
+  { key: 'password', q: 'password' },
+  { key: 'card', q: 'card' },
+  { key: 'qr', q: 'qr' },
+  { key: 'uuid', q: 'uuid' },
+];
 
 /**
- * Hero section for the GenCore home page.
+ * Hero for the platform home page.
  *
- * Editorial/magazine style with enhanced visual depth.
- * Large typography, generous whitespace, and a slow aurora backdrop.
+ * It used to be the wordmark at 8rem and a paragraph about what a data
+ * generation platform is — half a screen spent telling visitors something they
+ * knew before they clicked. With sixteen generators, the useful thing to put
+ * at the top is the way to find one, so the search field is the hero.
  */
-export default function HeroSection() {
-  const { locale } = useParams<{ locale: string }>() ?? { locale: 'en' };
+export default function HeroSection({
+  query,
+  onQuery,
+  generatorCount,
+  countryCount,
+}: HeroSectionProps) {
+  const { t } = useTranslations();
+  const reduced = useReducedMotion();
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  /* "/" focuses the search, the way every tool catalogue does it. */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
+      const el = document.activeElement;
+      const typing =
+        el instanceof HTMLInputElement ||
+        el instanceof HTMLTextAreaElement ||
+        (el instanceof HTMLElement && el.isContentEditable);
+      if (typing) return;
+      e.preventDefault();
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  /* Entrance runs on mount, not on scroll — the hero is already on screen. */
+  const rise = (delay: number) =>
+    reduced
+      ? {}
+      : {
+          initial: { opacity: 0, y: 12 },
+          animate: { opacity: 1, y: 0 },
+          transition: { duration: 0.45, delay, ease: EASE },
+        };
 
   return (
-    <section className="relative overflow-hidden bg-linear-to-b from-primary/3 via-primary/1 to-background">
-      {/* Enhanced aurora background — larger, slower orbs */}
-      <div className="absolute inset-0 z-0" aria-hidden="true">
-        <AnimatedBackground
-          aurora={true}
-          grid={true}
-          stars={true}
-          noise={true}
-          floatingData={true}
-        />
-        {/* Extra hero-only aurora orbs for dramatic scale */}
-        <div
-          className="absolute top-[-20%] left-[-10%] w-200 h-200 rounded-full opacity-[0.08] dark:opacity-[0.06]"
-          style={{
-            background: 'radial-gradient(ellipse, #22c55e, transparent 70%)',
-            filter: 'blur(160px)',
-            animation: 'hero-drift-1 45s ease-in-out infinite alternate',
-          }}
-        />
-        <div
-          className="absolute bottom-[-15%] right-[10%] w-175 h-175 rounded-full opacity-[0.06] dark:opacity-[0.04]"
-          style={{
-            background: 'radial-gradient(ellipse, #6366f1, transparent 70%)',
-            filter: 'blur(180px)',
-            animation: 'hero-drift-2 50s ease-in-out infinite alternate',
-          }}
-        />
-        <style>{`
-          @keyframes hero-drift-1 {
-            0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-            33% { transform: translate3d(40px, -30px, 0) scale(1.05); }
-            66% { transform: translate3d(-20px, 20px, 0) scale(0.95); }
-          }
-          @keyframes hero-drift-2 {
-            0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-            33% { transform: translate3d(-30px, 40px, 0) scale(0.95); }
-            66% { transform: translate3d(20px, -20px, 0) scale(1.05); }
-          }
-        `}</style>
+    <section className="relative border-b border-border">
+      {/* A single warm bloom behind the search, so the hero is not flat. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 overflow-hidden"
+      >
+        <div className="absolute -top-40 left-1/4 size-[36rem] rounded-full bg-action/[0.07] blur-[120px] dark:bg-action/[0.09]" />
+        <div className="absolute -bottom-52 right-1/4 size-[30rem] rounded-full bg-primary/[0.06] blur-[130px]" />
       </div>
 
-      {/* Gradient fade at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-linear-to-t from-background to-transparent pointer-events-none z-1" aria-hidden="true" />
-
-      {/* Content */}
-      <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 pt-28 sm:pt-36 pb-32 sm:pb-40 text-center">
-        {/* Tagline badge */}
-        <motion.div
-          initial={{ opacity: 0, y: -8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-          className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/4 backdrop-blur-sm px-4 py-1.5 text-xs font-medium text-primary mb-8"
-        >
-          <Sparkles size={12} />
-          {PLATFORM_CONFIG.tagline}
-        </motion.div>
-
-        {/* Main headline — editorial scale */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-          className="font-heading text-5xl sm:text-7xl lg:text-8xl font-bold text-foreground tracking-tight leading-[1.05]"
-        >
-          Gen
-          <span className="text-primary">Core</span>
-        </motion.h1>
-
-        {/* Subtitle — larger, more readable */}
+      <div className="relative mx-auto max-w-5xl px-4 sm:px-6 pt-16 pb-12 sm:pt-24 sm:pb-16">
         <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-          className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed font-light"
+          {...rise(0)}
+          className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-xs text-muted-foreground sm:text-[0.8125rem]"
         >
-          {PLATFORM_CONFIG.description}
+          <span className="text-action">
+            {t('platformHome.eyebrow.generators', { n: generatorCount })}
+          </span>
+          <span aria-hidden="true" className="size-[3px] rounded-full bg-border" />
+          <span>{t('platformHome.eyebrow.countries', { n: countryCount })}</span>
+          <span aria-hidden="true" className="size-[3px] rounded-full bg-border" />
+          <span>{t('platformHome.eyebrow.inBrowser')}</span>
+          <span aria-hidden="true" className="size-[3px] rounded-full bg-border" />
+          <span>{t('platformHome.eyebrow.nothingStored')}</span>
         </motion.p>
 
-        {/* CTA buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-          className="mt-10 flex flex-wrap items-center justify-center gap-4"
+        <motion.h1
+          {...rise(0.06)}
+          className="mt-5 max-w-[17ch] font-heading text-4xl font-bold leading-[1.08] tracking-tight text-foreground sm:text-5xl lg:text-6xl"
         >
-          <Link
-            href={`/${locale}/phone-generator`}
-            className="group relative inline-flex items-center gap-2 h-14 px-8 rounded-2xl bg-primary text-primary-foreground font-semibold text-sm hover:bg-primary/90 transition-all duration-300 shadow-md hover:shadow-lg active:scale-[0.98]"
-          >
-            <span>Go to Phone Generator</span>
-            <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-0.5" />
-          </Link>
-          <Link
-            href={`/${locale}/about`}
-            className="group inline-flex items-center gap-2 h-14 px-8 rounded-2xl border border-border bg-card/80 backdrop-blur-sm text-foreground font-medium text-sm hover:bg-card hover:border-primary/20 transition-all duration-300 shadow-sm hover:shadow-elevated"
-          >
-            About GenCore
-          </Link>
-        </motion.div>
+          {t('platformHome.title')}
+        </motion.h1>
 
-        {/* Subtle scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-          className="mt-20 flex flex-col items-center gap-2 text-muted-foreground/40"
+        <motion.p
+          {...rise(0.12)}
+          className="mt-5 max-w-[52ch] text-base leading-relaxed text-muted-foreground sm:text-lg"
         >
-          <div className="w-px h-8 bg-linear-to-b from-primary/30 to-transparent" />
-          <span className="text-[10px] font-medium tracking-widest uppercase">Scroll</span>
+          {t('platformHome.lede')}
+        </motion.p>
+
+        <motion.div {...rise(0.18)} className="mt-8 max-w-2xl">
+          <div className="group flex items-center gap-3 rounded-2xl border border-border bg-card px-4 shadow-card transition-[border-color,box-shadow] focus-within:border-action/40 focus-within:shadow-elevated">
+            <Search size={17} className="shrink-0 text-action" aria-hidden="true" />
+            <input
+              ref={inputRef}
+              type="search"
+              value={query}
+              onChange={(e) => onQuery(e.target.value)}
+              aria-label={t('platformHome.searchLabel')}
+              placeholder={t('platformHome.searchPlaceholder')}
+              className="h-13 min-w-0 flex-1 bg-transparent py-3.5 text-base text-foreground outline-none placeholder:text-muted-foreground"
+            />
+            {query ? (
+              <button
+                type="button"
+                onClick={() => onQuery('')}
+                aria-label={t('platformHome.clear')}
+                className="shrink-0 rounded-md p-1 text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <X size={16} />
+              </button>
+            ) : (
+              <kbd
+                aria-hidden="true"
+                className="hidden shrink-0 rounded border border-border px-1.5 py-0.5 font-mono text-[0.6875rem] text-muted-foreground sm:block"
+              >
+                /
+              </kbd>
+            )}
+          </div>
+
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <span className="text-[0.8125rem] text-muted-foreground">
+              {t('platformHome.popular')}
+            </span>
+            {CHIPS.map((chip) => (
+              <button
+                key={chip.key}
+                type="button"
+                onClick={() => onQuery(chip.q)}
+                className="rounded-full border border-border bg-card px-3 py-1 text-[0.8125rem] text-muted-foreground transition-colors hover:border-action/40 hover:text-action"
+              >
+                {t(`platformHome.chips.${chip.key}`)}
+              </button>
+            ))}
+          </div>
         </motion.div>
       </div>
     </section>

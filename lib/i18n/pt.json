@@ -1178,5 +1178,194 @@
     "previewSocialPost": "Post em rede social",
     "previewAvatar": "Avatar",
     "previewPresentation": "Apresentação"
+  },
+  "products": {
+    "phone": {
+      "title": "Gerador de números de telefone",
+      "description": "Números móveis e fixos válidos para 245 países, verificados com os mesmos metadados do libphonenumber-js que o seu código usa."
+    },
+    "user": {
+      "title": "Gerador de usuários",
+      "description": "Perfis completos — nome, e-mail, telefone, endereço e data de nascimento — coerentes entre si, e não retirados de fontes separadas."
+    },
+    "credential": {
+      "title": "Gerador de credenciais",
+      "description": "Senhas, frases-senha, PINs, chaves de API e segredos de webhook, gerados com a Web Crypto API e com medidor de força."
+    },
+    "address": {
+      "title": "Gerador de endereços",
+      "description": "Rua, cidade, região e código postal no formato que cada país realmente usa, e não um modelo único com os nomes trocados."
+    },
+    "email": {
+      "title": "Gerador de e-mails",
+      "description": "Endereços no estilo Gmail, corporativos e descartáveis, com subendereçamento e variantes com pontos para testar filtros."
+    },
+    "username": {
+      "title": "Gerador de nomes de usuário",
+      "description": "Nomes por padrão: pares de palavras, leetspeak, sufixos numéricos, com limite de comprimento e verificação de legibilidade."
+    },
+    "company": {
+      "title": "Gerador de empresas",
+      "description": "Empresas fictícias cujo setor, forma jurídica, quadro de pessoal e faturamento combinam entre si em vez de se contradizerem."
+    },
+    "uuid": {
+      "title": "Gerador de UUID",
+      "description": "UUID v4 e v7 ordenados por tempo, em lote, nos formatos que drivers de banco de dados e APIs esperam."
+    },
+    "lorem": {
+      "title": "Gerador de Lorem Ipsum",
+      "description": "Texto de preenchimento para maquetes e layouts."
+    },
+    "qr": {
+      "title": "QR Studio",
+      "description": "37 tipos de conteúdo — URL, Wi-Fi, vCard, pagamento — com editor, espaço para logotipo e controle de correção de erros."
+    },
+    "barcode": {
+      "title": "Gerador de códigos de barras",
+      "description": "EAN, UPC, Code 128, ITF-14 e mais dez, com o dígito verificador calculado e explicado, não adivinhado."
+    },
+    "payment": {
+      "title": "Payment Studio",
+      "description": "Cartões de teste de 15 redes, um validador, uma consulta de BIN e exportação em massa em seis formatos."
+    },
+    "creditCard": {
+      "title": "Gerador de cartões de crédito",
+      "description": "O gerador sozinho, quando o estúdio inteiro é demais. Os números passam no Luhn e caem em uma faixa BIN real."
+    },
+    "iban": {
+      "title": "Gerador de IBAN",
+      "description": "Números IBAN válidos para testes bancários internacionais."
+    },
+    "vehicle": {
+      "title": "Gerador de veículos",
+      "description": "Dados de veículo realistas — VIN, placas, marca, modelo e ano."
+    },
+    "cryptoWallet": {
+      "title": "Crypto Wallet Playground",
+      "description": "Endereços, mnemônicos BIP39 e árvores de derivação HD para 22 blockchains, mais um validador. Para testes — nunca para fundos reais."
+    },
+    "licensePlate": {
+      "title": "Gerador de placas de veículo",
+      "description": "Placas de veículo realistas para vários países."
+    },
+    "mockApi": {
+      "title": "Gerador de APIs simuladas",
+      "description": "Endpoints REST e GraphQL simulados para desenvolvimento."
+    },
+    "json": {
+      "title": "Gerador de JSON",
+      "description": "Estruturas JSON realistas para testar APIs."
+    },
+    "color": {
+      "title": "Color Studio",
+      "description": "Paletas, gradientes, conversores e verificações de contraste WCAG, exportáveis como CSS, Tailwind ou design tokens."
+    },
+    "image": {
+      "title": "Image Studio",
+      "description": "Remoção de fundo, ampliação e conversão de formatos, com um pincel para retocar a máscara à mão."
+    },
+    "text": {
+      "title": "Gerador de texto",
+      "description": "Cadeias, frases e parágrafos aleatórios para testes."
+    },
+    "media": {
+      "title": "Media Studio",
+      "description": "Converta, comprima e corte vídeo com FFmpeg compilado para WebAssembly. Nada é enviado."
+    }
+  },
+  "platformHome": {
+    "eyebrow": {
+      "generators": "{n} geradores",
+      "countries": "{n} países",
+      "inBrowser": "funciona no navegador",
+      "nothingStored": "nada é armazenado"
+    },
+    "title": "Dados de teste que passam na validação.",
+    "lede": "Números que o libphonenumber aceita, cartões que passam no Luhn, códigos de barras com o dígito verificador certo. Escolha um gerador e copie o resultado — sem conta, sem upload, sem limites.",
+    "searchPlaceholder": "Buscar geradores — telefone, QR, senha…",
+    "searchLabel": "Buscar geradores",
+    "popular": "Mais buscados:",
+    "chips": {
+      "phone": "Números de telefone",
+      "password": "Senhas",
+      "card": "Cartões de teste",
+      "qr": "Códigos QR",
+      "uuid": "UUID"
+    },
+    "groups": {
+      "people": {
+        "title": "Pessoas, lugares e contatos",
+        "note": "Preencher um formulário, popular um banco, montar uma demo."
+      },
+      "secrets": {
+        "title": "Segredos e identificadores",
+        "note": "Tudo aqui vem da Web Crypto API."
+      },
+      "payments": {
+        "title": "Pagamentos e cripto",
+        "note": "Apenas valores de teste — nenhum está vinculado a uma conta."
+      },
+      "codes": {
+        "title": "Códigos e códigos de barras",
+        "note": "Renderizados em SVG, então ficam nítidos em qualquer tamanho."
+      },
+      "media": {
+        "title": "Design e mídia",
+        "note": "Ferramentas mais pesadas — e ainda assim tudo roda na sua máquina."
+      }
+    },
+    "empty": "Nada corresponde a “{q}”.",
+    "emptyHint": "Tente uma palavra mais curta, ou limpe a busca.",
+    "clear": "Limpar",
+    "planned": {
+      "title": "Em preparação",
+      "badge": "{n} planejados",
+      "note": "Ainda não existem, por isso não estão no catálogo acima — lá cada cartão leva a algum lugar."
+    },
+    "trust": {
+      "local": {
+        "k": "no cliente",
+        "title": "Seus dados não saem da aba",
+        "body": "Cada gerador roda no navegador. Nada é enviado, registrado ou armazenado — e é por isso que não há conta a criar."
+      },
+      "valid": {
+        "k": "libphonenumber · Luhn · BIP39",
+        "title": "Válido, não apenas plausível",
+        "body": "A saída é construída pelos mesmos padrões com que seu código a verifica, então passa no validador em vez de falhar no primeiro formulário."
+      },
+      "formats": {
+        "k": "json · csv · sql · xml",
+        "title": "No formato de que você precisa",
+        "body": "Copie um valor ou exporte mil linhas. Com seed a geração se repete, então um teste que falha continua reproduzível."
+      }
+    },
+    "faq": {
+      "title": "Perguntas frequentes",
+      "free": {
+        "q": "É gratuito?",
+        "a": "Sim, tudo, sem cadastro e sem limite diário. Os geradores rodam na sua máquina, então não há o que medir."
+      },
+      "phones": {
+        "q": "Os números são reais?",
+        "a": "São estruturalmente válidos e não atribuídos. São construídos a partir dos metadados libphonenumber do Google, então passam na validação do país escolhido sem pertencer a ninguém."
+      },
+      "cards": {
+        "q": "Posso pagar com esses cartões?",
+        "a": "Não. Eles passam na verificação de Luhn e caem na faixa BIN de uma rede, que é o que um formulário de pagamento valida — mas não estão vinculados a nenhuma conta e serão recusados."
+      },
+      "storage": {
+        "q": "Vocês guardam o que eu gero?",
+        "a": "Não. A geração acontece no seu navegador e nada é enviado a um servidor. O histórico, quando uma ferramenta mantém um, fica apenas nesse navegador."
+      },
+      "seed": {
+        "q": "Posso obter os mesmos valores duas vezes?",
+        "a": "Sim — dê uma seed ao gerador e ele devolve o mesmo conjunto sempre, então um fixture permanece estável e um teste que falha pode ser reproduzido."
+      }
+    },
+    "closing": {
+      "title": "Comece pelo que você veio buscar",
+      "body": "A maioria começa pelos números de telefone, disponíveis para {n} países.",
+      "cta": "Abrir o gerador de telefones"
+    }
   }
 }

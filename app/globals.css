@@ -24,6 +24,9 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-action: var(--action);
+  --color-action-foreground: var(--action-foreground);
+  --color-action-soft: var(--action-soft);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
@@ -42,6 +45,15 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+
+  /* Elevations. These existed as :root variables only, so `shadow-card` and
+     `shadow-elevated` were classes Tailwind never generated — ten components
+     had been asking for a shadow and getting nothing. Registering them here
+     is what turns the variables into utilities. */
+  --shadow-card: var(--elev-card);
+  --shadow-elevated: var(--elev-elevated);
+  --shadow-floating: var(--elev-floating);
+  --shadow-dropdown: var(--elev-dropdown);
 
   --radius-sm: calc(var(--radius) * 0.5);
   --radius-md: calc(var(--radius) * 0.75);
@@ -69,9 +81,21 @@
   --muted: #f0f2f5;
   --muted-foreground: #64748b;
 
-  /* Accent — warm but restrained */
+  /* Accent — warm but restrained.
+     NOTE: shadcn treats `accent` as a hover SURFACE (`hover:bg-accent`), and
+     several components here rely on that. It is therefore not usable as a
+     brand colour, which is what `--action` below is for. */
   --accent: #f59e0b;
   --accent-foreground: #ffffff;
+
+  /* Action — the orange that marks "press this".
+     The platform's green says *valid*: check digits, Luhn, a passing
+     contrast ratio. When green also painted every button and border,
+     a green tick stopped meaning anything. Orange takes the action half
+     so the two can be told apart at a glance. */
+  --action: #c2410c;
+  --action-foreground: #ffffff;
+  --action-soft: #fce7d8;
 
   /* Semantic */
   --destructive: #ef4444;
@@ -86,10 +110,10 @@
   --radius: 1rem;
 
   /* Depth shadows — light theme, very soft */
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
-  --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.04);
-  --shadow-floating: 0 8px 30px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-dropdown: 0 12px 40px rgba(0, 0, 0, 0.08);
+  --elev-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --elev-elevated: 0 4px 12px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --elev-floating: 0 8px 30px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --elev-dropdown: 0 12px 40px rgba(0, 0, 0, 0.08);
 
   /* Sidebar — same surface hierarchy */
   --sidebar: #f8fafc;
@@ -129,9 +153,14 @@
   --muted: #1a1b23;
   --muted-foreground: #8b8d97;
 
-  /* Accent */
+  /* Accent — see the note in the light theme: this is a hover surface. */
   --accent: #fbbf24;
   --accent-foreground: #08090e;
+
+  /* Action — brighter here so it holds against the deep background. */
+  --action: #ff8a3d;
+  --action-foreground: #2a1204;
+  --action-soft: #331a0a;
 
   /* Semantic */
   --destructive: #ef4444;
@@ -143,10 +172,10 @@
   --ring: rgba(74, 222, 128, 0.20);
 
   /* Depth shadows — dark theme uses luminous depth (glow, not cast shadow) */
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-elevated: 0 4px 16px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-floating: 0 8px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-dropdown: 0 12px 48px rgba(0, 0, 0, 0.6);
+  --elev-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --elev-elevated: 0 4px 16px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --elev-floating: 0 8px 32px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --elev-dropdown: 0 12px 48px rgba(0, 0, 0, 0.6);
 
   /* Sidebar */
   --sidebar: #111218;

@@ -1,7 +1,13 @@
 /**
  * Platform Config — single source of truth for GenCore platform metadata.
  *
- * All platform-wide settings (brand, stats, social, SEO, announcement)
+ * All platform-wide settings (brand, social, SEO, announcement).
+ *
+ * `stats` and `roadmap` used to live here as hand-written English arrays and
+ * were rendered by two home-page sections. Both are gone: the numbers now come
+ * from the registries that decide them (the strip claimed "8+ Products" while
+ * sixteen were live), and the roadmap is the planned products themselves,
+ * read from PRODUCTS and translated like everything else.
  * live here. Components and pages read from this file; never hardcode
  * platform strings outside this file.
  */
@@ -18,7 +24,6 @@ export interface PlatformConfig {
   /** GitHub org/repo */
   github: string;
   /** Platform statistics shown on homepage */
-  stats: { label: string; value: string }[];
   /** Social links */
   social: {
     github: string;
@@ -27,13 +32,6 @@ export interface PlatformConfig {
   };
   /** Optional announcement bar (null = hidden) */
   announcement: { text: string; href?: string } | null;
-  /** Product roadmap entries */
-  roadmap: {
-    title: string;
-    description: string;
-    status: 'done' | 'in-progress' | 'planned';
-    quarter?: string;
-  }[];
   /** Footer section links */
   footerLinks: {
     section: string;
@@ -66,61 +64,11 @@ export const PLATFORM_CONFIG: PlatformConfig = {
   domain: 'www.gencore.space',
   github: 'gencore',
 
-  stats: [
-    { label: 'Countries', value: '245+' },
-    { label: 'Products', value: '8+' },
-    { label: 'Formats', value: '4+' },
-    { label: 'Free', value: '100%' },
-  ],
-
   social: {
     github: 'https://github.com/gencore',
   },
 
   announcement: null,
-
-  roadmap: [
-    {
-      title: 'Phone Generator',
-      description: 'Valid phone numbers for 245+ countries with libphonenumber-js validation.',
-      status: 'done',
-    },
-    {
-      title: 'User Generator',
-      description: 'Realistic user profiles with names, addresses, and contacts.',
-      status: 'done',
-    },
-    {
-      title: 'Credential Generator',
-      description: 'Secure passwords, passphrases, PINs, and API keys.',
-      status: 'done',
-    },
-    {
-      title: 'Email & Username Generators',
-      description: 'Generate realistic emails and usernames for testing.',
-      status: 'done',
-    },
-    {
-      title: 'Platform Homepage',
-      description: 'Unified platform landing page with product discovery.',
-      status: 'in-progress',
-    },
-    {
-      title: 'Address Generator',
-      description: 'Valid addresses for countries worldwide.',
-      status: 'done',
-    },
-    {
-      title: 'Company Generator',
-      description: 'Fictional company profiles with industry data.',
-      status: 'done',
-    },
-    {
-      title: 'Self-serve Product Addition',
-      description: 'Add new products and generators via config — no code changes.',
-      status: 'in-progress',
-    },
-  ],
 
   footerLinks: [
     {

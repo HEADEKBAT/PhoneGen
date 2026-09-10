@@ -1178,5 +1178,194 @@
     "previewSocialPost": "Publication",
     "previewAvatar": "Avatar",
     "previewPresentation": "Présentation"
+  },
+  "products": {
+    "phone": {
+      "title": "Générateur de numéros de téléphone",
+      "description": "Numéros mobiles et fixes valides pour 245 pays, vérifiés avec les mêmes métadonnées libphonenumber-js que votre code."
+    },
+    "user": {
+      "title": "Générateur d'utilisateurs",
+      "description": "Des profils complets — nom, e-mail, téléphone, adresse et date de naissance — cohérents entre eux plutôt que tirés séparément."
+    },
+    "credential": {
+      "title": "Générateur d'identifiants",
+      "description": "Mots de passe, phrases secrètes, codes PIN, clés d'API et secrets de webhook, générés via la Web Crypto API, avec indicateur de robustesse."
+    },
+    "address": {
+      "title": "Générateur d'adresses",
+      "description": "Rue, ville, région et code postal au format réellement utilisé par chaque pays, et non un modèle unique aux noms remplacés."
+    },
+    "email": {
+      "title": "Générateur d'adresses e-mail",
+      "description": "Adresses de type Gmail, professionnelles et jetables, avec sous-adressage et variantes pointées pour tester les filtres."
+    },
+    "username": {
+      "title": "Générateur de noms d'utilisateur",
+      "description": "Pseudonymes par motif — paires de mots, leetspeak, suffixes numérotés — avec limites de longueur et contrôle de lisibilité."
+    },
+    "company": {
+      "title": "Générateur d'entreprises",
+      "description": "Des entreprises fictives dont le secteur, la forme juridique, l'effectif et le chiffre d'affaires sont cohérents entre eux."
+    },
+    "uuid": {
+      "title": "Générateur d'UUID",
+      "description": "UUID v4 et v7 ordonnés dans le temps, en lot, dans les formats attendus par les pilotes de bases de données et les API."
+    },
+    "lorem": {
+      "title": "Générateur de Lorem Ipsum",
+      "description": "Texte de remplissage pour maquettes et mises en page."
+    },
+    "qr": {
+      "title": "QR Studio",
+      "description": "37 types de contenu — URL, Wi-Fi, vCard, paiement — avec éditeur, emplacement de logo et réglage de la correction d'erreurs."
+    },
+    "barcode": {
+      "title": "Générateur de codes-barres",
+      "description": "EAN, UPC, Code 128, ITF-14 et dix autres, avec la clé de contrôle calculée et expliquée plutôt que devinée."
+    },
+    "payment": {
+      "title": "Payment Studio",
+      "description": "Cartes de test pour 15 réseaux, un validateur, une recherche BIN et un export en masse dans six formats."
+    },
+    "creditCard": {
+      "title": "Générateur de cartes bancaires",
+      "description": "Le générateur seul, quand tout le studio est superflu. Les numéros passent Luhn et relèvent d'une vraie plage BIN."
+    },
+    "iban": {
+      "title": "Générateur d'IBAN",
+      "description": "Numéros IBAN valides pour les tests bancaires internationaux."
+    },
+    "vehicle": {
+      "title": "Générateur de véhicules",
+      "description": "Données de véhicule réalistes — VIN, plaques, marque, modèle et année."
+    },
+    "cryptoWallet": {
+      "title": "Crypto Wallet Playground",
+      "description": "Adresses, mnémoniques BIP39 et arbres de dérivation HD pour 22 blockchains, plus un validateur. Pour les tests, jamais pour de vrais fonds."
+    },
+    "licensePlate": {
+      "title": "Générateur de plaques d'immatriculation",
+      "description": "Plaques d'immatriculation réalistes pour plusieurs pays."
+    },
+    "mockApi": {
+      "title": "Générateur d'API simulées",
+      "description": "Points de terminaison REST et GraphQL simulés pour le développement."
+    },
+    "json": {
+      "title": "Générateur de JSON",
+      "description": "Structures JSON réalistes pour tester des API."
+    },
+    "color": {
+      "title": "Color Studio",
+      "description": "Palettes, dégradés, convertisseurs et contrôles de contraste WCAG, exportables en CSS, Tailwind ou tokens de design."
+    },
+    "image": {
+      "title": "Image Studio",
+      "description": "Suppression d'arrière-plan, agrandissement et conversion de formats, avec un pinceau pour retoucher le masque à la main."
+    },
+    "text": {
+      "title": "Générateur de texte",
+      "description": "Chaînes, phrases et paragraphes aléatoires pour les tests."
+    },
+    "media": {
+      "title": "Media Studio",
+      "description": "Convertissez, compressez et découpez des vidéos avec FFmpeg compilé en WebAssembly. Rien n'est téléversé."
+    }
+  },
+  "platformHome": {
+    "eyebrow": {
+      "generators": "{n} générateurs",
+      "countries": "{n} pays",
+      "inBrowser": "fonctionne dans le navigateur",
+      "nothingStored": "rien n'est conservé"
+    },
+    "title": "Des données de test qui passent la validation.",
+    "lede": "Des numéros que libphonenumber accepte, des cartes qui passent Luhn, des codes-barres à la bonne clé de contrôle. Choisissez un générateur et copiez le résultat — sans compte, sans téléversement, sans limite.",
+    "searchPlaceholder": "Rechercher un générateur — téléphone, QR, mot de passe…",
+    "searchLabel": "Rechercher un générateur",
+    "popular": "Recherches fréquentes :",
+    "chips": {
+      "phone": "Numéros de téléphone",
+      "password": "Mots de passe",
+      "card": "Cartes de test",
+      "qr": "Codes QR",
+      "uuid": "UUID"
+    },
+    "groups": {
+      "people": {
+        "title": "Personnes, lieux et contacts",
+        "note": "Remplir un formulaire, alimenter une base, monter une démo."
+      },
+      "secrets": {
+        "title": "Secrets et identifiants",
+        "note": "Tout ici provient de la Web Crypto API."
+      },
+      "payments": {
+        "title": "Paiements et crypto",
+        "note": "Valeurs de test uniquement — aucune n'est rattachée à un compte."
+      },
+      "codes": {
+        "title": "Codes et codes-barres",
+        "note": "Rendus en SVG, ils restent nets à toute taille."
+      },
+      "media": {
+        "title": "Design et médias",
+        "note": "Des outils plus lourds — et pourtant tout se passe sur votre machine."
+      }
+    },
+    "empty": "Rien ne correspond à « {q} ».",
+    "emptyHint": "Essayez un mot plus court, ou videz la recherche.",
+    "clear": "Effacer",
+    "planned": {
+      "title": "En chantier",
+      "badge": "{n} prévus",
+      "note": "Pas encore réalisés, donc absents du catalogue ci-dessus — chaque carte y mène quelque part."
+    },
+    "trust": {
+      "local": {
+        "k": "côté client",
+        "title": "Vos données ne quittent pas l'onglet",
+        "body": "Chaque générateur tourne dans le navigateur. Rien n'est téléversé, journalisé ni conservé — d'où l'absence de compte à créer."
+      },
+      "valid": {
+        "k": "libphonenumber · Luhn · BIP39",
+        "title": "Valide, pas seulement plausible",
+        "body": "La sortie est construite selon les normes mêmes que votre code vérifie : elle passe le validateur au lieu d'échouer au premier formulaire."
+      },
+      "formats": {
+        "k": "json · csv · sql · xml",
+        "title": "Sous la forme qu'il vous faut",
+        "body": "Copiez une valeur ou exportez mille lignes. Avec une graine, la génération se répète : un test en échec reste reproductible."
+      }
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "free": {
+        "q": "Est-ce gratuit ?",
+        "a": "Oui, entièrement, sans inscription ni limite quotidienne. Les générateurs tournent sur votre machine : nous n'avons rien à compter."
+      },
+      "phones": {
+        "q": "Les numéros sont-ils réels ?",
+        "a": "Ils sont structurellement valides et non attribués. Ils sont construits à partir des métadonnées libphonenumber de Google : ils passent la validation du pays choisi sans appartenir à personne."
+      },
+      "cards": {
+        "q": "Puis-je payer avec ces numéros de carte ?",
+        "a": "Non. Ils passent le contrôle de Luhn et relèvent de la plage BIN d'un réseau — c'est ce que vérifie un formulaire de paiement — mais ils ne sont rattachés à aucun compte et seront refusés."
+      },
+      "storage": {
+        "q": "Conservez-vous ce que je génère ?",
+        "a": "Non. La génération a lieu dans votre navigateur et rien n'est envoyé à un serveur. L'historique, quand un outil en tient un, reste dans ce navigateur."
+      },
+      "seed": {
+        "q": "Puis-je obtenir deux fois les mêmes valeurs ?",
+        "a": "Oui — donnez une graine au générateur et il renverra le même ensemble à chaque fois : un jeu de données reste stable et un test en échec se reproduit."
+      }
+    },
+    "closing": {
+      "title": "Commencez par ce que vous êtes venu chercher",
+      "body": "La plupart commencent par les numéros de téléphone, disponibles pour {n} pays.",
+      "cta": "Ouvrir le générateur de numéros"
+    }
   }
 }

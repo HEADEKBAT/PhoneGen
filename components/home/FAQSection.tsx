@@ -1,122 +1,84 @@
 'use client';
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
-
-const FAQS = [
-  {
-    q: 'What is GenCore?',
-    a: 'GenCore is a free data generation platform for developers, QA engineers, and testers. Generate realistic phone numbers, user profiles, addresses, credentials, and more — all valid and ready to use in testing and development.',
-  },
-  {
-    q: 'Is GenCore free?',
-    a: 'Yes, GenCore is 100% free. No sign-up, no credit card, no limits. We believe test data should be accessible to everyone.',
-  },
-  {
-    q: 'How are phone numbers generated?',
-    a: 'Phone numbers are generated using libphonenumber-js, Google\'s phone number handling library. Numbers pass actual validation and match real country formats.',
-  },
-  {
-    q: 'Do you store generated data?',
-    a: 'No. All generation happens in your browser. We never store, log, or transmit generated data to any server.',
-  },
-  {
-    q: 'Can I use this for production testing?',
-    a: 'Absolutely. GenCore is designed for development, testing, QA, and staging environments. The generated data is realistic and follows proper format rules.',
-  },
-];
+import { useTranslations } from '@/lib/i18n';
+import { REVEAL_VIEWPORT, revealCard, revealUp, stagger } from './motion';
 
 /**
- * FAQ accordion section with JSON-LD structured data and smooth animations.
+ * The five questions people actually arrive with.
+ *
+ * Also emitted as FAQPage JSON-LD, which is what makes these eligible for a
+ * rich result — the previous FAQ was rendered but never marked up.
  */
-export default function FAQSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+const QUESTIONS = ['free', 'phones', 'cards', 'storage', 'seed'] as const;
+
+export default function FaqSection() {
+  const { t } = useTranslations();
+  const reduced = useReducedMotion();
+
+  const faqs = QUESTIONS.map((id) => ({
+    id,
+    q: t(`platformHome.faq.${id}.q`),
+    a: t(`platformHome.faq.${id}.a`),
+  }));
 
   return (
-    <section className="mx-auto max-w-3xl px-4 sm:px-6 py-20 sm:py-28">
-      {/* JSON-LD */}
+    <section id="faq" className="border-t border-border">
+      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
+        <motion.h2
+          variants={revealUp}
+          initial={reduced ? false : 'hidden'}
+          whileInView="shown"
+          viewport={REVEAL_VIEWPORT}
+          className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl"
+        >
+          {t('platformHome.faq.title')}
+        </motion.h2>
+
+        <motion.div
+          variants={stagger(0.05, 0.05)}
+          initial={reduced ? false : 'hidden'}
+          whileInView="shown"
+          viewport={REVEAL_VIEWPORT}
+          className="mt-6"
+        >
+          {faqs.map((faq) => (
+            <motion.details
+              key={faq.id}
+              variants={revealCard}
+              className="group border-b border-border py-4"
+            >
+              <summary className="flex cursor-pointer list-none items-center gap-4 text-[0.9375rem] font-medium text-foreground [&::-webkit-details-marker]:hidden">
+                {faq.q}
+                <ChevronDown
+                  size={16}
+                  aria-hidden="true"
+                  className="ml-auto shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180"
+                />
+              </summary>
+              <p className="mt-3 max-w-[62ch] text-[0.8125rem] leading-relaxed text-muted-foreground">
+                {faq.a}
+              </p>
+            </motion.details>
+          ))}
+        </motion.div>
+      </div>
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'FAQPage',
-            mainEntity: FAQS.map((faq) => ({
+            mainEntity: faqs.map((faq) => ({
               '@type': 'Question',
               name: faq.q,
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: faq.a,
-              },
+              acceptedAnswer: { '@type': 'Answer', text: faq.a },
             })),
           }),
         }}
       />
-
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-        className="text-center mb-12"
-      >
-        <h2 className="font-heading text-3xl sm:text-4xl font-bold text-foreground tracking-tight">
-          Frequently Asked Questions
-        </h2>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
-        className="space-y-3"
-      >
-        {FAQS.map((faq, i) => {
-          const isOpen = openIndex === i;
-          return (
-            <div
-              key={i}
-              className="rounded-2xl border border-border bg-card overflow-hidden transition-all duration-300 hover:shadow-elevated hover:border-primary/15"
-            >
-              <button
-                onClick={() => setOpenIndex(isOpen ? null : i)}
-                className="flex items-center justify-between w-full text-left px-6 py-5 cursor-pointer"
-                aria-expanded={isOpen}
-              >
-                <span className="text-sm font-medium text-foreground pr-4">
-                  {faq.q}
-                </span>
-                <motion.div
-                  animate={{ rotate: isOpen ? 180 : 0 }}
-                  transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-                >
-                  <ChevronDown size={14} className="shrink-0 text-muted-foreground" />
-                </motion.div>
-              </button>
-              <AnimatePresence initial={false}>
-                {isOpen && (
-                  <motion.div
-                    key="content"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-                    className="overflow-hidden"
-                  >
-                    <div className="px-6 pb-5">
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {faq.a}
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          );
-        })}
-      </motion.div>
     </section>
   );
 }

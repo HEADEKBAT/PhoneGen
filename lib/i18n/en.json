@@ -1178,5 +1178,194 @@
     "previewSocialPost": "Social Post",
     "previewAvatar": "Avatar",
     "previewPresentation": "Presentation"
+  },
+  "products": {
+    "phone": {
+      "title": "Phone Generator",
+      "description": "Valid mobile and landline numbers for 245 countries, checked against the same libphonenumber-js metadata your code validates with."
+    },
+    "user": {
+      "title": "User Generator",
+      "description": "Whole profiles — name, email, phone, address and date of birth — consistent with one another instead of drawn from separate hats."
+    },
+    "credential": {
+      "title": "Credential Generator",
+      "description": "Passwords, passphrases, PINs, API keys and webhook secrets, generated with the Web Crypto API and shown with a strength read-out."
+    },
+    "address": {
+      "title": "Address Generator",
+      "description": "Street, city, region and postal code in the format each country actually uses — not one template with the names swapped."
+    },
+    "email": {
+      "title": "Email Generator",
+      "description": "Addresses in Gmail-style, corporate and disposable shapes, with plus-addressing and dotted variants for testing filters."
+    },
+    "username": {
+      "title": "Username Generator",
+      "description": "Handles by pattern — word pairs, leetspeak, numbered suffixes — with length limits and a check that they stay readable."
+    },
+    "company": {
+      "title": "Company Generator",
+      "description": "Fictional companies whose industry, legal form, headcount and revenue fit together instead of contradicting each other."
+    },
+    "uuid": {
+      "title": "UUID Generator",
+      "description": "UUID v4 and time-ordered v7, in bulk, in the formats database drivers and APIs expect."
+    },
+    "lorem": {
+      "title": "Lorem Ipsum Generator",
+      "description": "Placeholder text for design and layout mockups."
+    },
+    "qr": {
+      "title": "QR Studio",
+      "description": "37 content types — URL, Wi-Fi, vCard, payment — with a designer, a logo slot and error-correction control."
+    },
+    "barcode": {
+      "title": "Barcode Generator",
+      "description": "EAN, UPC, Code 128, ITF-14 and ten more, with the check digit computed and explained rather than guessed."
+    },
+    "payment": {
+      "title": "Payment Studio",
+      "description": "Test cards for 15 networks, a validator, a BIN lookup and bulk export in six formats."
+    },
+    "creditCard": {
+      "title": "Credit Card Generator",
+      "description": "The single-purpose card generator, for when the whole studio is more than you need. Numbers pass Luhn and match a real BIN range."
+    },
+    "iban": {
+      "title": "IBAN Generator",
+      "description": "Valid IBAN numbers for international banking tests."
+    },
+    "vehicle": {
+      "title": "Vehicle Generator",
+      "description": "Realistic vehicle data — VIN, plates, make, model and year."
+    },
+    "cryptoWallet": {
+      "title": "Crypto Wallet Playground",
+      "description": "Addresses, BIP39 mnemonics and HD derivation trees for 22 blockchains, plus a validator. For testing — never for real funds."
+    },
+    "licensePlate": {
+      "title": "License Plate Generator",
+      "description": "Realistic licence plates for several countries."
+    },
+    "mockApi": {
+      "title": "Mock API Generator",
+      "description": "Mock REST and GraphQL endpoints for development."
+    },
+    "json": {
+      "title": "JSON Generator",
+      "description": "Realistic JSON structures for API testing."
+    },
+    "color": {
+      "title": "Color Studio",
+      "description": "Palettes, gradients, converters and WCAG contrast checks, exported as CSS, Tailwind or design tokens."
+    },
+    "image": {
+      "title": "Image Studio",
+      "description": "Background removal, upscaling and format conversion, with a brush for touching up the mask by hand."
+    },
+    "text": {
+      "title": "Text Generator",
+      "description": "Random strings, sentences and paragraphs for testing."
+    },
+    "media": {
+      "title": "Media Studio",
+      "description": "Convert, compress and trim video with FFmpeg compiled to WebAssembly. Nothing is uploaded."
+    }
+  },
+  "platformHome": {
+    "eyebrow": {
+      "generators": "{n} generators",
+      "countries": "{n} countries",
+      "inBrowser": "runs in your browser",
+      "nothingStored": "nothing is stored"
+    },
+    "title": "Test data that passes validation.",
+    "lede": "Phone numbers libphonenumber accepts, card numbers that pass Luhn, barcodes with the right check digit. Pick a generator and copy the output — no account, no upload, no limits.",
+    "searchPlaceholder": "Search generators — phone, QR, password…",
+    "searchLabel": "Search generators",
+    "popular": "Popular:",
+    "chips": {
+      "phone": "Phone numbers",
+      "password": "Passwords",
+      "card": "Test cards",
+      "qr": "QR codes",
+      "uuid": "UUID"
+    },
+    "groups": {
+      "people": {
+        "title": "People, places and contacts",
+        "note": "Fill a form, seed a database, populate a demo."
+      },
+      "secrets": {
+        "title": "Secrets and identifiers",
+        "note": "Everything here comes from the Web Crypto API."
+      },
+      "payments": {
+        "title": "Payments and crypto",
+        "note": "Test values only — none of it is issued to an account."
+      },
+      "codes": {
+        "title": "Codes and barcodes",
+        "note": "Rendered as SVG, so they stay sharp at any size."
+      },
+      "media": {
+        "title": "Design and media",
+        "note": "Heavier tools — they still run entirely on your machine."
+      }
+    },
+    "empty": "Nothing matches “{q}”.",
+    "emptyHint": "Try a shorter word, or clear the search.",
+    "clear": "Clear",
+    "planned": {
+      "title": "In the works",
+      "badge": "{n} planned",
+      "note": "Not built yet, so they are not in the catalogue above — every card there opens something."
+    },
+    "trust": {
+      "local": {
+        "k": "client-side",
+        "title": "Your data never leaves the tab",
+        "body": "Every generator runs in the browser. Nothing is uploaded, logged or stored — which is also why there is no account to create."
+      },
+      "valid": {
+        "k": "libphonenumber · Luhn · BIP39",
+        "title": "Valid, not just plausible",
+        "body": "Output is built against the same standards your code checks it with, so it survives the validator instead of failing at the first form."
+      },
+      "formats": {
+        "k": "json · csv · sql · xml",
+        "title": "In the shape you need it",
+        "body": "Copy one value or export a thousand rows. Seeded generation repeats the same set, so a failing test stays reproducible."
+      }
+    },
+    "faq": {
+      "title": "Frequently asked",
+      "free": {
+        "q": "Is it free?",
+        "a": "Yes, all of it, with no sign-up and no daily limit. The generators run on your machine, so there is nothing for us to meter."
+      },
+      "phones": {
+        "q": "Are the phone numbers real?",
+        "a": "They are structurally valid and unassigned. Numbers are built from Google's libphonenumber metadata, so they pass validation for the country you pick without belonging to anyone."
+      },
+      "cards": {
+        "q": "Can I pay with the card numbers?",
+        "a": "No. They pass the Luhn check and match a network's BIN range, which is what a checkout form validates — but they are not issued to an account and will be declined."
+      },
+      "storage": {
+        "q": "Do you store what I generate?",
+        "a": "No. Generation happens in your browser and nothing is sent to a server. History, where a tool keeps one, lives in that browser only."
+      },
+      "seed": {
+        "q": "Can I get the same values twice?",
+        "a": "Yes — give the generator a seed and it returns the same set every time, so a fixture stays stable and a failing test can be reproduced."
+      }
+    },
+    "closing": {
+      "title": "Start with the one you came for",
+      "body": "Phone numbers for {n} countries is where most people begin.",
+      "cta": "Open the Phone Generator"
+    }
   }
 }
