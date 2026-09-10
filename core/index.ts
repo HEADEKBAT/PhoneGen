@@ -48,3 +48,8 @@ export { createLandingPage } from './landing-factory';
 export type { LandingPageManifest, LandingLocaleCopy } from './landing-factory';
 export { createStudioSEOPage } from './studio-seo-factory';
 export type { StudioSEOPageManifest } from './studio-seo-factory';
+export { createCredentialDeepLinkPage } from './credential-deep-link-factory';
+export type {
+  CredentialDeepLinkManifest,
+  DeepLinkLocaleCopy,
+} from './credential-deep-link-factory';
