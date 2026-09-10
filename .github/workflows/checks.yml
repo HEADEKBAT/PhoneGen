@@ -41,8 +41,10 @@ jobs:
         run: node scripts/i18n/check.mjs
 
       - name: Sitemap coverage
-        # Fails when a page exists but the sitemap never emits it, or when the
-        # sitemap advertises a URL that answers with a redirect.
+        # Four ways the sitemap and the app can disagree, all of them failures:
+        # a page the sitemap never emits, a URL that answers with a redirect, a
+        # page that names another page as its canonical, and a registry slug
+        # with no page behind it. The last one was true of 354 URLs.
         run: node scripts/seo/sitemap.check.mjs
 
       - name: Background removal
