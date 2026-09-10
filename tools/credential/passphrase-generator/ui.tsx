@@ -1,11 +1,6 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
-const CredentialClientLoader = dynamic(
-  () => import('@/components/dynamic/CredentialClientLoader'),
-  { ssr: false },
-);
+import { CredentialClientLoader } from '@/components/dynamic';
 
 export default function PassphraseGeneratorUI() {
   return (

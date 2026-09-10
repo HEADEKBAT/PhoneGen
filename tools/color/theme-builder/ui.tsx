@@ -1,11 +1,6 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
-const ColorStudioLoader = dynamic(
-  () => import('@/components/dynamic/ColorStudioLoader'),
-  { ssr: false },
-);
+import { ColorStudioLoader } from '@/components/dynamic';
 
 export default function ThemeBuilderUI() {
   return <ColorStudioLoader standalone={false} initialMode="theme" />;

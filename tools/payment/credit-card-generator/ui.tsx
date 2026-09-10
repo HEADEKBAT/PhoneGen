@@ -1,15 +1,10 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
-const PaymentStudioClientLoader = dynamic(
-  () => import('@/components/dynamic/PaymentStudioLoader'),
-  { ssr: false },
-);
+import { PaymentStudioLoader } from '@/components/dynamic';
 
 export default function CreditCardGeneratorUI() {
   return (
-    <PaymentStudioClientLoader
+    <PaymentStudioLoader
       standalone={false}
       initialMode="quick"
     />

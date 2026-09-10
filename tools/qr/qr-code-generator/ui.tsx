@@ -1,11 +1,6 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
-const QRStudioLoader = dynamic(
-  () => import('@/components/dynamic/QRStudioLoader'),
-  { ssr: false },
-);
+import { QRStudioLoader } from '@/components/dynamic';
 
 export default function QRCodeGeneratorUI() {
   return <QRStudioLoader standalone={false} />;

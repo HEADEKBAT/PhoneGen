@@ -1,11 +1,6 @@
 'use client';
 
-import dynamic from 'next/dynamic';
-
-const BarcodeStudioClientLoader = dynamic(
-  () => import('@/components/dynamic/BarcodeStudioClientLoader'),
-  { ssr: false },
-);
+import { BarcodeStudioClientLoader } from '@/components/dynamic';
 
 export default function ITF14GeneratorUI() {
   return (
