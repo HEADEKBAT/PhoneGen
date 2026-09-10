@@ -2,8 +2,8 @@
  * Legacy route redirects — single source of truth.
  *
  * When the barcode and credential tools moved under their product folders, the
- * old top-level URLs stayed alive as 308 redirects. Two places need to agree on
- * that list:
+ * old top-level URLs stayed alive as 308 redirects; the Payment Studio
+ * sub-topics follow the same shape. Two places need to agree on that list:
  *
  *   • next.config.ts — to issue the redirects
  *   • app/sitemap.ts — to STOP advertising the old URLs
@@ -59,6 +59,32 @@ export const LEGACY_CREDENTIAL_SLUGS = [
   'password-strength-checker',
 ] as const;
 
+/**
+ * Payment Studio sub-topics that are served under /payment-studio/{slug}.
+ *
+ * Unlike the two lists above these URLs were never live — they were listed in
+ * the sitemap before anyone wrote the pages, and answered 404. The pages exist
+ * now, under the studio folder, matching what the barcode and credential
+ * families do. The bare top-level slug redirects there rather than 404ing,
+ * because it is the shape a visitor is most likely to type and the shape the
+ * sitemap advertised for months.
+ *
+ * 'credit-card-generator' is absent on purpose: it is a product slug with its
+ * own landing page, and /payment-studio/credit-card-generator is its tool.
+ */
+export const PAYMENT_STUDIO_ALIAS_SLUGS = [
+  'visa-card-generator',
+  'mastercard-generator',
+  'amex-card-generator',
+  'discover-card-generator',
+  'jcb-card-generator',
+  'test-credit-card-numbers',
+  'credit-card-validator',
+  'bin-lookup',
+  'cvv-generator',
+  'bulk-credit-card-generator',
+] as const;
+
 /** One-off moves that do not follow the "{slug} → {product}/{slug}" shape. */
 export const LEGACY_ONE_OFF_REDIRECTS: { from: string; to: string }[] = [
   {
@@ -74,6 +100,7 @@ export const LEGACY_ONE_OFF_REDIRECTS: { from: string; to: string }[] = [
 export const REDIRECTED_TOP_LEVEL_SLUGS: ReadonlySet<string> = new Set<string>([
   ...LEGACY_BARCODE_SLUGS,
   ...LEGACY_CREDENTIAL_SLUGS,
+  ...PAYMENT_STUDIO_ALIAS_SLUGS,
   ...LEGACY_ONE_OFF_REDIRECTS.map((entry) => entry.from),
 ]);
 
@@ -101,6 +128,14 @@ export function buildLegacyRedirects(): {
     redirects.push({
       source: `/:locale/${slug}`,
       destination: `/:locale/credential-generator/${slug}`,
+      permanent: true,
+    });
+  }
+
+  for (const slug of PAYMENT_STUDIO_ALIAS_SLUGS) {
+    redirects.push({
+      source: `/:locale/${slug}`,
+      destination: `/:locale/payment-studio/${slug}`,
       permanent: true,
     });
   }
