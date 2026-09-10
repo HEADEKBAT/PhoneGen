@@ -36,7 +36,7 @@ function getValue(obj: Record<string, unknown>, path: string): string | undefine
  */
 export function getT(locale: string): (key: string, params?: Record<string, string | number>) => string {
   return (key: string, params?: Record<string, string | number>): string => {
-    let text =
+    const text =
       getValue(translations[locale], key) ??
       getValue(translations.en, key) ??
       key;

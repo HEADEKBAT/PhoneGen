@@ -1,11 +1,11 @@
 'use client';
 
 import { Suspense, lazy, useMemo } from 'react';
-import type { QRContentType } from '@/lib/qr/types';
+import type { FormField, QRContentType } from '@/lib/qr/types';
 import { getContentTypeConfig } from '@/lib/qr/contentTypes';
 import { Loader2 } from 'lucide-react';
 
-const CONTENT_TYPE_FORMS: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> = {
+const CONTENT_TYPE_FORMS: Record<string, React.LazyExoticComponent<React.ComponentType<ContentFormProps>>> = {
   url: lazy(() => import('@/components/qr-studio/content-forms/URLForm')),
   text: lazy(() => import('@/components/qr-studio/content-forms/TextForm')),
   email: lazy(() => import('@/components/qr-studio/content-forms/EmailForm')),
@@ -16,13 +16,19 @@ const CONTENT_TYPE_FORMS: Record<string, React.LazyExoticComponent<React.Compone
   vcard: lazy(() => import('@/components/qr-studio/content-forms/VCardForm')),
 };
 
+/** Every content form takes the same three props. */
+interface ContentFormProps {
+  data: Record<string, string>;
+  onChange: (data: Record<string, string>) => void;
+}
+
 interface QRContentFormProps {
   contentType: string;
   data: Record<string, string>;
   onChange: (data: Record<string, string>) => void;
 }
 
-function GenericForm({ fields, data, onChange }: { fields: any[]; data: Record<string, string>; onChange: (d: Record<string, string>) => void }) {
+function GenericForm({ fields, data, onChange }: ContentFormProps & { fields: FormField[] }) {
   const update = (id: string, value: string) => onChange({ ...data, [id]: value });
 
   return (
@@ -46,9 +52,11 @@ function GenericForm({ fields, data, onChange }: { fields: any[]; data: Record<s
               value={data[field.id] || field.defaultValue || ''}
               onChange={(e) => update(field.id, e.target.value)}
             >
-              {field.options.map((opt: any) => (
-                <option key={typeof opt === 'string' ? opt : opt.value} value={typeof opt === 'string' ? opt : opt.value}>
-                  {typeof opt === 'string' ? opt : opt.label}
+              {/* FormFieldOption is always {label, value} — the string
+                  branch that stood here was unreachable. */}
+              {field.options.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
                 </option>
               ))}
             </select>

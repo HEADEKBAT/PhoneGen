@@ -81,10 +81,10 @@ export default function About() {
                   <Icon size={24} className={color} />
                   <div>
                     <h3 className="font-heading font-semibold text-foreground text-sm">
-                      {t(`about.features_${key}_title` as any)}
+                      {t(`about.features_${key}_title`)}
                     </h3>
                     <p className="text-xs text-muted-foreground mt-1">
-                      {t(`about.features_${key}_desc` as any)}
+                      {t(`about.features_${key}_desc`)}
                     </p>
                   </div>
                 </div>

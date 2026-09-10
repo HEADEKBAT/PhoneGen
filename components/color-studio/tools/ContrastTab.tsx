@@ -424,15 +424,21 @@ function ReportExportPanel({ report }: { report: AccessibilityReport | null }) {
   const [format, setFormat] = useState<ReportExportFormat>('text');
   const [copied, setCopied] = useState(false);
 
-  if (!report) return null;
-
-  const code = useMemo(() => exportReport(report, format), [report, format]);
+  /*
+   * `if (!report) return null` used to sit above these two hooks, so this
+   * component ran four hooks with a report and two without. Every time the
+   * report appeared or went away, React threw on the next render. The guard
+   * has to come after the last hook; the memo handles the null itself.
+   */
+  const code = useMemo(() => (report ? exportReport(report, format) : ''), [report, format]);
 
   const handleCopy = useCallback(async () => {
     await navigator.clipboard.writeText(code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }, [code]);
+
+  if (!report) return null;
 
   return (
     <div className="rounded-xl border border-border bg-card p-4 space-y-3">
@@ -525,22 +531,34 @@ export default function ContrastTab() {
 
   const activeReport = contrastView === 'audit' ? themeAuditReport : simpleReport;
 
-  // Accessible text suggestions for Simple view
+  /*
+   * Accessible text suggestions for Simple view.
+   *
+   * The dependency is `bgColor`, not `bgRgb`. `bgRgb` is `hexToRgb(bgColor)`
+   * computed in the component body, so it is a new object on every render and
+   * a memo keyed on it never once hit its cache — the React Compiler reports
+   * exactly that ("this dependency may be modified later"). Keyed on the hex
+   * string, the memo does what it was written to do.
+   *
+   * flatMap drops the unparseable hexes without a `filter(Boolean)` that
+   * leaves the element type nullable, which is what forced the four non-null
+   * assertions this replaces.
+   */
   const accessibleSuggestions = useMemo(() => {
-    if (!bgRgb) return [];
+    const background = hexToRgb(bgColor);
+    if (!background) return [];
     const candidates = ['#ffffff', '#000000', '#f8fafc', '#1e293b', '#94a3b8'];
     return candidates
-      .map((hex) => {
+      .flatMap((hex) => {
         const rgb = hexToRgb(hex);
-        if (!rgb) return null;
-        const r = contrastRatio(rgb, bgRgb);
-        return { hex, ratio: r, level: getWCAGLevel(r, false) };
+        if (!rgb) return [];
+        const ratio = contrastRatio(rgb, background);
+        const level = getWCAGLevel(ratio, false);
+        return level === 'AA' || level === 'AAA' ? [{ hex, ratio, level }] : [];
       })
-      .filter(Boolean)
-      .filter((s) => s!.level === 'AA' || s!.level === 'AAA')
-      .sort((a, b) => b!.ratio - a!.ratio)
+      .sort((a, b) => b.ratio - a.ratio)
       .slice(0, 3);
-  }, [bgRgb]);
+  }, [bgColor]);
 
   return (
     <div className="space-y-5">

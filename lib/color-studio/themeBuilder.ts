@@ -319,7 +319,7 @@ function ensureContrast(
   const bgRgb = hexToRgb(background);
   if (!fgRgb || !bgRgb) return foreground;
 
-  let ratio = contrastRatio(fgRgb, bgRgb);
+  const ratio = contrastRatio(fgRgb, bgRgb);
   if (ratio >= minRatio) return foreground;
 
   // Try to fix by adjusting lightness in OKLCH

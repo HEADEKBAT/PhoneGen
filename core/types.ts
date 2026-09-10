@@ -106,14 +106,24 @@ export interface ToolManifest {
   /* ── UI ──────────────────────────────────────────────────────────────── */
 
   ui: {
-    /** The main generator component. Rendered inside ToolShell. */
-    component: ComponentType<any>;
+    /**
+     * The main generator component. ToolShell renders it with no props, so
+     * that is the contract, and `ComponentType` without a type argument states
+     * it. `ComponentType<any>` accepted a component with required props that
+     * ToolShell would then never pass — a runtime failure the type allowed.
+     *
+     * ToolShell used to pass `locale={locale}`. None of the 37 tool UIs read
+     * it; they all get their locale from `useTranslations()`. The prop was
+     * removed rather than added to this type, because a contract nobody uses
+     * is not a contract.
+     */
+    component: ComponentType;
 
     /** Lucide icon component. */
     icon: ComponentType<{ size?: number; className?: string }>;
 
     /** Optional lightweight preview shown on product landing pages. */
-    previewComponent?: ComponentType<any>;
+    previewComponent?: ComponentType;
   };
 
   /* ── SEO ─────────────────────────────────────────────────────────────── */

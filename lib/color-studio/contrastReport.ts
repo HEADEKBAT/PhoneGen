@@ -276,7 +276,7 @@ export function findAccessibleColor(
   const bgL = bgOklch.l;
 
   // Check original
-  let ratio = contrastRatio(fgRgb, bgRgb);
+  const ratio = contrastRatio(fgRgb, bgRgb);
   if (ratio >= minRatio) {
     return { color: foreground, ratio, adjusted: false };
   }

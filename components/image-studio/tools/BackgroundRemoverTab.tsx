@@ -580,7 +580,14 @@ export default function BackgroundRemoverTab() {
               <ExportPanel
                 fileName={baseName(currentImage.name)}
                 onExport={handleExport}
-                disabled={!sourceRef.current}
+                /* `sourceRef.current` was read here, during render. A ref does
+                   not trigger a re-render, so the button's disabled state could
+                   not update when the source appeared. `composedUrl` is state
+                   and is non-null exactly when a composite exists — which is
+                   also the better condition: there is nothing to export until
+                   one has been rendered. handleExport still guards on the ref
+                   itself, so a race cannot export a disposed source. */
+                disabled={!composedUrl}
               />
             </div>
 

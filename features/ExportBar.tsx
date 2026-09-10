@@ -3,9 +3,9 @@
 import { useCallback } from 'react';
 import { Download } from 'lucide-react';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-interface ExportBarProps {
-  data: any[];
+interface ExportBarProps<T extends object> {
+  /** Any array of objects. Column names are read off the first item. */
+  data: readonly T[];
   filename?: string;
 }
 
@@ -13,7 +13,17 @@ interface ExportBarProps {
  * Shared export component — JSON / CSV / TXT download.
  * Works with any array of objects by auto-detecting keys from the first item.
  */
-export default function ExportBar({ data, filename = 'export' }: ExportBarProps) {
+export default function ExportBar<T extends object>({
+  data,
+  filename = 'export',
+}: ExportBarProps<T>) {
+  /*
+   * The component is deliberately structure-agnostic: it reads whatever keys
+   * the first item has. TypeScript will not index an `object`, so the widening
+   * happens once, here, instead of the `any[]` prop that used to let every
+   * caller in unchecked — callers keep their own result types.
+   */
+  const records = data as readonly Record<string, unknown>[];
   const handleExport = useCallback(
     (format: 'json' | 'csv' | 'txt') => {
       if (data.length === 0) return;
@@ -30,8 +40,8 @@ export default function ExportBar({ data, filename = 'export' }: ExportBarProps)
           break;
 
         case 'csv': {
-          const headers = Object.keys(data[0]);
-          const rows = data.map((item) =>
+          const headers = Object.keys(records[0]);
+          const rows = records.map((item) =>
             headers
               .map((h) => {
                 const val = String(item[h] ?? '');
@@ -46,12 +56,12 @@ export default function ExportBar({ data, filename = 'export' }: ExportBarProps)
         }
 
         case 'txt':
-          content = data
+          content = records
             .map(
               (item, i) =>
                 `[${i + 1}]\n` +
                 Object.entries(item)
-                  .map(([key, val]) => `  ${key}: ${val}`)
+                  .map(([key, val]) => `  ${key}: ${String(val)}`)
                   .join('\n'),
             )
             .join('\n\n');

@@ -112,7 +112,7 @@ export default function ToolShell({
                 </div>
               }
             >
-              <ToolComponent locale={locale} />
+              <ToolComponent />
             </Suspense>
           )}
         </section>

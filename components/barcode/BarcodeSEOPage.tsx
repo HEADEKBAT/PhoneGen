@@ -30,7 +30,7 @@ export default function BarcodeSEOPage({ locale, config, title, description }: B
       : config.barcodeType === 'isbn13' ? '9781234567897'
       : '5901234123457';
     const result = generateBarcode({
-      type: config.barcodeType as any,
+      type: config.barcodeType,
       data: sampleData,
       width: 1.5,
       height: 60,

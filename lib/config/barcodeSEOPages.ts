@@ -5,6 +5,8 @@
  * Each page is a thin server component that reads its config from here.
  */
 
+import type { BarcodeType } from '@/lib/barcode/types';
+
 export interface SEOFaq {
   q: string;
   a: string;
@@ -13,7 +15,7 @@ export interface SEOFaq {
 export interface BarcodeSEOPageConfig {
   id: string;
   slug: string;
-  barcodeType: string;
+  barcodeType: BarcodeType;
   title: string;
   description: string;
   heroTitle: string;

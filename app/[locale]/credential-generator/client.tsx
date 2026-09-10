@@ -3,6 +3,7 @@
 import { Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getPreset } from '@/lib/config/credentialPresets';
+import type { SecretMode } from '@/lib/credentialGenerator/types';
 import CredentialTabs from '@/components/credential/CredentialTabs';
 import { useCredentialGeneratorStore } from '@/lib/store';
 
@@ -108,14 +109,15 @@ function CredentialContent({ initialMode, standalone = true }: CredentialClientP
     if (initialMode.activeTab) store.setActiveTab(initialMode.activeTab);
     if (initialMode.passwordMode) store.setPasswordMode(initialMode.passwordMode);
     if (initialMode.secretMode) {
-      // Map extended secret modes to store-compatible values
-      const modeMap: Record<string, string> = {
-        'token': 'uuid',
-        'session': 'session',
-        'uuid-v7': 'uuid-v7',
-        'oauth': 'oauth',
-      };
-      store.setSecretMode((modeMap[initialMode.secretMode] || initialMode.secretMode) as any);
+      /*
+       * The store accepts every secret mode this prop can carry, so the map
+       * that stood here only mattered for one entry: 'token' opens the UUID
+       * mode. The other three mapped each value to itself. Kept as-is — the
+       * remap is behaviour, not a type problem — but stated in one line, and
+       * typed, so the store's union is checked at compile time.
+       */
+      const REMAP: Partial<Record<SecretMode, SecretMode>> = { token: 'uuid' };
+      store.setSecretMode(REMAP[initialMode.secretMode] ?? initialMode.secretMode);
     }
     if (initialMode.pinLength) store.setPinLength(initialMode.pinLength);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

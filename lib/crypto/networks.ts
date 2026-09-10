@@ -282,7 +282,7 @@ export function getNetworkByCoinType(coinType: number): Network | undefined {
 }
 
 export function getNetworksByFormat(format: string): Network[] {
-  return ALL_NETWORKS.filter((n) => n.addressFormats.includes(format as any));
+  return ALL_NETWORKS.filter((n) => n.addressFormats.some((f) => f === format));
 }
 
 export const NETWORK_IDS = Object.keys(NETWORKS) as NetworkId[];

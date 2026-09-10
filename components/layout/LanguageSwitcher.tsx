@@ -39,6 +39,10 @@ export default function LanguageSwitcher() {
     setLanguage(lang);
     try {
       localStorage.setItem('language', lang);
+      /* The compiler lint reads this as mutating a module-scope value. It is
+         the DOM setter for a cookie, and it runs in a click handler, not
+         during render — nothing here affects what React paints. */
+      // eslint-disable-next-line react-hooks/immutability
       document.cookie = `language=${lang};path=/;max-age=${365 * 24 * 60 * 60}`;
     } catch {
       /* noop */

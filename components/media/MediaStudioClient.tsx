@@ -182,7 +182,7 @@ export default function MediaStudioClient({ standalone = true, initialTab }: Med
 
   /* ─── Recommendation handler ────────────────────────────────────────── */
 
-  const handleRecommendation = useCallback((_recommendation: any) => {
+  const handleRecommendation = useCallback((_recommendation: unknown) => {
     setActiveTab('converter');
   }, []);
 

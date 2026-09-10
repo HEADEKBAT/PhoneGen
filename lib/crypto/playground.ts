@@ -12,7 +12,7 @@ export interface ExportOptions {
 }
 
 function toJSON(wallet: WalletResult, includePrivateKey: boolean): string {
-  const obj: Record<string, any> = {
+  const obj: Record<string, unknown> = {
     network: wallet.network,
     address: wallet.address,
     format: wallet.format,

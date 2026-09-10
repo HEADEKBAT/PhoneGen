@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import Header from '@/components/Header';
@@ -25,14 +25,23 @@ function HomeContent() {
   const router = useRouter();
   const { t } = useTranslations();
 
-  // ── Redirect to /generate if URL has search params ─────────────────────
+  // ── A link with generator params belongs on /generate ──────────────────
   const urlCountry = searchParams.get('country');
   const urlCount = searchParams.get('count');
   const urlFormat = searchParams.get('format');
   const urlMode = searchParams.get('mode');
-  const hasParams = urlCountry || urlCount || urlFormat || urlMode;
+  const hasParams = Boolean(urlCountry || urlCount || urlFormat || urlMode);
 
-  if (hasParams && typeof window !== 'undefined') {
+  /*
+   * This used to navigate during render and `return null` — before the four
+   * useState calls below. So on a visit to /?country=NG React ran five fewer
+   * hooks than on a visit to /, and the next render of this component threw
+   * "Rendered more hooks than during the previous render". Navigation is a
+   * side effect; it belongs in an effect, and the early return has to come
+   * after every hook.
+   */
+  useEffect(() => {
+    if (!hasParams) return;
     const params = new URLSearchParams();
     if (urlCountry) params.set('country', urlCountry);
     if (urlCount) params.set('count', urlCount);
@@ -40,8 +49,7 @@ function HomeContent() {
     if (urlMode) params.set('mode', urlMode);
     const qs = params.toString();
     router.replace(qs ? `/generate?${qs}` : '/generate');
-    return null;
-  }
+  }, [hasParams, urlCountry, urlCount, urlFormat, urlMode, router]);
 
   // ── Landing page state ─────────────────────────────────────────────────
   const [selectedCountry, setSelectedCountry] = useState('NG');
@@ -75,6 +83,9 @@ function HomeContent() {
     () => Object.values(COUNTRIES).sort((a, b) => a.name.localeCompare(b.name)),
     []
   );
+
+  /* Every hook above has run. Nothing to paint while the effect redirects. */
+  if (hasParams) return null;
 
   const getCountryCode = (code: string) => {
     const codeMap: Record<string, string> = { UK: 'GB', US: 'US' };
@@ -207,10 +218,10 @@ function HomeContent() {
                 <Icon size={24} className="mx-auto text-primary" />
                 <div>
                   <h3 className="font-heading font-semibold text-foreground text-sm">
-                    {t(`about.features_${key}_title` as any)}
+                    {t(`about.features_${key}_title`)}
                   </h3>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {t(`about.features_${key}_desc` as any)}
+                    {t(`about.features_${key}_desc`)}
                   </p>
                 </div>
               </div>

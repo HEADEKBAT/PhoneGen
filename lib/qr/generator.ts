@@ -5,7 +5,13 @@
  * All generation is client-side, using Canvas API.
  */
 
-import QRCodeStyling from 'qr-code-styling';
+import QRCodeStyling, {
+  type CornerSquareType,
+  type DotType,
+  type ErrorCorrectionLevel,
+  type FileExtension,
+  type GradientType as StyledGradientType,
+} from 'qr-code-styling';
 import type {
   QROptions,
   QRResult,
@@ -13,35 +19,95 @@ import type {
   EyeStyle,
   ErrorCorrection,
   ExportFormat,
+  GradientType,
 } from './types';
 
-/* ── Module style mapping ───────────────────────────────────────────── */
+/* ── Project option → library value ─────────────────────────────────────
+ *
+ * These four maps were typed `Record<…, string>`, which does not match what
+ * qr-code-styling accepts, so every use site carried an `as any`. That cast
+ * was not cosmetic: it let values through that the library has no case for,
+ * and its dispatch ends in `default: this._drawSquare`. Several options in the
+ * UI therefore rendered as a plain square while appearing to do something.
+ *
+ * Typed against the library's own unions, the compiler now rejects a value
+ * the library cannot draw, and each alias below is a stated decision rather
+ * than a silent fallback.
+ */
 
-const MODULE_STYLE_MAP: Record<ModuleStyle, string> = {
+/**
+ * Module shape. The library draws six: dots, rounded, classy,
+ * classy-rounded, square, extra-rounded.
+ *
+ * `circle` now maps to `dots` — round modules are what the library calls
+ * "dots", and this option rendered as a square before.
+ *
+ * `diamond`, `hexagon` and `minimal` have no equivalent at all. They map to
+ * `square`, which is what they already rendered as. Three of the eight module
+ * styles in the picker are therefore the same shape; that is a product
+ * decision to make, not something a type can fix.
+ */
+const MODULE_STYLE_MAP: Record<ModuleStyle, DotType> = {
   square: 'square',
   rounded: 'rounded',
   dots: 'dots',
-  circle: 'circle',
-  diamond: 'diamond',
+  circle: 'dots',
+  diamond: 'square',
   pixel: 'extra-rounded',
-  hexagon: 'star',
+  hexagon: 'square',
   minimal: 'square',
 };
 
-const EYE_STYLE_MAP: Record<EyeStyle, string> = {
+/**
+ * Eye (corner square) shape. The library draws square, dot, extra-rounded and
+ * the dot types.
+ *
+ * `circle` now maps to `dot`, the library's name for the same shape; it
+ * rendered as a square before. `frame`, `diamond` and `modern` have no
+ * equivalent and keep the square they already rendered as.
+ */
+const EYE_STYLE_MAP: Record<EyeStyle, CornerSquareType> = {
   classic: 'square',
   rounded: 'rounded',
-  circle: 'circle',
-  frame: 'frame',
-  diamond: 'diamond',
-  modern: 'leaf',
+  circle: 'dot',
+  frame: 'square',
+  diamond: 'square',
+  modern: 'square',
 };
 
-const EC_MAP: Record<ErrorCorrection, string> = {
+const EC_MAP: Record<ErrorCorrection, ErrorCorrectionLevel> = {
   L: 'L',
   M: 'M',
   Q: 'Q',
   H: 'H',
+};
+
+/**
+ * Gradient kind. The library tests `type === 'radial'` and draws a linear
+ * gradient for anything else, so `conic` has always rendered as linear.
+ * Stating that here is the whole change.
+ */
+const GRADIENT_TYPE_MAP: Record<GradientType, StyledGradientType> = {
+  linear: 'linear',
+  radial: 'radial',
+  conic: 'linear',
+};
+
+/**
+ * Export format → what `getRawData` can actually produce.
+ *
+ * `pdf` and `eps` are offered by ExportFormat and are not formats this
+ * library writes. They ask for PNG bytes here, which is what the canvas
+ * fallback below already produced for them — so a "PDF" export has always
+ * been a PNG. Worth fixing, and worth fixing deliberately.
+ */
+const RAW_DATA_FORMAT: Record<ExportFormat, FileExtension> = {
+  png: 'png',
+  svg: 'svg',
+  jpeg: 'jpeg',
+  webp: 'webp',
+  pdf: 'png',
+  eps: 'png',
 };
 
 /* ── Generate QR ────────────────────────────────────────────────────── */
@@ -55,7 +121,7 @@ export async function generateQR(options: QROptions): Promise<QRResult> {
     qrOptions: {
       typeNumber: 0,
       mode: 'Byte',
-      errorCorrectionLevel: EC_MAP[options.errorCorrection] as any,
+      errorCorrectionLevel: EC_MAP[options.errorCorrection],
     },
     image: options.logo?.dataUrl || undefined,
     imageOptions: {
@@ -67,11 +133,11 @@ export async function generateQR(options: QROptions): Promise<QRResult> {
       crossOrigin: 'anonymous',
     },
     dotsOptions: {
-      type: MODULE_STYLE_MAP[options.moduleStyle] as any,
+      type: MODULE_STYLE_MAP[options.moduleStyle],
       color: options.colors.pattern,
       gradient: options.colors.gradient
         ? {
-            type: options.colors.gradient.type as any,
+            type: GRADIENT_TYPE_MAP[options.colors.gradient.type],
             rotation: options.colors.gradient.rotation || 0,
             colorStops: options.colors.gradient.colors.map((c, i) => ({
               offset: i / (options.colors!.gradient!.colors.length - 1 || 1),
@@ -81,11 +147,12 @@ export async function generateQR(options: QROptions): Promise<QRResult> {
         : undefined,
     },
     cornersSquareOptions: {
-      type: EYE_STYLE_MAP[options.eyeStyle] as any,
+      type: EYE_STYLE_MAP[options.eyeStyle],
       color: options.colors.eye,
     },
     cornersDotOptions: {
-      type: EYE_STYLE_MAP[options.eyeStyle] === 'diamond' ? ('dot' as any) : ('dot' as any),
+      /* Both branches of the ternary that stood here were 'dot'. */
+      type: 'dot',
       color: options.colors.eye,
     },
     backgroundOptions: {
@@ -93,7 +160,7 @@ export async function generateQR(options: QROptions): Promise<QRResult> {
     },
   });
 
-  const dataUrl = await qr.getRawData('png' as any);
+  const dataUrl = await qr.getRawData('png');
   const dataUrlStr = dataUrl ? await blobToDataURL(dataUrl) : '';
 
   // Estimate version from content length
@@ -125,7 +192,7 @@ export async function generateQRToCanvas(options: QROptions, canvas?: HTMLCanvas
     qrOptions: {
       typeNumber: 0,
       mode: 'Byte',
-      errorCorrectionLevel: EC_MAP[options.errorCorrection] as any,
+      errorCorrectionLevel: EC_MAP[options.errorCorrection],
     },
     image: options.logo?.dataUrl || undefined,
     imageOptions: {
@@ -135,11 +202,11 @@ export async function generateQRToCanvas(options: QROptions, canvas?: HTMLCanvas
       crossOrigin: 'anonymous',
     },
     dotsOptions: {
-      type: MODULE_STYLE_MAP[options.moduleStyle] as any,
+      type: MODULE_STYLE_MAP[options.moduleStyle],
       color: options.colors.pattern,
       gradient: options.colors.gradient
         ? {
-            type: options.colors.gradient.type as any,
+            type: GRADIENT_TYPE_MAP[options.colors.gradient.type],
             rotation: options.colors.gradient.rotation || 0,
             colorStops: options.colors.gradient.colors.map((c, i) => ({
               offset: i / (options.colors!.gradient!.colors.length - 1 || 1),
@@ -149,7 +216,7 @@ export async function generateQRToCanvas(options: QROptions, canvas?: HTMLCanvas
         : undefined,
     },
     cornersSquareOptions: {
-      type: EYE_STYLE_MAP[options.eyeStyle] as any,
+      type: EYE_STYLE_MAP[options.eyeStyle],
       color: options.colors.eye,
     },
     backgroundOptions: {
@@ -182,7 +249,7 @@ export async function exportQRToFormat(
     qrOptions: {
       typeNumber: 0,
       mode: 'Byte',
-      errorCorrectionLevel: EC_MAP[options.errorCorrection] as any,
+      errorCorrectionLevel: EC_MAP[options.errorCorrection],
     },
     image: options.logo?.dataUrl || undefined,
     imageOptions: {
@@ -191,11 +258,11 @@ export async function exportQRToFormat(
       margin: 4,
     },
     dotsOptions: {
-      type: MODULE_STYLE_MAP[options.moduleStyle] as any,
+      type: MODULE_STYLE_MAP[options.moduleStyle],
       color: options.colors.pattern,
       gradient: options.colors.gradient
         ? {
-            type: options.colors.gradient.type as any,
+            type: GRADIENT_TYPE_MAP[options.colors.gradient.type],
             rotation: options.colors.gradient.rotation || 0,
             colorStops: options.colors.gradient.colors.map((c, i) => ({
               offset: i / (options.colors!.gradient!.colors.length - 1 || 1),
@@ -205,7 +272,7 @@ export async function exportQRToFormat(
         : undefined,
     },
     cornersSquareOptions: {
-      type: EYE_STYLE_MAP[options.eyeStyle] as any,
+      type: EYE_STYLE_MAP[options.eyeStyle],
       color: options.colors.eye,
     },
     backgroundOptions: {
@@ -213,7 +280,7 @@ export async function exportQRToFormat(
     },
   });
 
-  const rawData = await qr.getRawData(format as any);
+  const rawData = await qr.getRawData(RAW_DATA_FORMAT[format]);
   if (rawData) {
     if (rawData instanceof Buffer) return new Blob([rawData as unknown as BlobPart]);
     return rawData as Blob;
@@ -249,7 +316,7 @@ export async function exportQRToSVG(options: QROptions): Promise<string> {
     qrOptions: {
       typeNumber: 0,
       mode: 'Byte',
-      errorCorrectionLevel: EC_MAP[options.errorCorrection] as any,
+      errorCorrectionLevel: EC_MAP[options.errorCorrection],
     },
     image: options.logo?.dataUrl || undefined,
     imageOptions: {
@@ -258,11 +325,11 @@ export async function exportQRToSVG(options: QROptions): Promise<string> {
       margin: 4,
     },
     dotsOptions: {
-      type: MODULE_STYLE_MAP[options.moduleStyle] as any,
+      type: MODULE_STYLE_MAP[options.moduleStyle],
       color: options.colors.pattern,
     },
     cornersSquareOptions: {
-      type: EYE_STYLE_MAP[options.eyeStyle] as any,
+      type: EYE_STYLE_MAP[options.eyeStyle],
       color: options.colors.eye,
     },
     backgroundOptions: {
@@ -270,7 +337,7 @@ export async function exportQRToSVG(options: QROptions): Promise<string> {
     },
   });
 
-  const raw = await qr.getRawData('svg' as any);
+  const raw = await qr.getRawData('svg');
   if (raw) {
     return await blobToText(raw);
   }
