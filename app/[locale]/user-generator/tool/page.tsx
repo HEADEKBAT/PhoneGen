@@ -1,5 +1,6 @@
-import { UserGenClientLoader } from '@/components/dynamic';
+import { createStudioToolPage } from '@/core';
+import { getStudioToolPage } from '@/lib/config/studioToolPages';
 
-export default async function UserGeneratorToolPage() {
-  return <UserGenClientLoader />;
-}
+const { generateMetadata, Page } = createStudioToolPage(getStudioToolPage('user-generator'));
+export { generateMetadata };
+export default Page;

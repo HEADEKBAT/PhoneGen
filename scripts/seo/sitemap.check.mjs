@@ -81,6 +81,12 @@ function read(file) {
 
 const SLUG = /\bslug:\s*'([^']+)'/g;
 
+/* Page files that delegate to a factory in core/. Listed so the canonical
+   check can say how much of the app it actually inspected, rather than
+   reporting a clean pass over pages it never looked at. */
+const FACTORY_CALL =
+  /create(?:ToolPage|PresetPage|LandingPage|StudioSEOPage|StudioToolPage|CredentialDeepLinkPage)\(/;
+
 function slugsIn(file) {
   const text = read(file);
   const found = new Set();
@@ -200,12 +206,22 @@ function findForeignCanonicals() {
   }
 
   const offenders = [];
+  let inspected = 0;
+  let fromFactory = 0;
   for (const route of staticRoutes) {
     const file = join(APP_DIR, route, 'page.tsx');
     if (!existsSync(file)) continue;
 
     const source = readFileSync(file, 'utf8');
+    /* A factory-built page has no metadata of its own to inspect: the factory
+       derives the canonical from the manifest path, which is also where the
+       file lives, so the two cannot disagree. Counted, not checked. */
+    if (FACTORY_CALL.test(source)) {
+      fromFactory++;
+      continue;
+    }
     if (!/type:\s*'product'/.test(source)) continue;
+    inspected++;
     if (/\bpath:\s*'/.test(source)) continue; // declares its own canonical
 
     const product = /getProduct\('([^']+)'\)/.exec(source);
@@ -219,10 +235,10 @@ function findForeignCanonicals() {
 
     offenders.push({ route, canonical: slug });
   }
-  return offenders;
+  return { offenders, inspected, fromFactory };
 }
 
-const foreignCanonicals = findForeignCanonicals();
+const { offenders: foreignCanonicals, inspected, fromFactory } = findForeignCanonicals();
 
 /* ── Pages behind the sitemap's URLs ──────────────────────────── */
 
@@ -299,6 +315,10 @@ if (asJson) {
       console.log('');
     }
   }
+
+  console.log(
+    `Canonical URLs: ${fromFactory} page(s) derive theirs from a factory manifest, ${inspected} declare their own and were checked`,
+  );
 
   if (foreignCanonicals.length) {
     console.log(`\n✗ ${foreignCanonicals.length} page(s) name another page as their canonical URL:`);

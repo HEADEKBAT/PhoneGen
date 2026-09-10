@@ -1,5 +1,6 @@
-import { CredentialClientLoader } from '@/components/dynamic';
+import { createStudioToolPage } from '@/core';
+import { getStudioToolPage } from '@/lib/config/studioToolPages';
 
-export default async function CredentialGeneratorToolPage() {
-  return <CredentialClientLoader />;
-}
+const { generateMetadata, Page } = createStudioToolPage(getStudioToolPage('credential-generator'));
+export { generateMetadata };
+export default Page;

@@ -1,5 +1,6 @@
-import { UsernameGeneratorLoader } from '@/components/dynamic';
+import { createStudioToolPage } from '@/core';
+import { getStudioToolPage } from '@/lib/config/studioToolPages';
 
-export default async function UsernameGeneratorToolPage() {
-  return <UsernameGeneratorLoader />;
-}
+const { generateMetadata, Page } = createStudioToolPage(getStudioToolPage('username-generator'));
+export { generateMetadata };
+export default Page;

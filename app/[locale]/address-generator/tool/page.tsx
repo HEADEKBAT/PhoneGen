@@ -1,5 +1,6 @@
-import { AddressGeneratorLoader } from '@/components/dynamic';
+import { createStudioToolPage } from '@/core';
+import { getStudioToolPage } from '@/lib/config/studioToolPages';
 
-export default async function AddressGeneratorToolPage() {
-  return <AddressGeneratorLoader />;
-}
+const { generateMetadata, Page } = createStudioToolPage(getStudioToolPage('address-generator'));
+export { generateMetadata };
+export default Page;

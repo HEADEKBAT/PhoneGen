@@ -1,5 +1,6 @@
-import { CompanyGeneratorLoader } from '@/components/dynamic';
+import { createStudioToolPage } from '@/core';
+import { getStudioToolPage } from '@/lib/config/studioToolPages';
 
-export default async function CompanyGeneratorToolPage() {
-  return <CompanyGeneratorLoader />;
-}
+const { generateMetadata, Page } = createStudioToolPage(getStudioToolPage('company-generator'));
+export { generateMetadata };
+export default Page;

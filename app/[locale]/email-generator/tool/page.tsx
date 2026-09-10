@@ -1,5 +1,6 @@
-import { EmailGeneratorLoader } from '@/components/dynamic';
+import { createStudioToolPage } from '@/core';
+import { getStudioToolPage } from '@/lib/config/studioToolPages';
 
-export default async function EmailGeneratorToolPage() {
-  return <EmailGeneratorLoader />;
-}
+const { generateMetadata, Page } = createStudioToolPage(getStudioToolPage('email-generator'));
+export { generateMetadata };
+export default Page;
