@@ -17,6 +17,12 @@
  *      product landing page, which keeps them out of the index no matter how
  *      well they are linked.
  *
+ *   4. Sitemap entries with no page behind them. A slug added to a registry is
+ *      advertised immediately, whether or not anyone wrote the page; three
+ *      hundred and fifty-four URLs in this sitemap answered with a 404 for
+ *      that reason. A registry slug is a promise, and this check holds it:
+ *      list the slug when the page exists, not before.
+ *
  * It reconstructs the sitemap's URL set by reading the same registries
  * app/sitemap.ts imports, rather than executing it — the sitemap is TypeScript
  * with Next.js imports, so running it needs the whole toolchain. The PREFIXES
@@ -120,6 +126,7 @@ const staticRoutes = fsRoutes.filter((r) => !r.includes('['));
 const redirected = new Set([
   ...stringArray('legacyRedirects.ts', 'LEGACY_BARCODE_SLUGS'),
   ...stringArray('legacyRedirects.ts', 'LEGACY_CREDENTIAL_SLUGS'),
+  ...stringArray('legacyRedirects.ts', 'PAYMENT_STUDIO_ALIAS_SLUGS'),
   ...[...read('legacyRedirects.ts').matchAll(/from:\s*'([^']+)'/g)].map((m) => m[1]),
 ]);
 
@@ -132,11 +139,15 @@ const covered = new Set(EXPLICIT);
 const productSlugById = new Map();
 {
   const text = readFileSync(join(CONFIG_DIR, 'products.ts'), 'utf8');
-  const ENTRY = /\bid:\s*'([^']+)',\s*\n\s*slug:\s*'([^']+)'/g;
+  /* Captures the status too: sitemap.ts lists only shipped products, because
+     'planned' entries are roadmap cards with no route. */
+  const ENTRY =
+    /\bid:\s*'([^']+)',\s*\n\s*slug:\s*'([^']+)'[\s\S]{0,400}?\bstatus:\s*'([^']+)'/g;
   let match;
   while ((match = ENTRY.exec(text)) !== null) {
-    productSlugById.set(match[1], match[2]);
-    covered.add(match[2]);
+    const [, id, slug, status] = match;
+    productSlugById.set(id, slug);
+    if (status === 'active' || status === 'beta') covered.add(slug);
   }
 }
 
@@ -213,6 +224,28 @@ function findForeignCanonicals() {
 
 const foreignCanonicals = findForeignCanonicals();
 
+/* ── Pages behind the sitemap's URLs ──────────────────────────── */
+
+/**
+ * A dynamic segment stands in for any one path segment, so
+ * `phone-generator/[country]` serves `phone-generator/us`. Matching segment by
+ * segment keeps the check honest about which URLs really have a file behind
+ * them without expanding the dynamic route.
+ */
+function servedByDynamicRoute(route) {
+  const parts = route.split('/');
+  return dynamicRoutes.some((pattern) => {
+    const shape = pattern.split('/');
+    if (shape.length !== parts.length) return false;
+    return shape.every((segment, i) => segment.startsWith('[') || segment === parts[i]);
+  });
+}
+
+const staticRouteSet = new Set(staticRoutes);
+const phantom = [...covered]
+  .filter((route) => !staticRouteSet.has(route) && !servedByDynamicRoute(route))
+  .sort();
+
 /* ── Diff ─────────────────────────────────────────────────────────────────── */
 
 /* A redirected page is expected to be absent from the sitemap, so it is not a
@@ -241,6 +274,7 @@ if (asJson) {
         uncovered,
         excludedAsRedirects: excluded,
         advertisedRedirects,
+        phantom,
         foreignCanonicals,
         dynamic: dynamicRoutes,
       },
@@ -274,6 +308,12 @@ if (asJson) {
     console.log('  Pass `path` to generateMetadata so each page claims its own URL.');
   }
 
+  if (phantom.length) {
+    console.log(`\n✗ ${phantom.length} sitemap URL(s) have no page behind them (404):`);
+    for (const route of phantom) console.log(`      /${route}`);
+    console.log('  Remove the slug from its registry, or write the page it promises.');
+  }
+
   if (advertisedRedirects.length) {
     console.log(`\n✗ ${advertisedRedirects.length} sitemap URL(s) answer with a redirect:`);
     for (const route of advertisedRedirects) console.log(`      /${route}`);
@@ -287,7 +327,10 @@ if (asJson) {
 }
 
 process.exit(
-  uncovered.length > 0 || advertisedRedirects.length > 0 || foreignCanonicals.length > 0
+  uncovered.length > 0 ||
+    advertisedRedirects.length > 0 ||
+    foreignCanonicals.length > 0 ||
+    phantom.length > 0
     ? 1
     : 0,
 );
