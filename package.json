@@ -1,6 +1,11 @@
 {
   "name": "my-app",
   "version": "0.1.0",
+  "devEngines": {
+    "packageManager": {
+      "name": "npm"
+    }
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",

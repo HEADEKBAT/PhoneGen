@@ -1,7 +1,7 @@
 name: checks
 
-# Everything here is runnable locally as `pnpm check`. The workflow exists so a
-# push cannot quietly skip it.
+# Everything here is runnable locally as `npm run check`. The workflow exists so
+# a push cannot quietly skip it.
 on:
   push:
     branches: [main]
@@ -19,17 +19,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
+          cache: npm
 
       - name: Install
-        run: pnpm install --frozen-lockfile
+        # `npm ci` installs exactly what package-lock.json records and fails if
+        # the lockfile has drifted from package.json — the same guarantee
+        # --frozen-lockfile gave, from the one manager this project uses.
+        run: npm ci
 
       # ── Fast, dependency-free audits first ──────────────────────────────
       # These need no build and fail in seconds, so a broken registry or a
@@ -55,17 +54,17 @@ jobs:
       # ── Compiler and linter ─────────────────────────────────────────────
 
       - name: Types
-        run: pnpm typecheck
+        run: npm run typecheck
 
       - name: Lint
-        run: pnpm lint
+        run: npm run lint
 
       - name: Tests
-        run: pnpm test
+        run: npm run test
 
       # ── Build last: slowest, and the steps above localise most failures ──
 
       - name: Build
-        run: pnpm build
+        run: npm run build
         env:
           NEXT_TELEMETRY_DISABLED: "1"
