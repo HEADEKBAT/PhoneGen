@@ -9,7 +9,6 @@
 import { type Metadata } from 'next';
 import { PLATFORM_CONFIG } from './platform';
 import { getProduct } from './products';
-import { getT } from '@/lib/i18n/server';
 import type { Product } from './products';
 import type { Generator } from './generators';
 
@@ -161,18 +160,19 @@ export function generateMetadata(page: SEOPage): Metadata {
     case 'product': {
       const { locale, product, title: overrideTitle, description: overrideDesc } = page;
       /*
-       * The registry's own `title` and `description` are English. They are the
-       * fallback, not the answer: `products.<id>.*` carries the translation, so
-       * a page that passes no override still gets metadata in the reader's
-       * language instead of English on /ru and /de.
+       * The registry's English `title`/`description` are the last resort, not
+       * the translation path. Callers that want a translated title resolve it
+       * themselves and pass it in — see core/studio-tool-factory.tsx.
        *
-       * `getT` falls back to English itself when a key is missing, so a product
-       * added to PRODUCTS before its translation lands still gets a title.
+       * This module deliberately does NOT import lib/i18n/server. It is
+       * re-exported from lib/config/index.ts, which client components import
+       * (the header and footer among them), and lib/i18n/server statically
+       * pulls all six locale JSON files — roughly half a megabyte that would
+       * then ride along in every page's client bundle, duplicating what
+       * `useTranslations` already loads on demand.
        */
-      const t = getT(locale);
-      const title =
-        (overrideTitle || t(`products.${product.id}.title`)) + titleSuffix(locale);
-      const description = overrideDesc || t(`products.${product.id}.description`);
+      const title = (overrideTitle || product.title) + titleSuffix(locale);
+      const description = overrideDesc || product.description;
       // A page that lives somewhere other than the product root must say so,
       // or it declares itself a duplicate of the product landing page.
       const path = page.path ?? `/${product.slug}`;

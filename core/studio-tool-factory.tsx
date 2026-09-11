@@ -100,12 +100,21 @@ export function createStudioToolPage(manifest: StudioToolPageManifest) {
     const product = resolveProduct();
     const copy = resolveCopy(locale);
 
+    /*
+     * Six of these manifests carry no copy of their own, and used to fall
+     * through to the registry's English strings. The translated product name
+     * is resolved here rather than inside seoGenerateMetadata, which must stay
+     * free of the i18n import: it is re-exported to client components, and
+     * lib/i18n/server pulls every locale file with it.
+     */
+    const t = getT(locale);
+
     return seoGenerateMetadata({
       type: 'product',
       locale,
       product,
-      title: copy?.title,
-      description: copy?.description,
+      title: copy?.title ?? t(`products.${manifest.product}.title`),
+      description: copy?.description ?? t(`products.${manifest.product}.description`),
       /* The editor is not the product's landing page, so it claims its own
          URL. Deriving it from the product slug is what keeps the canonical
          and the route from drifting apart. */
