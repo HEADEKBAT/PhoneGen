@@ -1367,5 +1367,13 @@
       "body": "A maioria começa pelos números de telefone, disponíveis para {n} países.",
       "cta": "Abrir o gerador de telefones"
     }
+  },
+  "breadcrumb": {
+    "tool": "Ferramenta",
+    "deepLink": {
+      "wifi-password-generator": "Senhas WiFi",
+      "human-password-generator": "Senhas memorizáveis",
+      "pin-generator": "Códigos PIN"
+    }
   }
 }

@@ -1367,5 +1367,13 @@
       "body": "Die meisten beginnen mit Rufnummern für {n} Länder.",
       "cta": "Telefonnummern-Generator öffnen"
     }
+  },
+  "breadcrumb": {
+    "tool": "Werkzeug",
+    "deepLink": {
+      "wifi-password-generator": "WiFi-Passwörter",
+      "human-password-generator": "Einprägsame Passwörter",
+      "pin-generator": "PIN-Codes"
+    }
   }
 }

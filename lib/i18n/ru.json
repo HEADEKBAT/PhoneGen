@@ -1367,5 +1367,13 @@
       "body": "Чаще всего начинают с телефонных номеров — их здесь для {n} стран.",
       "cta": "Открыть генератор номеров"
     }
+  },
+  "breadcrumb": {
+    "tool": "Инструмент",
+    "deepLink": {
+      "wifi-password-generator": "Пароли WiFi",
+      "human-password-generator": "Человеческие пароли",
+      "pin-generator": "PIN-коды"
+    }
   }
 }

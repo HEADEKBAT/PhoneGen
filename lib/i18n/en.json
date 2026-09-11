@@ -1367,5 +1367,13 @@
       "body": "Phone numbers for {n} countries is where most people begin.",
       "cta": "Open the Phone Generator"
     }
+  },
+  "breadcrumb": {
+    "tool": "Tool",
+    "deepLink": {
+      "wifi-password-generator": "WiFi Password Generator",
+      "human-password-generator": "Human Password Generator",
+      "pin-generator": "PIN Generator"
+    }
   }
 }

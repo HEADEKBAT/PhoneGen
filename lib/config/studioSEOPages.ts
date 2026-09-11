@@ -39,7 +39,8 @@ import type { StudioSEOPageManifest } from '@/core/studio-seo-factory';
 /* ── Studios ────────────────────────────────────────────────────────────────── */
 
 interface StudioBinding {
-  parentLabel: string;
+  /** Product id — the breadcrumb reads its translated name. */
+  product: string;
   parentHref: string;
   ctaHref: string;
   /** Path prefix for this family's pages, '' for top level. */
@@ -47,21 +48,21 @@ interface StudioBinding {
 }
 
 const CRYPTO: StudioBinding = {
-  parentLabel: 'Crypto Wallet Playground',
+  product: 'cryptoWallet',
   parentHref: 'crypto-wallet-playground',
   ctaHref: 'crypto-wallet-playground/tool',
   prefix: '',
 };
 
 const MEDIA: StudioBinding = {
-  parentLabel: 'Media Studio',
+  product: 'media',
   parentHref: 'media-studio',
   ctaHref: 'media-studio/tool',
   prefix: '',
 };
 
 const PAYMENT: StudioBinding = {
-  parentLabel: 'Payment Studio',
+  product: 'payment',
   parentHref: 'payment-studio',
   ctaHref: 'payment-studio/credit-card-generator',
   prefix: 'payment-studio/',
@@ -86,7 +87,7 @@ function build(): Record<string, StudioSEOPageManifest> {
       const path = `${studio.prefix}${record.slug}`;
       pages[path] = {
         path,
-        parentLabel: studio.parentLabel,
+        product: studio.product,
         parentHref: studio.parentHref,
         ctaHref: studio.ctaHref,
         config: record as StudioSEOPageManifest['config'],

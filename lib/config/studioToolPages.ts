@@ -7,7 +7,11 @@
  * they now have a canonical URL and an hreflang set where before they had
  * neither. Those six render the editor alone, as they did — no `heading`.
  *
- * `lib/i18n` is not involved: this copy was never in the translation files.
+ * Breadcrumb labels are gone from these entries: the factory builds the trail
+ * from the product's translated name plus `breadcrumb.tool`.
+ *
+ * `lib/i18n` is not involved for the title/description copy below: it was
+ * never in the translation files.
  * Moving it there is a separate change, and a larger one, because six locales
  * of two strings for thirteen pages is 156 keys.
  */
@@ -30,8 +34,6 @@ import type { StudioToolPageManifest } from '@/core/studio-tool-factory';
 
 const BARCODE_GENERATOR: StudioToolPageManifest = {
   product: 'barcode',
-  parentLabel: 'Barcode Generator',
-  label: 'Barcode Studio',
   heading: 'Barcode Studio',
   Tool: BarcodeStudioClientLoader,
   copy: {
@@ -64,8 +66,6 @@ const BARCODE_GENERATOR: StudioToolPageManifest = {
 
 const COLOR_GENERATOR: StudioToolPageManifest = {
   product: 'color',
-  parentLabel: 'Color Studio',
-  label: 'Color Studio',
   heading: 'Color Studio',
   Tool: ColorStudioLoader,
   copy: {
@@ -98,8 +98,6 @@ const COLOR_GENERATOR: StudioToolPageManifest = {
 
 const CRYPTO_WALLET_PLAYGROUND: StudioToolPageManifest = {
   product: 'cryptoWallet',
-  parentLabel: 'Crypto Wallet Playground',
-  label: 'Tool',
   heading: 'Crypto Wallet Playground',
   Tool: CryptoPlaygroundLoader,
   copy: {
@@ -132,8 +130,6 @@ const CRYPTO_WALLET_PLAYGROUND: StudioToolPageManifest = {
 
 const IMAGE_STUDIO: StudioToolPageManifest = {
   product: 'image',
-  parentLabel: 'Image Studio',
-  label: 'Image Studio',
   heading: 'Image Studio',
   Tool: ImageStudioLoader,
   copy: {
@@ -166,8 +162,6 @@ const IMAGE_STUDIO: StudioToolPageManifest = {
 
 const MEDIA_STUDIO: StudioToolPageManifest = {
   product: 'media',
-  parentLabel: 'Media Studio',
-  label: 'Video Converter',
   heading: 'Media Studio — Video Converter',
   Tool: MediaStudioLoader,
   copy: {
@@ -200,8 +194,6 @@ const MEDIA_STUDIO: StudioToolPageManifest = {
 
 const QR_GENERATOR: StudioToolPageManifest = {
   product: 'qr',
-  parentLabel: 'QR Code Generator',
-  label: 'QR Studio',
   heading: 'QR Studio',
   Tool: QRStudioLoader,
   copy: {
@@ -234,43 +226,31 @@ const QR_GENERATOR: StudioToolPageManifest = {
 
 const ADDRESS_GENERATOR: StudioToolPageManifest = {
   product: 'address',
-  parentLabel: 'Address Generator',
-  label: 'Tool',
   Tool: AddressGeneratorLoader,
 };
 
 const COMPANY_GENERATOR: StudioToolPageManifest = {
   product: 'company',
-  parentLabel: 'Company Generator',
-  label: 'Tool',
   Tool: CompanyGeneratorLoader,
 };
 
 const CREDENTIAL_GENERATOR: StudioToolPageManifest = {
   product: 'credential',
-  parentLabel: 'Credential Generator',
-  label: 'Tool',
   Tool: CredentialClientLoader,
 };
 
 const EMAIL_GENERATOR: StudioToolPageManifest = {
   product: 'email',
-  parentLabel: 'Email Generator',
-  label: 'Tool',
   Tool: EmailGeneratorLoader,
 };
 
 const USER_GENERATOR: StudioToolPageManifest = {
   product: 'user',
-  parentLabel: 'User Generator',
-  label: 'Tool',
   Tool: UserGenClientLoader,
 };
 
 const USERNAME_GENERATOR: StudioToolPageManifest = {
   product: 'username',
-  parentLabel: 'Username Generator',
-  label: 'Tool',
   Tool: UsernameGeneratorLoader,
 };
 

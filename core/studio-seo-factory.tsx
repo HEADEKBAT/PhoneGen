@@ -32,6 +32,7 @@
 
 import { type Metadata } from 'next';
 import { generateMetadata as seoGenerateMetadata, type SEOCustomPage } from '@/lib/config';
+import { getT } from '@/lib/i18n/server';
 import StudioSEOPage, { type StudioSEOConfig } from '@/components/seo-landing/StudioSEOPage';
 
 /* ── Manifest ───────────────────────────────────────────────────────────────── */
@@ -43,8 +44,11 @@ export interface StudioSEOPageManifest {
    * and the page's canonical URL, so the two cannot drift apart.
    */
   path: string;
-  /** Breadcrumb label for the studio this page belongs to. */
-  parentLabel: string;
+  /**
+   * Product id of the studio this page belongs to. The breadcrumb shows its
+   * translated name rather than a hardcoded English one.
+   */
+  product: string;
   /** Studio landing path, without the locale prefix. */
   parentHref: string;
   /** Where the calls to action point, without the locale prefix. */
@@ -85,7 +89,7 @@ export function createStudioSEOPage(manifest: StudioSEOPageManifest) {
       <StudioSEOPage
         locale={locale}
         config={manifest.config}
-        parentLabel={manifest.parentLabel}
+        parentLabel={getT(locale)(`products.${manifest.product}.title`)}
         parentHref={manifest.parentHref}
         ctaHref={manifest.ctaHref}
         path={manifest.path}

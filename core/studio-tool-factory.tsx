@@ -52,10 +52,13 @@ export interface StudioToolLocaleCopy {
 export interface StudioToolPageManifest {
   /** Product id. Supplies the slug, the breadcrumb parent and the fallback copy. */
   product: string;
-  /** Parent breadcrumb label, i.e. the studio's own name. */
-  parentLabel: string;
-  /** This page's breadcrumb label — 'Tool', 'Video Converter', and so on. */
-  label: string;
+  /*
+   * The breadcrumb carries no strings of its own any more. The parent crumb is
+   * the product's translated name and the leaf is `breadcrumb.tool`, so the
+   * trail reads "Главная › Генератор штрихкодов › Инструмент" instead of
+   * staying English on every locale. Thirteen manifests each used to spell
+   * both labels out in English.
+   */
   /**
    * Per-locale title and description, `en` as the fallback. Optional: without
    * it the page uses the product's title and description from PRODUCTS.
@@ -122,8 +125,11 @@ export function createStudioToolPage(manifest: StudioToolPageManifest) {
         <Breadcrumb
           items={[
             { label: t('nav.home'), href: `/${locale}` },
-            { label: manifest.parentLabel, href: `/${locale}/${product.slug}` },
-            { label: manifest.label, href: `/${locale}/${product.slug}/tool` },
+            {
+              label: t(`products.${manifest.product}.title`),
+              href: `/${locale}/${product.slug}`,
+            },
+            { label: t('breadcrumb.tool'), href: `/${locale}/${product.slug}/tool` },
           ]}
         />
 

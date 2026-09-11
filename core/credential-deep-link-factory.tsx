@@ -54,10 +54,10 @@ export interface CredentialDeepLinkManifest {
   slug: string;
   /** Product id supplying the SEO record and the parent breadcrumb. */
   product: string;
-  /** Parent breadcrumb label. Not translated, matching the pages it replaces. */
-  parentLabel: string;
-  /** This page's breadcrumb label. */
-  label: string;
+  /*
+   * No breadcrumb strings here either: the parent crumb is the product's
+   * translated name and the leaf is `breadcrumb.deepLink.<slug>`.
+   */
   /** Per-locale title and description. `en` is the fallback. */
   copy: Record<string, DeepLinkLocaleCopy>;
   /** Which tab and mode the studio opens in. */
@@ -104,8 +104,14 @@ export function createCredentialDeepLinkPage(manifest: CredentialDeepLinkManifes
         <Breadcrumb
           items={[
             { label: t('nav.home'), href: `/${locale}` },
-            { label: manifest.parentLabel, href: `/${locale}/${product?.slug ?? ''}` },
-            { label: manifest.label, href: `/${locale}/${manifest.slug}` },
+            {
+              label: t(`products.${manifest.product}.title`),
+              href: `/${locale}/${product?.slug ?? ''}`,
+            },
+            {
+              label: t(`breadcrumb.deepLink.${manifest.slug}`),
+              href: `/${locale}/${manifest.slug}`,
+            },
           ]}
         />
 

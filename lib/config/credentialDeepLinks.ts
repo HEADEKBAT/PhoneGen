@@ -11,8 +11,6 @@ import type { CredentialDeepLinkManifest } from '@/core/credential-deep-link-fac
 const WIFI_PASSWORD_GENERATOR: CredentialDeepLinkManifest = {
   slug: 'wifi-password-generator',
   product: 'credential',
-  parentLabel: 'Credential Generator',
-  label: 'WiFi Password Generator',
   initialMode: { activeTab: 'passwords', passwordMode: 'random' },
   copy: {
     en: {
@@ -45,8 +43,6 @@ const WIFI_PASSWORD_GENERATOR: CredentialDeepLinkManifest = {
 const HUMAN_PASSWORD_GENERATOR: CredentialDeepLinkManifest = {
   slug: 'human-password-generator',
   product: 'credential',
-  parentLabel: 'Credential Generator',
-  label: 'Human Password Generator',
   initialMode: { activeTab: 'passwords', passwordMode: 'human' },
   copy: {
     en: {
@@ -79,8 +75,6 @@ const HUMAN_PASSWORD_GENERATOR: CredentialDeepLinkManifest = {
 const PIN_GENERATOR: CredentialDeepLinkManifest = {
   slug: 'pin-generator',
   product: 'credential',
-  parentLabel: 'Credential Generator',
-  label: 'PIN Generator',
   initialMode: { activeTab: 'pins-secrets' },
   copy: {
     en: {
