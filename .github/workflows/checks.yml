@@ -1,7 +1,8 @@
 name: checks
 
 # Everything here is runnable locally as `npm run check`. The workflow exists so
-# a push cannot quietly skip it.
+# a push cannot quietly skip it — and because two of these checks only fail on
+# a case-sensitive filesystem, which most of us are not developing on.
 on:
   push:
     branches: [main]
@@ -33,6 +34,12 @@ jobs:
       # ── Fast, dependency-free audits first ──────────────────────────────
       # These need no build and fail in seconds, so a broken registry or a
       # missing translation is reported before the slow steps run.
+
+      - name: Imports resolve
+        # Catches an import whose case does not match the file on disk. Windows
+        # and macOS do not care; this Linux runner does, and so does the build
+        # machine — a mismatch reaches production as "Module not found".
+        run: node scripts/check/imports.mjs
 
       - name: Translations
         # Fails when a key the code uses is missing from en.json, or when a

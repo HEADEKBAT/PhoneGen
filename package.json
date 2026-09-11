@@ -19,9 +19,10 @@
     "seo:report": "tsx scripts/seo/check.ts --report",
     "seo:score": "tsx scripts/seo/check.ts --score",
     "check:i18n": "node scripts/i18n/check.mjs",
+    "check:imports": "node scripts/check/imports.mjs",
     "check:sitemap": "node scripts/seo/sitemap.check.mjs",
     "check:segmentation": "node scripts/image-studio/segmentation.check.mjs",
-    "check": "npm run typecheck && npm run lint && npm run test && npm run check:i18n && npm run check:sitemap && npm run check:segmentation"
+    "check": "npm run typecheck && npm run lint && npm run test && npm run check:imports && npm run check:i18n && npm run check:sitemap && npm run check:segmentation"
   },
   "dependencies": {
     "@faker-js/faker": "^10.5.0",
