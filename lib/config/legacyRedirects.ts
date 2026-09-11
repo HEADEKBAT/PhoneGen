@@ -94,6 +94,25 @@ export const LEGACY_ONE_OFF_REDIRECTS: { from: string; to: string }[] = [
 ];
 
 /**
+ * Paths with no locale segment, sent into the default locale.
+ *
+ * `/`, `/about` and `/generate` were real pages once — the phone-only landing
+ * this platform grew out of. They have been unreachable for a while: something
+ * outside this repository was already redirecting them, language-aware, into
+ * the locale tree. That redirect is invisible here, so if it were ever removed
+ * the bare domain would start serving a two-generation-old page, or nothing.
+ *
+ * These rules put the behaviour back in the repository. A language-aware
+ * redirect configured at the edge still wins, and this is what answers if it
+ * goes away.
+ */
+export const ROOTLESS_REDIRECTS: { from: string; to: string }[] = [
+  { from: '/', to: '/en' },
+  { from: '/about', to: '/en/about' },
+  { from: '/generate', to: '/en/phone-generator' },
+];
+
+/**
  * Every top-level slug that answers with a redirect. Anything in here must be
  * kept out of the sitemap.
  */
@@ -146,6 +165,10 @@ export function buildLegacyRedirects(): {
       destination: `/:locale/${to}`,
       permanent: true,
     });
+  }
+
+  for (const { from, to } of ROOTLESS_REDIRECTS) {
+    redirects.push({ source: from, destination: to, permanent: false });
   }
 
   return redirects;

@@ -266,7 +266,14 @@ const phantom = [...covered]
 
 /* A redirected page is expected to be absent from the sitemap, so it is not a
    miss — it is reported separately as "intentionally excluded". */
-const uncovered = staticRoutes.filter((r) => !covered.has(r) && !redirected.has(r));
+/* Internal routes are not part of the public site: they are noindex, they are
+   disallowed in robots.txt, and in production they redirect away. Absent from
+   the sitemap is the correct state for them, not a gap. */
+const INTERNAL = /^dev\//;
+
+const uncovered = staticRoutes.filter(
+  (r) => !covered.has(r) && !redirected.has(r) && !INTERNAL.test(r),
+);
 const excluded = staticRoutes.filter((r) => redirected.has(r));
 const advertisedRedirects = [...covered].filter((r) => redirected.has(r));
 

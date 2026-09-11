@@ -8,10 +8,14 @@
 import { redirect } from 'next/navigation';
 import * as fs from 'fs';
 import * as path from 'path';
-import type { SeoReport } from '../../../scripts/seo/config';
+import type { SeoReport } from '@/scripts/seo/config';
 import SEOHealthDashboard from './SEOHealthDashboard';
 
 export const dynamic = 'force-dynamic';
+
+/* It redirects away in production, but a crawler that reaches it in any other
+   environment should not keep it. */
+export const metadata = { robots: { index: false, follow: false } };
 
 export default async function SEODashboardPage() {
   // Guard: only available in dev

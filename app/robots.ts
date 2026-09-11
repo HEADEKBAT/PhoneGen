@@ -8,6 +8,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
+      /* Internal dashboard. It redirects away in production; this keeps
+         crawlers from asking in the first place. */
+      disallow: '/*/dev/',
     },
     sitemap: `${siteUrl}/sitemap.xml`,
   };

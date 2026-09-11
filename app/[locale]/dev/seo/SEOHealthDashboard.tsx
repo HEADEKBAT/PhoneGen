@@ -8,7 +8,7 @@
  */
 
 import { useState, useMemo } from 'react';
-import type { SeoReport, CheckResult } from '../../../scripts/seo/config';
+import type { SeoReport, CheckResult } from '@/scripts/seo/config';
 
 interface Props {
   report: SeoReport;
