@@ -27,6 +27,19 @@
   --color-action: var(--action);
   --color-action-foreground: var(--action-foreground);
   --color-action-soft: var(--action-soft);
+
+  /* Hero night sky — see the block below for why these ignore the theme. */
+  --color-hero-ground: var(--hero-ground);
+  --color-hero-ink: var(--hero-ink);
+  --color-hero-ink-soft: var(--hero-ink-soft);
+  --color-hero-muted: var(--hero-muted);
+  --color-hero-rule: var(--hero-rule);
+  --color-hero-panel: var(--hero-panel);
+  --color-hero-well: var(--hero-well);
+  --color-hero-action: var(--hero-action);
+  --color-hero-action-foreground: var(--hero-action-foreground);
+  --color-hero-action-soft: var(--hero-action-soft);
+  --color-hero-brand: var(--hero-brand);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
@@ -131,6 +144,33 @@
   --chart-3: #f59e0b;
   --chart-4: #f97316;
   --chart-5: #ef4444;
+}
+
+/* ─────────── Hero night sky ───────────
+   The home page's first screen is a starfield, and a starfield only reads as
+   one against a dark ground. So the hero commits to a single dark band in both
+   themes — the page beneath it still follows the visitor's choice — and carries
+   its own foreground values rather than borrowing the theme's, which would put
+   near-black text on a night sky in light mode.
+
+   Declared once, outside :root and .dark, because there is nothing to switch.
+   Confined to the hero: deleting this block and the `hero-*` classes in
+   HeroSection is the whole of an undo. */
+:root {
+  --hero-ground: #060b0a;
+  --hero-ink: #eef4f1;
+  --hero-ink-soft: #a7b8b1;
+  --hero-muted: #6f827b;
+  --hero-rule: rgba(233, 244, 240, 0.11);
+  --hero-panel: rgba(17, 25, 22, 0.72);
+  --hero-well: rgba(233, 244, 240, 0.05);
+
+  /* The dark-theme values of the two brand colours: the light-theme orange
+     (#c2410c) is a burnt red against a night sky and the green goes muddy. */
+  --hero-action: #ff8a3d;
+  --hero-action-foreground: #2a1204;
+  --hero-action-soft: rgba(255, 138, 61, 0.14);
+  --hero-brand: #3ecf8e;
 }
 
 /* ─────────── Dark Theme — Deep & Rich ─────────── */

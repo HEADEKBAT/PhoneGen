@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ArrowDown, ArrowRight } from 'lucide-react';
+import Starfield from '@/components/background/Starfield';
 import { useTranslations } from '@/lib/i18n';
 import { EASE } from './motion';
 import HeroShowcase from './HeroShowcase';
@@ -29,6 +30,14 @@ interface HeroSectionProps {
  * answer at a glance: what does this actually give me? It answers by handing
  * over a generated value, marked against the standard it satisfies, and then
  * doing it again with a different kind of data.
+ *
+ * ── The dark band ───────────────────────────────────────────────────────────
+ *
+ * The hero keeps its night sky in both themes. A starfield on a #f8fafc ground
+ * is not a starfield, and a hero that inverts between visits is not an
+ * identity — so this one screen commits, and the page under it goes on
+ * following the visitor's choice. Everything inside uses `hero-*` colours for
+ * that reason: `text-foreground` here would be near-black on a night sky.
  */
 export default function HeroSection({ generatorCount, countryCount }: HeroSectionProps) {
   const { locale } = useParams<{ locale: string }>() ?? { locale: 'en' };
@@ -46,39 +55,48 @@ export default function HeroSection({ generatorCount, countryCount }: HeroSectio
         };
 
   return (
-    <section className="relative border-b border-border">
+    <section className="relative isolate overflow-hidden bg-hero-ground">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 left-1/4 size-[36rem] rounded-full bg-action/[0.06] blur-[120px] dark:bg-action/[0.08]" />
-        <div className="absolute -bottom-52 right-1/4 size-[30rem] rounded-full bg-primary/[0.05] blur-[130px]" />
+        {/* Two distant nebulae, in the platform's own two colours. */}
+        <div className="absolute -top-48 left-[18%] size-[38rem] rounded-full bg-hero-action/[0.10] blur-[130px]" />
+        <div className="absolute -bottom-56 right-[14%] size-[32rem] rounded-full bg-hero-brand/[0.07] blur-[140px]" />
+
+        <Starfield className="absolute inset-0 size-full" />
+
+        {/* The limb of something large, just off the bottom edge. It is what
+            turns a field of dots into a place, and it hands the hero over to
+            the page below instead of ending on a hard line. */}
+        <div className="absolute -bottom-[30rem] left-1/2 h-[36rem] w-[120rem] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_50%_0%,rgba(255,138,61,0.16),rgba(62,207,142,0.06)_38%,transparent_68%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-background to-transparent" />
       </div>
 
       <div className="relative mx-auto grid max-w-5xl grid-cols-1 items-center gap-10 px-4 pt-16 pb-14 sm:px-6 sm:pt-20 sm:pb-18 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] lg:gap-14 lg:pt-24 lg:pb-24">
         <div>
           <motion.p
             {...rise(0)}
-            className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-xs text-muted-foreground sm:text-[0.8125rem]"
+            className="flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-xs text-hero-muted sm:text-[0.8125rem]"
           >
-            <span className="text-action">
+            <span className="text-hero-action">
               {t('platformHome.eyebrow.generators', { n: generatorCount })}
             </span>
-            <span aria-hidden="true" className="size-[3px] rounded-full bg-border" />
+            <span aria-hidden="true" className="size-[3px] rounded-full bg-hero-rule" />
             <span>{t('platformHome.eyebrow.countries', { n: countryCount })}</span>
-            <span aria-hidden="true" className="size-[3px] rounded-full bg-border" />
+            <span aria-hidden="true" className="size-[3px] rounded-full bg-hero-rule" />
             <span>{t('platformHome.eyebrow.inBrowser')}</span>
-            <span aria-hidden="true" className="size-[3px] rounded-full bg-border" />
+            <span aria-hidden="true" className="size-[3px] rounded-full bg-hero-rule" />
             <span>{t('platformHome.eyebrow.nothingStored')}</span>
           </motion.p>
 
           <motion.h1
             {...rise(0.06)}
-            className="mt-5 max-w-[17ch] font-heading text-4xl font-bold leading-[1.08] tracking-tight text-foreground sm:text-5xl lg:text-[3.5rem]"
+            className="mt-5 max-w-[17ch] font-heading text-4xl font-bold leading-[1.08] tracking-tight text-hero-ink sm:text-5xl lg:text-[3.5rem]"
           >
             {t('platformHome.title')}
           </motion.h1>
 
           <motion.p
             {...rise(0.12)}
-            className="mt-5 max-w-[52ch] text-base leading-relaxed text-muted-foreground sm:text-lg"
+            className="mt-5 max-w-[52ch] text-base leading-relaxed text-hero-ink-soft sm:text-lg"
           >
             {t('platformHome.lede')}
           </motion.p>
@@ -86,7 +104,7 @@ export default function HeroSection({ generatorCount, countryCount }: HeroSectio
           <motion.div {...rise(0.18)} className="mt-8 flex flex-wrap items-center gap-3">
             <Link
               href={`/${locale}/phone-generator`}
-              className="group inline-flex items-center gap-2 rounded-xl bg-action px-5 py-3 text-[0.8125rem] font-semibold text-action-foreground shadow-card transition-[filter,transform] duration-200 hover:brightness-105 active:scale-[0.98]"
+              className="group inline-flex items-center gap-2 rounded-xl bg-hero-action px-5 py-3 text-[0.8125rem] font-semibold text-hero-action-foreground shadow-card transition-[filter,transform] duration-200 hover:brightness-105 active:scale-[0.98]"
             >
               {t('platformHome.cta.primary')}
               <ArrowRight
@@ -97,7 +115,7 @@ export default function HeroSection({ generatorCount, countryCount }: HeroSectio
             </Link>
             <a
               href="#generators"
-              className="group inline-flex items-center gap-2 rounded-xl border border-border bg-card px-5 py-3 text-[0.8125rem] font-medium text-foreground transition-colors duration-200 hover:border-action/40 hover:text-action"
+              className="group inline-flex items-center gap-2 rounded-xl border border-hero-rule bg-hero-panel px-5 py-3 text-[0.8125rem] font-medium text-hero-ink backdrop-blur-sm transition-colors duration-200 hover:border-hero-action/50 hover:text-hero-action"
             >
               {t('platformHome.cta.secondary', { n: generatorCount })}
               <ArrowDown

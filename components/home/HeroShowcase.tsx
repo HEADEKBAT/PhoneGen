@@ -46,6 +46,11 @@ const TYPE_MS = 22;
  * At rest — before hydration, and whenever the visitor prefers reduced motion —
  * the first sample is already rendered in full. Nothing here waits for a timer
  * to become readable.
+ *
+ * The panel is glass rather than card-coloured: it sits on the hero's night
+ * sky, where a solid light surface would read as a sheet of paper taped over
+ * the window. Its colours come from the `hero-*` set for the same reason the
+ * headline's do.
  */
 export default function HeroShowcase() {
   const { t } = useTranslations();
@@ -90,12 +95,12 @@ export default function HeroShowcase() {
       {/* A warm bloom behind the panel, so it sits in light rather than on flat ground. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -inset-8 rounded-[2rem] bg-action/[0.07] blur-3xl dark:bg-action/[0.10]"
+        className="pointer-events-none absolute -inset-8 rounded-[2rem] bg-hero-action/[0.12] blur-3xl"
       />
 
-      <div className="relative rounded-2xl border border-border bg-card p-5 shadow-elevated sm:p-6">
+      <div className="relative rounded-2xl border border-hero-rule bg-hero-panel p-5 shadow-floating backdrop-blur-md sm:p-6">
         <div className="flex items-center gap-2.5">
-          <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-action-soft text-action">
+          <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-hero-action-soft text-hero-action">
             <Icon size={15} aria-hidden="true" />
           </span>
           <AnimatePresence mode="wait" initial={false}>
@@ -105,30 +110,30 @@ export default function HeroShowcase() {
               animate={{ opacity: 1, y: 0 }}
               exit={reduced ? undefined : { opacity: 0, y: -4 }}
               transition={{ duration: 0.2, ease: EASE }}
-              className="font-heading text-[0.9375rem] font-semibold tracking-tight text-foreground"
+              className="font-heading text-[0.9375rem] font-semibold tracking-tight text-hero-ink"
             >
               {t(`products.${current.id}.title`)}
             </motion.span>
           </AnimatePresence>
-          <span className="ml-auto flex items-center gap-1.5 font-mono text-[0.6875rem] text-muted-foreground">
+          <span className="ml-auto flex items-center gap-1.5 font-mono text-[0.6875rem] text-hero-muted">
             <span className="relative flex size-1.5">
               {!reduced && (
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-60" />
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-hero-brand opacity-60" />
               )}
-              <span className="relative inline-flex size-1.5 rounded-full bg-primary" />
+              <span className="relative inline-flex size-1.5 rounded-full bg-hero-brand" />
             </span>
             {t('platformHome.showcase.label')}
           </span>
         </div>
 
         {/* The value. Height is fixed so the panel does not jump between samples. */}
-        <div className="mt-4 flex min-h-16 items-center rounded-xl bg-muted px-4 py-3.5">
-          <code className="font-mono text-sm break-all text-foreground sm:text-base">
+        <div className="mt-4 flex min-h-16 items-center rounded-xl bg-hero-well px-4 py-3.5">
+          <code className="font-mono text-sm break-all text-hero-ink sm:text-base">
             {shown}
             {typing && (
               <span
                 aria-hidden="true"
-                className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[0.15em] animate-pulse bg-action"
+                className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[0.15em] animate-pulse bg-hero-action"
               />
             )}
           </code>
@@ -136,11 +141,11 @@ export default function HeroShowcase() {
 
         <div className="mt-3.5 flex flex-wrap items-center gap-x-3 gap-y-2">
           {current.validates && (
-            <span className="rounded bg-primary/10 px-1.5 py-0.5 font-mono text-[0.6875rem] text-primary">
+            <span className="rounded bg-hero-brand/15 px-1.5 py-0.5 font-mono text-[0.6875rem] text-hero-brand">
               ✓ {current.validates}
             </span>
           )}
-          <span className="text-[0.8125rem] text-muted-foreground">
+          <span className="text-[0.8125rem] text-hero-ink-soft">
             {t('platformHome.showcase.note')}
           </span>
 
@@ -151,8 +156,8 @@ export default function HeroShowcase() {
                 key={item.id}
                 className={
                   i === index
-                    ? 'h-1 w-4 rounded-full bg-action transition-all duration-300'
-                    : 'size-1 rounded-full bg-border transition-all duration-300'
+                    ? 'h-1 w-4 rounded-full bg-hero-action transition-all duration-300'
+                    : 'size-1 rounded-full bg-hero-rule transition-all duration-300'
                 }
               />
             ))}
