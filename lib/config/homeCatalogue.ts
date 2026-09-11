@@ -95,6 +95,32 @@ export const CATALOGUE_GROUPS: CatalogueGroup[] = [
   },
 ];
 
+/**
+ * What the hero cycles through.
+ *
+ * Six of the sixteen, chosen for variety of shape rather than popularity: a
+ * formatted number, a secret, a card, a barcode, an address and a colour. The
+ * point of the hero is to show what "generated data" looks like here, and six
+ * identical-looking strings would not.
+ */
+export const HERO_HIGHLIGHT_IDS: string[] = [
+  'phone',
+  'credential',
+  'payment',
+  'barcode',
+  'cryptoWallet',
+  'color',
+];
+
+/** Look up one catalogue entry by product id. */
+export function getCatalogueEntry(id: string): CatalogueEntry | undefined {
+  for (const group of CATALOGUE_GROUPS) {
+    const found = group.entries.find((entry) => entry.id === id);
+    if (found) return found;
+  }
+  return undefined;
+}
+
 /** Every product id the catalogue shows, in display order. */
 export const CATALOGUE_PRODUCT_IDS: string[] = CATALOGUE_GROUPS.flatMap((g) =>
   g.entries.map((e) => e.id),

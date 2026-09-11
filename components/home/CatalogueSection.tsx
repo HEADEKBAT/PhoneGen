@@ -1,9 +1,8 @@
 'use client';
 
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useMemo } from 'react';
 import {
   ArrowRight,
   Building,
@@ -41,60 +40,20 @@ const ICONS: Record<string, LucideIcon> = {
   Palette, Image: ImageIcon, Video,
 };
 
-interface CatalogueSectionProps {
-  query: string;
-  onClear: () => void;
-}
-
-export default function CatalogueSection({ query, onClear }: CatalogueSectionProps) {
+/**
+ * The catalogue, in full.
+ *
+ * It briefly had a search field in the hero filtering it. That was the wrong
+ * shape for sixteen entries: a search box asks the visitor to already know
+ * what they want, while five labelled groups of two to six cards simply show
+ * them. The filtering machinery went with it.
+ */
+export default function CatalogueSection() {
   const { locale } = useParams<{ locale: string }>() ?? { locale: 'en' };
   const { t } = useTranslations();
   const reduced = useReducedMotion();
 
-  const needle = query.trim().toLowerCase();
-
-  /* A product matches on its translated title and description as well as its
-     keyword list, so searching "senha" works on the Portuguese page. */
-  const groups = useMemo(() => {
-    const matches = (entry: CatalogueEntry) => {
-      if (!needle) return true;
-      const haystack = [
-        t(`products.${entry.id}.title`),
-        t(`products.${entry.id}.description`),
-        entry.keywords,
-      ]
-        .join(' ')
-        .toLowerCase();
-      return haystack.includes(needle);
-    };
-
-    return CATALOGUE_GROUPS.map((group) => ({
-      ...group,
-      entries: group.entries.filter(matches),
-    })).filter((group) => group.entries.length > 0);
-  }, [needle, t]);
-
-  const total = groups.reduce((n, g) => n + g.entries.length, 0);
-
-  if (total === 0) {
-    return (
-      <section className="mx-auto max-w-5xl px-4 py-20 text-center sm:px-6">
-        <p className="text-base text-foreground">
-          {t('platformHome.empty', { q: query.trim() })}
-        </p>
-        <p className="mt-2 text-[0.8125rem] text-muted-foreground">
-          {t('platformHome.emptyHint')}
-        </p>
-        <button
-          type="button"
-          onClick={onClear}
-          className="mt-5 rounded-lg border border-border bg-card px-4 py-2 text-[0.8125rem] font-medium text-foreground transition-colors hover:border-action/40 hover:text-action"
-        >
-          {t('platformHome.clear')}
-        </button>
-      </section>
-    );
-  }
+  const groups = CATALOGUE_GROUPS;
 
   return (
     <section id="generators" className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
@@ -133,11 +92,9 @@ export default function CatalogueSection({ query, onClear }: CatalogueSectionPro
             viewport={REVEAL_VIEWPORT}
             className="grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2 lg:grid-cols-3"
           >
-            <AnimatePresence initial={false}>
-              {group.entries.map((entry) => (
-                <ProductCard key={entry.id} entry={entry} locale={locale} reduced={!!reduced} />
-              ))}
-            </AnimatePresence>
+            {group.entries.map((entry) => (
+              <ProductCard key={entry.id} entry={entry} locale={locale} reduced={!!reduced} />
+            ))}
           </motion.ul>
         </motion.div>
       ))}
@@ -166,7 +123,6 @@ function ProductCard({
     <motion.li
       layout={!reduced}
       variants={revealCard}
-      exit={reduced ? undefined : { opacity: 0, scale: 0.97 }}
       className="list-none"
     >
       <Link

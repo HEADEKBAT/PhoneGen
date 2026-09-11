@@ -1282,16 +1282,6 @@
     },
     "title": "Testdaten, die die Validierung bestehen.",
     "lede": "Rufnummern, die libphonenumber akzeptiert, Kartennummern, die Luhn bestehen, Barcodes mit korrekter Prüfziffer. Generator wählen, Ergebnis kopieren — kein Konto, kein Upload, keine Limits.",
-    "searchPlaceholder": "Generatoren durchsuchen — Telefon, QR, Passwort…",
-    "searchLabel": "Generatoren durchsuchen",
-    "popular": "Häufig gesucht:",
-    "chips": {
-      "phone": "Telefonnummern",
-      "password": "Passwörter",
-      "card": "Testkarten",
-      "qr": "QR-Codes",
-      "uuid": "UUID"
-    },
     "groups": {
       "people": {
         "title": "Personen, Orte und Kontakte",
@@ -1314,9 +1304,6 @@
         "note": "Schwerere Werkzeuge — und trotzdem vollständig auf Ihrem Rechner."
       }
     },
-    "empty": "Nichts passt zu „{q}“.",
-    "emptyHint": "Versuchen Sie ein kürzeres Wort oder leeren Sie die Suche.",
-    "clear": "Leeren",
     "planned": {
       "title": "In Arbeit",
       "badge": "{n} geplant",
@@ -1366,6 +1353,14 @@
       "title": "Fangen Sie mit dem an, weswegen Sie hier sind",
       "body": "Die meisten beginnen mit Rufnummern für {n} Länder.",
       "cta": "Telefonnummern-Generator öffnen"
+    },
+    "cta": {
+      "primary": "Telefonnummern-Generator öffnen",
+      "secondary": "Alle {n} Generatoren"
+    },
+    "showcase": {
+      "label": "Gerade erzeugt",
+      "note": "In diesem Tab erzeugt, mit demselben Code wie in den Werkzeugen."
     }
   },
   "breadcrumb": {

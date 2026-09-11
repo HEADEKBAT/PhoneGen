@@ -1,4 +1,5 @@
 export { default as HeroSection } from './HeroSection';
+export { default as HeroShowcase } from './HeroShowcase';
 export { default as CatalogueSection } from './CatalogueSection';
 export { default as PlannedSection } from './PlannedSection';
 export { default as TrustSection } from './TrustSection';

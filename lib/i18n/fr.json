@@ -1282,16 +1282,6 @@
     },
     "title": "Des données de test qui passent la validation.",
     "lede": "Des numéros que libphonenumber accepte, des cartes qui passent Luhn, des codes-barres à la bonne clé de contrôle. Choisissez un générateur et copiez le résultat — sans compte, sans téléversement, sans limite.",
-    "searchPlaceholder": "Rechercher un générateur — téléphone, QR, mot de passe…",
-    "searchLabel": "Rechercher un générateur",
-    "popular": "Recherches fréquentes :",
-    "chips": {
-      "phone": "Numéros de téléphone",
-      "password": "Mots de passe",
-      "card": "Cartes de test",
-      "qr": "Codes QR",
-      "uuid": "UUID"
-    },
     "groups": {
       "people": {
         "title": "Personnes, lieux et contacts",
@@ -1314,9 +1304,6 @@
         "note": "Des outils plus lourds — et pourtant tout se passe sur votre machine."
       }
     },
-    "empty": "Rien ne correspond à « {q} ».",
-    "emptyHint": "Essayez un mot plus court, ou videz la recherche.",
-    "clear": "Effacer",
     "planned": {
       "title": "En chantier",
       "badge": "{n} prévus",
@@ -1366,6 +1353,14 @@
       "title": "Commencez par ce que vous êtes venu chercher",
       "body": "La plupart commencent par les numéros de téléphone, disponibles pour {n} pays.",
       "cta": "Ouvrir le générateur de numéros"
+    },
+    "cta": {
+      "primary": "Ouvrir le générateur de numéros",
+      "secondary": "Voir les {n} générateurs"
+    },
+    "showcase": {
+      "label": "Généré à l’instant",
+      "note": "Produit dans cet onglet, par le code même des outils."
     }
   },
   "breadcrumb": {

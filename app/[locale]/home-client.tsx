@@ -1,6 +1,3 @@
-'use client';
-
-import { useState } from 'react';
 import {
   CatalogueSection,
   ClosingSection,
@@ -15,41 +12,23 @@ import { getAllRegionCodes } from '@/lib/countryRegistry';
 /**
  * GenCore platform home page.
  *
- * ── Why the search state lives here ─────────────────────────────────────────
+ * A server component: it holds no state now that the hero's search is gone, so
+ * only the sections that animate or cycle cross into the client. The counts it
+ * passes down are read from the registries that decide them, because the strip
+ * this page used to carry said "8+ Products" while sixteen were live.
  *
- * The field is in the hero and the results are in the catalogue, so one of
- * them has to own the query. Keeping it in the page means no context and no
- * store for a single string.
- *
- * ── Why the counts are computed and not written ─────────────────────────────
- *
- * The old page carried a stats strip reading "245+ Countries · 8+ Products".
- * There are sixteen live products, so the second number had been wrong for
- * months — the sort of thing a hand-written figure does. Both numbers now come
- * from the registries that decide them.
- *
- * ── `overflow-hidden` is gone from <main> ───────────────────────────────────
- *
- * It clipped the sections' entrance transforms, and combined with reveals that
- * parked content at opacity 0 it could leave whole screens blank. The reveals
- * now trigger on the first visible pixel (see components/home/motion.ts).
+ * `<main>` deliberately has no `overflow-hidden`: it clipped the sections'
+ * entrance transforms, and together with reveals that parked content at
+ * opacity 0 it could leave whole screens blank.
  */
 export default function GenCoreHomePage() {
-  const [query, setQuery] = useState('');
-
   const generatorCount = CATALOGUE_PRODUCT_IDS.length;
   const countryCount = getAllRegionCodes().length;
 
   return (
     <main className="flex-1">
-      <HeroSection
-        query={query}
-        onQuery={setQuery}
-        generatorCount={generatorCount}
-        countryCount={countryCount}
-      />
-
-      <CatalogueSection query={query} onClear={() => setQuery('')} />
+      <HeroSection generatorCount={generatorCount} countryCount={countryCount} />
+      <CatalogueSection />
       <PlannedSection />
       <TrustSection />
       <FaqSection />

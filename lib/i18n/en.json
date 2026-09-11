@@ -1282,16 +1282,6 @@
     },
     "title": "Test data that passes validation.",
     "lede": "Phone numbers libphonenumber accepts, card numbers that pass Luhn, barcodes with the right check digit. Pick a generator and copy the output — no account, no upload, no limits.",
-    "searchPlaceholder": "Search generators — phone, QR, password…",
-    "searchLabel": "Search generators",
-    "popular": "Popular:",
-    "chips": {
-      "phone": "Phone numbers",
-      "password": "Passwords",
-      "card": "Test cards",
-      "qr": "QR codes",
-      "uuid": "UUID"
-    },
     "groups": {
       "people": {
         "title": "People, places and contacts",
@@ -1314,9 +1304,6 @@
         "note": "Heavier tools — they still run entirely on your machine."
       }
     },
-    "empty": "Nothing matches “{q}”.",
-    "emptyHint": "Try a shorter word, or clear the search.",
-    "clear": "Clear",
     "planned": {
       "title": "In the works",
       "badge": "{n} planned",
@@ -1366,6 +1353,14 @@
       "title": "Start with the one you came for",
       "body": "Phone numbers for {n} countries is where most people begin.",
       "cta": "Open the Phone Generator"
+    },
+    "cta": {
+      "primary": "Open the Phone Generator",
+      "secondary": "See all {n} generators"
+    },
+    "showcase": {
+      "label": "Generated just now",
+      "note": "Produced in this tab, by the same code the tools run."
     }
   },
   "breadcrumb": {
