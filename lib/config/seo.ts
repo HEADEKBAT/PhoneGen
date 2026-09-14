@@ -126,13 +126,29 @@ export function generateHreflang(
 
 /* ── OpenGraph helper ──────────────────────────────────────────────────────── */
 
-function generateOpenGraph(title: string, description: string, url: string) {
+/** `ru` → `ru_RU`, `en` → `en_US` — the form Open Graph expects. */
+const OG_LOCALES: Record<string, string> = {
+  en: 'en_US',
+  fr: 'fr_FR',
+  es: 'es_ES',
+  pt: 'pt_BR',
+  de: 'de_DE',
+  ru: 'ru_RU',
+};
+
+/**
+ * `locale` is a parameter because this used to hardcode 'en_US', and page
+ * metadata overrides the layout's: every page on the site announced itself to
+ * Facebook, LinkedIn and every other Open Graph consumer as American English,
+ * Russian and German pages included.
+ */
+function generateOpenGraph(title: string, description: string, url: string, locale: string) {
   return {
     title,
     description,
     url,
     siteName: PLATFORM_CONFIG.seo.openGraph.siteName,
-    locale: 'en_US',
+    locale: OG_LOCALES[locale] ?? OG_LOCALES.en,
     type: 'website' as const,
   };
 }
@@ -171,7 +187,7 @@ export function generateMetadata(page: SEOPage): Metadata {
         title,
         description,
         alternates,
-        openGraph: generateOpenGraph(title, description, alternates.canonical),
+        openGraph: generateOpenGraph(title, description, alternates.canonical, locale),
         twitter: { ...PLATFORM_CONFIG.seo.twitter, card: 'summary' },
         robots: { index: true, follow: true },
       };
@@ -202,7 +218,7 @@ export function generateMetadata(page: SEOPage): Metadata {
         title,
         description,
         alternates,
-        openGraph: generateOpenGraph(title, description, alternates.canonical),
+        openGraph: generateOpenGraph(title, description, alternates.canonical, locale),
         twitter: { ...PLATFORM_CONFIG.seo.twitter, card: 'summary' },
         robots: { index: true, follow: true },
       };
@@ -223,7 +239,7 @@ export function generateMetadata(page: SEOPage): Metadata {
         title,
         description,
         alternates,
-        openGraph: generateOpenGraph(title, description, alternates.canonical),
+        openGraph: generateOpenGraph(title, description, alternates.canonical, locale),
         twitter: { ...PLATFORM_CONFIG.seo.twitter, card: 'summary' },
         robots: { index: true, follow: true },
       };
@@ -239,7 +255,7 @@ export function generateMetadata(page: SEOPage): Metadata {
         title,
         description,
         alternates,
-        openGraph: generateOpenGraph(title, description, alternates.canonical),
+        openGraph: generateOpenGraph(title, description, alternates.canonical, locale),
         twitter: { ...PLATFORM_CONFIG.seo.twitter, card: 'summary' },
         robots: { index: true, follow: true },
       };
@@ -254,7 +270,7 @@ export function generateMetadata(page: SEOPage): Metadata {
         title,
         description,
         alternates,
-        openGraph: generateOpenGraph(title, description, alternates.canonical),
+        openGraph: generateOpenGraph(title, description, alternates.canonical, locale),
         twitter: { ...PLATFORM_CONFIG.seo.twitter, card: 'summary' },
         robots: { index: true, follow: true },
       };

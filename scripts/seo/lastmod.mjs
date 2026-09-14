@@ -47,6 +47,20 @@ const OUT = join(ROOT, 'lib', 'config', 'lastmod.generated.json');
 const LOCALES = ['en', 'fr', 'es', 'pt', 'de', 'ru'];
 
 /**
+ * Sources every page depends on: the root layout, which supplies the <title>
+ * template and the Open Graph block, and the metadata registry every page's
+ * `generateMetadata` calls. These feed into every group's date, the same way
+ * an unclaimed dictionary section does — a change here really does change the
+ * HTML of all 2172 URLs.
+ */
+const SHARED_SOURCES = [
+  'app/[locale]/layout.tsx',
+  'lib/config/seo.ts',
+  'lib/seo.ts',
+  'lib/config/platform.ts',
+];
+
+/**
  * Content group → the source paths whose history determines its pages' dates.
  * Keys must match the group names `app/sitemap.ts` passes to `add()`.
  */
@@ -188,9 +202,12 @@ function sectionDates(file) {
 function build() {
   const missing = [];
 
+  const sharedSourceDate = lastCommit(SHARED_SOURCES);
+  if (!sharedSourceDate) missing.push('shared-sources');
+
   const groupDate = {};
   for (const [name, paths] of Object.entries(GROUPS)) {
-    const date = lastCommit(paths);
+    const date = [lastCommit(paths), sharedSourceDate].filter(Boolean).sort().at(-1);
     if (date) groupDate[name] = date;
     else missing.push(`group:${name}`);
   }

@@ -74,29 +74,6 @@ const UNTRANSLATED = new Map([
   ['/video-converter', 'lib/config/mediaSEOPages.ts holds English copy only'],
 ]);
 
-/**
- * Whether `<html lang>` is expected in the served HTML.
- *
- * It is not, today, and that is a known structural limit rather than an
- * oversight. The attribute has to be set by the topmost layout, and Next's
- * topmost layout is `app/layout.tsx`, which sits above `[locale]` and so
- * cannot see the param. The locale layout sets it from the URL with an inline
- * script that runs before hydration, so browsers, screen readers and Lighthouse
- * all see the right value — only a consumer reading the raw HTML without
- * running scripts does not. Google states it ignores `lang` entirely; Bing and
- * Yandex may not.
- *
- * The two ways out, neither free:
- *   • `experimental.rootParams` in next.config, then `import { locale } from
- *     'next/root-params'` in the root layout (Next 16.2 has the API behind the
- *     flag — without it the build fails with "Invalid import");
- *   • drop `app/layout.tsx` and make `app/[locale]/layout.tsx` the root, which
- *     is Next's documented i18n shape but restructures the whole tree.
- *
- * Flip this to `true` once one of them lands, and the check will hold it there.
- */
-const EXPECT_LANG_IN_HTML = false;
-
 const grab = (html, re) => {
   const m = html.match(re);
   return m ? m[1].trim() : null;
@@ -120,7 +97,6 @@ async function inspect(url) {
 
 const problems = [];
 const knownGaps = [];
-let langGap = false;
 const note = (route, message) => problems.push(`${route}: ${message}`);
 
 for (const route of ROUTES) {
@@ -134,13 +110,7 @@ for (const route of ROUTES) {
       note(path, `HTTP ${page.status}`);
       continue;
     }
-    if (EXPECT_LANG_IN_HTML) {
-      if (page.lang !== locale) note(path, `<html lang> is "${page.lang}", expected "${locale}"`);
-    } else if (page.lang) {
-      note(path, `<html lang> is now served ("${page.lang}") — set EXPECT_LANG_IN_HTML to true`);
-    } else {
-      langGap = true;
-    }
+    if (page.lang !== locale) note(path, `<html lang> is "${page.lang}", expected "${locale}"`);
     if (!page.title) note(path, 'no <title>');
     if (!page.h1) note(path, 'no <h1>');
 
@@ -190,6 +160,3 @@ console.log(
   `✓ ${ROUTES.length} route(s) × ${LOCALES.length} locales — lang, canonical, hreflang and translation all sound`,
 );
 for (const gap of knownGaps) console.log(`  · known translation gap: ${gap}`);
-if (langGap) {
-  console.log('  · known gap: <html lang> is set by script, not served in the HTML — see EXPECT_LANG_IN_HTML');
-}
