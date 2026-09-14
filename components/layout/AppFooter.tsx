@@ -27,7 +27,7 @@ export default function AppFooter() {
               Gen<span className="text-primary">Core</span>
             </Link>
             <p className="mt-2 text-xs text-muted-foreground max-w-xs leading-relaxed">
-              Data generation platform for developers, QA engineers, and testers.
+              {t('footer.tagline')}
             </p>
           </div>
 
@@ -35,7 +35,7 @@ export default function AppFooter() {
           {FOOTER_SECTIONS.map((section) => (
             <div key={section.section}>
               <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider mb-3">
-                {section.section}
+                {section.sectionKey ? t(section.sectionKey) : section.section}
               </h4>
               <ul className="space-y-2">
                 {section.links.map((link: NavItem) => {
@@ -50,14 +50,14 @@ export default function AppFooter() {
                           rel="noopener noreferrer"
                           className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                         >
-                          {link.label}
+                          {link.labelKey ? t(link.labelKey) : link.label}
                         </a>
                       ) : (
                         <Link
                           href={href}
                           className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                         >
-                          {link.label}
+                          {link.labelKey ? t(link.labelKey) : link.label}
                         </Link>
                       )}
                     </li>

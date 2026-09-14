@@ -80,7 +80,7 @@ export default function Header() {
             <div className="relative size-9 overflow-hidden">
               <Image
                 src="/logo.png"
-                alt="PhoneGen"
+                alt="GenCore"
                 width={36}
                 height={36}
                 className="object-cover"

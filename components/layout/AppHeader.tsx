@@ -10,6 +10,7 @@ import AnnouncementBar from './AnnouncementBar';
 import SearchButton from './SearchButton';
 import LanguageSwitcher from './LanguageSwitcher';
 import ThemeSwitcher from './ThemeSwitcher';
+import { useTranslations } from '@/lib/i18n';
 
 /**
  * Lucide icon resolver for product icons.
@@ -32,6 +33,11 @@ const PRODUCT_ICON_MAP: Record<string, React.ComponentType<{ size?: number; clas
  */
 export default function AppHeader() {
   const { locale } = useParams<{ locale: string }>() ?? { locale: 'en' };
+  /* The nav read "Products" and "About" in English on all six locales, and the
+     dropdown showed each product's registry title — also English — rather than
+     its translated name. This is the site's primary navigation, above the fold
+     on all 2172 pages. */
+  const { t } = useTranslations();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
@@ -59,7 +65,7 @@ export default function AppHeader() {
           <Link
             href={`/${locale}`}
             className="flex items-center gap-2 shrink-0"
-            aria-label="GenCore Home"
+            aria-label={t('header.ariaLabel')}
           >
             <div className='relative size-9 overflow-hidden'>
             <img src="/logo.png" alt="" />
@@ -81,7 +87,7 @@ export default function AppHeader() {
               <button
                 className="inline-flex items-center gap-1 h-9 px-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               >
-                Products
+                {t('nav.products')}
                 <ChevronDown size={14} className={`transition-transform ${productsOpen ? 'rotate-180' : ''}`} />
               </button>
               {productsOpen && (
@@ -100,8 +106,10 @@ export default function AppHeader() {
                             {Icon && <Icon size={14} />}
                           </span>
                           <div>
-                            <div className="font-medium">{product.title}</div>
-                            <div className="text-xs text-muted-foreground line-clamp-1">{product.description}</div>
+                            <div className="font-medium">{t(`products.${product.id}.title`)}</div>
+                            <div className="text-xs text-muted-foreground line-clamp-1">
+                              {t(`products.${product.id}.description`)}
+                            </div>
                           </div>
                         </Link>
                       );
@@ -115,7 +123,7 @@ export default function AppHeader() {
               href={`/${locale}/about`}
               className="inline-flex items-center h-9 px-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
             >
-              About
+              {t('nav.about')}
             </Link>
           </nav>
 
@@ -144,7 +152,7 @@ export default function AppHeader() {
           <div className="md:hidden border-t border-border bg-background animate-in fade-in duration-150">
             <div className="px-4 py-3 space-y-1">
               <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider px-3 py-1.5">
-                Products
+                {t('nav.products')}
               </div>
               {products.map((product) => {
                 const Icon = PRODUCT_ICON_MAP[product.id];
@@ -158,7 +166,7 @@ export default function AppHeader() {
                     <span className="flex size-7 items-center justify-center rounded-md bg-primary/10 text-primary">
                       {Icon && <Icon size={14} />}
                     </span>
-                    {product.title}
+                    {t(`products.${product.id}.title`)}
                   </Link>
                 );
               })}
@@ -168,7 +176,7 @@ export default function AppHeader() {
                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-foreground hover:bg-muted transition-colors"
                 onClick={() => setMobileOpen(false)}
               >
-                About
+                {t('nav.about')}
               </Link>
             </div>
           </div>

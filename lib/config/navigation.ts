@@ -10,7 +10,15 @@
 
 /** A single navigation item (header link, footer link, breadcrumb segment). */
 export interface NavItem {
+  /** English fallback, and what is shown when `labelKey` is absent. */
   label: string;
+  /**
+   * Dictionary key for the label. The footer rendered `label` directly, so
+   * every heading and link in it read English on all six locales — on all
+   * 2172 pages. Product links point at `products.<id>.title`, which is already
+   * translated; the rest have their own keys under `footer.links`.
+   */
+  labelKey?: string;
   /** Path with optional `{locale}` placeholder, or absolute URL */
   href: string;
   /** Lucide icon name (for header links) */
@@ -20,8 +28,10 @@ export interface NavItem {
 }
 
 export interface NavSection {
-  /** Section heading (e.g. "Products", "Resources") */
+  /** Section heading (e.g. "Products", "Resources") — English fallback. */
   section: string;
+  /** Dictionary key for the heading. */
+  sectionKey?: string;
   links: NavItem[];
 }
 
@@ -40,23 +50,25 @@ export const PRODUCT_NAV_PLACEHOLDER = '___PRODUCTS___';
 export const FOOTER_SECTIONS: NavSection[] = [
   {
     section: 'Products',
+    sectionKey: 'nav.products',
     links: [
-      { label: 'Phone Generator', href: '/{locale}/phone-generator' },
-      { label: 'User Generator', href: '/{locale}/user-generator' },
-      { label: 'Credential Generator', href: '/{locale}/credential-generator' },
-      { label: 'Address Generator', href: '/{locale}/address-generator' },
-      { label: 'Email Generator', href: '/{locale}/email-generator' },
-      { label: 'Username Generator', href: '/{locale}/username-generator' },
-      { label: 'Barcode Generator', href: '/{locale}/barcode-generator' },
-      { label: 'Color Studio', href: '/{locale}/color-generator' },
-      { label: 'Payment Studio', href: '/{locale}/payment-studio' },
-      { label: 'Company Generator', href: '/{locale}/company-generator' },
+      { label: 'Phone Generator', labelKey: 'products.phone.title', href: '/{locale}/phone-generator' },
+      { label: 'User Generator', labelKey: 'products.user.title', href: '/{locale}/user-generator' },
+      { label: 'Credential Generator', labelKey: 'products.credential.title', href: '/{locale}/credential-generator' },
+      { label: 'Address Generator', labelKey: 'products.address.title', href: '/{locale}/address-generator' },
+      { label: 'Email Generator', labelKey: 'products.email.title', href: '/{locale}/email-generator' },
+      { label: 'Username Generator', labelKey: 'products.username.title', href: '/{locale}/username-generator' },
+      { label: 'Barcode Generator', labelKey: 'products.barcode.title', href: '/{locale}/barcode-generator' },
+      { label: 'Color Studio', labelKey: 'products.color.title', href: '/{locale}/color-generator' },
+      { label: 'Payment Studio', labelKey: 'products.payment.title', href: '/{locale}/payment-studio' },
+      { label: 'Company Generator', labelKey: 'products.company.title', href: '/{locale}/company-generator' },
     ],
   },
   {
     section: 'Resources',
+    sectionKey: 'footer.links',
     links: [
-      { label: 'About', href: '/{locale}/about' },
+      { label: 'About', labelKey: 'nav.about', href: '/{locale}/about' },
       { label: 'GitHub', href: 'https://github.com' },
     ],
   },
