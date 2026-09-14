@@ -1374,5 +1374,10 @@
       "human-password-generator": "Einprägsame Passwörter",
       "pin-generator": "PIN-Codes"
     }
+  },
+  "studioSeo": {
+    "open": "{studio} öffnen",
+    "about": "Über dieses Tool",
+    "faq": "{topic} — häufige Fragen"
   }
 }

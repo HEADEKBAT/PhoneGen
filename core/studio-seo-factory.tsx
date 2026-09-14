@@ -33,7 +33,10 @@
 import { type Metadata } from 'next';
 import { generateMetadata as seoGenerateMetadata, type SEOCustomPage } from '@/lib/config';
 import { getT } from '@/lib/i18n/server';
-import StudioSEOPage, { type StudioSEOConfig } from '@/components/seo-landing/StudioSEOPage';
+import StudioSEOPage, {
+  resolveStudioSEOCopy,
+  type StudioSEOConfig,
+} from '@/components/seo-landing/StudioSEOPage';
 
 /* ── Manifest ───────────────────────────────────────────────────────────────── */
 
@@ -65,20 +68,22 @@ type PageProps = {
 
 export function createStudioSEOPage(manifest: StudioSEOPageManifest) {
   /*
-   * The registries hold English copy only, exactly as the barcode pages this
-   * mirrors do. Repeating one English string across six locale keys would be
-   * the same value with more ceremony, so the title and description are passed
-   * straight through; `seoGenerateMetadata` still emits the full hreflang set.
+   * Title and description come from the record's `locales` map, falling back to
+   * the English on the record itself. They used to be passed straight through:
+   * every one of these pages served the same English <title> to all six
+   * locales, so /ru/bitcoin-address-generator competed for English queries and
+   * for nothing a Russian speaker would type.
    */
   async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { locale } = await params;
+    const copy = resolveStudioSEOCopy(manifest.config, locale);
 
     return seoGenerateMetadata({
       type: 'custom',
       locale,
       path: `/${manifest.path}`,
-      title: manifest.config.title,
-      description: manifest.config.description,
+      title: copy.title,
+      description: copy.description,
     } satisfies SEOCustomPage);
   }
 
@@ -88,7 +93,7 @@ export function createStudioSEOPage(manifest: StudioSEOPageManifest) {
     return (
       <StudioSEOPage
         locale={locale}
-        config={manifest.config}
+        copy={resolveStudioSEOCopy(manifest.config, locale)}
         parentLabel={getT(locale)(`products.${manifest.product}.title`)}
         parentHref={manifest.parentHref}
         ctaHref={manifest.ctaHref}

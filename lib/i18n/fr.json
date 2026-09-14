@@ -1374,5 +1374,10 @@
       "human-password-generator": "Mots de passe mémorisables",
       "pin-generator": "Codes PIN"
     }
+  },
+  "studioSeo": {
+    "open": "Ouvrir {studio}",
+    "about": "À propos de cet outil",
+    "faq": "{topic} — questions fréquentes"
   }
 }

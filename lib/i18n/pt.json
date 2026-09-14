@@ -1374,5 +1374,10 @@
       "human-password-generator": "Senhas memorizáveis",
       "pin-generator": "Códigos PIN"
     }
+  },
+  "studioSeo": {
+    "open": "Abrir {studio}",
+    "about": "Sobre esta ferramenta",
+    "faq": "{topic} — perguntas frequentes"
   }
 }

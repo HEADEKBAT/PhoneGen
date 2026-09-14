@@ -1374,5 +1374,10 @@
       "human-password-generator": "Human Password Generator",
       "pin-generator": "PIN Generator"
     }
+  },
+  "studioSeo": {
+    "open": "Open {studio}",
+    "about": "About this tool",
+    "faq": "{topic} — FAQ"
   }
 }

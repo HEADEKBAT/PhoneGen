@@ -1374,5 +1374,10 @@
       "human-password-generator": "Человеческие пароли",
       "pin-generator": "PIN-коды"
     }
+  },
+  "studioSeo": {
+    "open": "Открыть {studio}",
+    "about": "Об инструменте",
+    "faq": "{topic} — частые вопросы"
   }
 }
