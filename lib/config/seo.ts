@@ -53,6 +53,9 @@ export interface SEOGeneratorPage {
 export interface SEOHomePage {
   type: 'home';
   locale: string;
+  /** Translated by the caller; falls back to the platform defaults. */
+  title?: string;
+  description?: string;
 }
 
 export interface SEOAboutPage {
@@ -76,19 +79,18 @@ export type SEOPage = SEOProductPage | SEOGeneratorPage | SEOHomePage | SEOAbout
 
 const ALL_LOCALES = SEO_LOCALES as readonly string[];
 
-const PLATFORM_SUFFIX = ` | ${PLATFORM_CONFIG.name}`;
-const PLATFORM_SUFFIX_MAP: Record<string, string> = {
-  en: ` | ${PLATFORM_CONFIG.name}`,
-  ru: ` | ${PLATFORM_CONFIG.name}`,
-  de: ` | ${PLATFORM_CONFIG.name}`,
-  es: ` | ${PLATFORM_CONFIG.name}`,
-  fr: ` | ${PLATFORM_CONFIG.name}`,
-  pt: ` | ${PLATFORM_CONFIG.name}`,
-};
-
-function titleSuffix(locale: string): string {
-  return PLATFORM_SUFFIX_MAP[locale] || PLATFORM_SUFFIX;
-}
+/*
+ * The brand is appended in exactly one place: `title.template` in the locale
+ * layout. It used to be appended here as well, so every product, generator and
+ * custom page shipped it twice —
+ *
+ *   "Генератор номеров телефона — Валидные номера | GenCore | GenCore — Free
+ *    Online Generator Suite"
+ *
+ * — 94 characters where a search result shows about 60, spending the visible
+ * half on a name repeated once and then padded. Five of seven page types
+ * measured had it.
+ */
 
 /* ── Hreflang alternates ───────────────────────────────────────────────────── */
 
@@ -143,8 +145,17 @@ export function generateMetadata(page: SEOPage): Metadata {
   switch (page.type) {
     case 'home': {
       const { locale } = page;
-      const title = PLATFORM_CONFIG.seo.defaultTitle;
-      const description = PLATFORM_CONFIG.seo.defaultDescription;
+      /* The home page served one English title to all six locales. Its own
+         headline and standfirst are translated, so the page passes them in —
+         resolved by the caller, because this module is re-exported to client
+         components and must not import the server dictionary. */
+      const headline = page.title ?? PLATFORM_CONFIG.seo.defaultTitle;
+      const description = page.description ?? PLATFORM_CONFIG.seo.defaultDescription;
+      /* The brand is appended here rather than by the layout's `title.template`:
+         a template only applies to CHILD segments, and the home page lives in
+         the same segment as the layout that declares it. Every other page gets
+         its `| GenCore` from that template, so none of them add it themselves. */
+      const title = `${headline} | ${PLATFORM_CONFIG.name}`;
       const alternates = generateHreflang(locale, '');
 
       return {
@@ -171,7 +182,7 @@ export function generateMetadata(page: SEOPage): Metadata {
        * then ride along in every page's client bundle, duplicating what
        * `useTranslations` already loads on demand.
        */
-      const title = (overrideTitle || product.title) + titleSuffix(locale);
+      const title = (overrideTitle || product.title);
       const description = overrideDesc || product.description;
       // A page that lives somewhere other than the product root must say so,
       // or it declares itself a duplicate of the product landing page.
@@ -190,7 +201,7 @@ export function generateMetadata(page: SEOPage): Metadata {
 
     case 'generator': {
       const { locale, generator, title: overrideTitle, description: overrideDesc, country } = page;
-      const title = (overrideTitle || generator.title) + titleSuffix(locale);
+      const title = (overrideTitle || generator.title);
       const description = overrideDesc || generator.description;
       const product = getProduct(generator.productId);
       const productSlug = product?.slug ?? generator.productId;
@@ -211,7 +222,7 @@ export function generateMetadata(page: SEOPage): Metadata {
 
     case 'about': {
       const { locale } = page;
-      const title = `About ${PLATFORM_CONFIG.name}${titleSuffix(locale)}`;
+      const title = `About ${PLATFORM_CONFIG.name}`;
       const description = PLATFORM_CONFIG.description;
       const alternates = generateHreflang(locale, '/about');
 
@@ -227,7 +238,7 @@ export function generateMetadata(page: SEOPage): Metadata {
 
     case 'custom': {
       const { locale, title: t, description, path } = page;
-      const title = t + titleSuffix(locale);
+      const title = t;
       const alternates = generateHreflang(locale, path);
 
       return {

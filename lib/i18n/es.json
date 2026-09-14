@@ -1274,6 +1274,10 @@
     }
   },
   "platformHome": {
+    "meta": {
+      "title": "Generadores de datos de prueba en línea",
+      "description": "Números de teléfono, de tarjeta, códigos de barras, códigos QR y más — generados en el navegador y válidos según las reglas. Gratis y sin cuenta."
+    },
     "eyebrow": {
       "generators": "{n} generadores",
       "countries": "{n} países",

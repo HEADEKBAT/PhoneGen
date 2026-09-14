@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   title: {
     default: "GenCore — Free Online Generator Suite | Phone, Barcode & Credential Tools",
-    template: "%s | GenCore — Free Online Generator Suite",
+    template: "%s | GenCore",
   },
   description:
     "GenCore is a free online generator suite with tools for phone numbers, barcodes, passwords, credentials, and more. Generate valid test data for developers, QA engineers, and professionals.",

@@ -1274,6 +1274,10 @@
     }
   },
   "platformHome": {
+    "meta": {
+      "title": "Geradores de dados de teste online",
+      "description": "Números de telefone, de cartão, códigos de barras, QR codes e mais — gerados no navegador e válidos pelas regras. Grátis, sem conta e sem uploads."
+    },
     "eyebrow": {
       "generators": "{n} geradores",
       "countries": "{n} países",

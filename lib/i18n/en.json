@@ -1274,6 +1274,10 @@
     }
   },
   "platformHome": {
+    "meta": {
+      "title": "Test Data Generators — Free & In-Browser",
+      "description": "Phone numbers, card numbers, barcodes, QR codes and more — generated in your browser and valid by the rules that check them. Free, no account, no upload."
+    },
     "eyebrow": {
       "generators": "{n} generators",
       "countries": "{n} countries",

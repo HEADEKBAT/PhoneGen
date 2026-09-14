@@ -1274,6 +1274,10 @@
     }
   },
   "platformHome": {
+    "meta": {
+      "title": "Testdaten-Generatoren — kostenlos im Browser",
+      "description": "Telefonnummern, Kartennummern, Barcodes, QR-Codes und mehr — im Browser erzeugt und nach den geltenden Regeln gültig. Kostenlos, ohne Konto, ohne Upload."
+    },
     "eyebrow": {
       "generators": "{n} Generatoren",
       "countries": "{n} Länder",

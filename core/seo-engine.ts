@@ -23,7 +23,8 @@ import type { ToolManifest, ProductManifest, SupportedLocale } from './types';
 /* ── Constants ──────────────────────────────────────────────────────────────── */
 
 const PLATFORM_NAME = 'GenCore';
-const TITLE_TEMPLATE = ` | ${PLATFORM_NAME}`;
+/* No brand suffix here: `title.template` in the locale layout adds it once.
+   Appending it again put "| GenCore" in every title twice. */
 
 /* ── Helpers ────────────────────────────────────────────────────────────────── */
 
@@ -64,7 +65,7 @@ export function generateToolMetadata(
   const meta = tool.seo.meta[locale as SupportedLocale] ?? tool.seo.meta.en;
   const path = slugOverride ? `/${slugOverride}` : `/${tool.id}`;
   const alternates = generateHreflang(locale, path);
-  const title = `${meta.title}${TITLE_TEMPLATE}`;
+  const title = meta.title;
 
   return {
     title,
@@ -102,8 +103,8 @@ export function generateProductMetadata(
 ): Metadata {
   const override = overrides?.[locale];
   const title = override?.title
-    ? `${override.title}${TITLE_TEMPLATE}`
-    : `${product.name}${TITLE_TEMPLATE}`;
+    ? override.title
+    : product.name;
   const description = override?.description ?? product.description;
   const alternates = generateHreflang(locale, `/${product.slug}`);
 
@@ -144,7 +145,7 @@ export function generateToolPresetMetadata(
   const meta = preset.seo.meta[locale as SupportedLocale] ?? preset.seo.meta.en;
   const path = `/${tool.id}/${presetKey}`;
   const alternates = generateHreflang(locale, path);
-  const title = `${meta.title}${TITLE_TEMPLATE}`;
+  const title = meta.title;
 
   return {
     title,

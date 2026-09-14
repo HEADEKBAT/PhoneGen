@@ -42,7 +42,8 @@ import { SEO_LOCALES, BASE_URL } from './seo-engine';
 /* ── Constants ──────────────────────────────────────────────────────────────── */
 
 const PLATFORM_NAME = 'GenCore';
-const TITLE_TEMPLATE = ` | ${PLATFORM_NAME}`;
+/* No brand suffix here: `title.template` in the locale layout adds it once.
+   Appending it again put "| GenCore" in every title twice. */
 
 /* ── Types ──────────────────────────────────────────────────────────────────── */
 
@@ -120,7 +121,7 @@ export function createToolPage(
     const meta = resolveMeta(locale);
     const path = buildPath(locale);
     const alternates = generateHreflang(locale, path);
-    const title = `${meta.title}${TITLE_TEMPLATE}`;
+    const title = meta.title;
 
     return {
       title,
