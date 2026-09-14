@@ -16,6 +16,7 @@ import {
   getPreset,
 } from '@/lib/media';
 import {
+  AlertCircle,
   Upload,
   Server,
   BookOpen,
@@ -24,7 +25,7 @@ import {
   History,
   ArrowRight,
 } from 'lucide-react';
-import UploadZone from './shared/UploadZone';
+import SourcePanel, { type LoadedSource } from './shared/SourcePanel';
 import FormatSelector from './shared/FormatSelector';
 import PresetSelector from './shared/PresetSelector';
 import SettingsPanel from './shared/SettingsPanel';
@@ -39,6 +40,7 @@ import FormatAdvisor from './shared/FormatAdvisor';
 import HistoryPanel from './shared/HistoryPanel';
 import VideoPreview from './shared/VideoPreview';
 import { ALL_FORMATS, ALL_VIDEO_CODECS, ALL_AUDIO_CODECS } from '@/lib/media';
+import { loadEngine, probe, convert, lastError } from '@/lib/media/engine';
 
 /* ─── Tab Definitions ─────────────────────────────────────────────────────── */
 
@@ -83,6 +85,43 @@ function saveHistory(entries: HistoryEntry[]) {
   }
 }
 
+/** "1:02:03" or "2:07" — no leading hour when there is none. */
+function formatClock(seconds: number): string {
+  const total = Math.max(0, Math.round(seconds));
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+
+  return h > 0
+    ? `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+    : `${m}:${String(s).padStart(2, '0')}`;
+}
+
+/**
+ * The type to stamp on the output blob.
+ *
+ * It decides whether the browser plays the preview inline or offers a
+ * download, so `video/${container}` — which was the old guess — is wrong for
+ * every container whose name is not its subtype.
+ */
+function mimeFor(container: string): string {
+  const types: Record<string, string> = {
+    mp4: 'video/mp4',
+    mov: 'video/quicktime',
+    avi: 'video/x-msvideo',
+    mkv: 'video/x-matroska',
+    webm: 'video/webm',
+    gif: 'image/gif',
+    mp3: 'audio/mpeg',
+    wav: 'audio/wav',
+    ogg: 'audio/ogg',
+    aac: 'audio/aac',
+    m4a: 'audio/mp4',
+    flac: 'audio/flac',
+  };
+  return types[container] ?? 'application/octet-stream';
+}
+
 function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
@@ -100,8 +139,11 @@ export default function MediaStudioClient({ standalone = true, initialTab }: Med
   const [activeTab, setActiveTab] = useState<TabId>(
     (initialTab as TabId) || 'converter'
   );
-  const [file, setFile] = useState<File | null>(null);
+  /* The bytes, not a File: a stream assembled from HLS segments never was a
+     File, and the converter needs the same shape for both. */
+  const [source, setSource] = useState<LoadedSource | null>(null);
   const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<VideoAnalysis | null>(null);
   const [options, setOptions] = useState<ConversionOptions>(DEFAULT_OPTIONS);
   const [estimation, setEstimation] = useState<SizeEstimation | null>(null);
@@ -120,41 +162,39 @@ export default function MediaStudioClient({ standalone = true, initialTab }: Med
 
   /* ─── File handling ─────────────────────────────────────────────────── */
 
-  const handleFile = useCallback((f: File) => {
-    setFile(f);
-    setFileUrl(URL.createObjectURL(f));
+  const handleSource = useCallback(async (loaded: LoadedSource) => {
+    setSource(loaded);
     setResult(null);
     setAnalysis(null);
     setEstimation(null);
+    setError(null);
 
-    // Simulate analysis (real analysis comes from FFmpeg.wasm probe)
-    const isAudio = f.type.startsWith('audio/');
-    const ext = f.name.split('.').pop()?.toLowerCase() || '';
+    const blob = new Blob([loaded.data as unknown as BlobPart]);
+    setFileUrl((previous) => {
+      if (previous) URL.revokeObjectURL(previous);
+      return URL.createObjectURL(blob);
+    });
 
-    const mockAnalysis: VideoAnalysis = {
-      fileName: f.name,
-      fileSize: f.size,
-      container: ext as VideoAnalysis['container'],
-      width: isAudio ? 0 : 1920,
-      height: isAudio ? 0 : 1080,
-      aspectRatio: '16:9',
-      frameRate: 30,
-      duration: 10,
-      videoCodec: isAudio ? null : ('h264' as const),
-      videoBitrate: isAudio ? null : 2500000,
-      audioCodec: 'aac',
-      audioBitrate: 128000,
-      audioChannels: 2,
-      colorSpace: 'bt.709',
-      hdr: false,
-      rotation: 0,
-      hasAudio: true,
-      hasVideo: !isAudio,
-      estimatedQuality: 'high' as const,
-      metadata: {},
-    };
-    setAnalysis(mockAnalysis);
-  }, []);
+    /* The engine is ~32MB and arrives on first use. Saying so beats a page
+       that looks frozen for half a minute. */
+    setPipeline({ stage: 'analyze', progress: 0, message: 'Starting the video engine…' });
+
+    try {
+      await loadEngine(({ ratio, message }) =>
+        setPipeline({ stage: 'analyze', progress: Math.round((ratio ?? 0) * 40), message }),
+      );
+
+      setPipeline({ stage: 'analyze', progress: 60, message: 'Reading the file…' });
+      const probed = await probe(loaded.data, loaded.fileName);
+
+      setAnalysis(probed);
+      setEstimation(estimateOutput(probed, options));
+      setPipeline(null);
+    } catch (err) {
+      setPipeline(null);
+      setError(err instanceof Error ? err.message : 'Could not read that file.');
+    }
+  }, [options]);
 
   /* ─── Options change ─────────────────────────────────────────────────── */
 
@@ -191,69 +231,63 @@ export default function MediaStudioClient({ standalone = true, initialTab }: Med
   const abortRef = useRef<AbortController | null>(null);
 
   const handleConvert = useCallback(async () => {
-    if (!file || !analysis) return;
+    if (!source || !analysis) return;
 
-    abortRef.current = new AbortController();
-
-    setPipeline({
-      stage: 'prepare',
-      progress: 0,
-      message: 'Preparing conversion...',
-    });
+    const controller = new AbortController();
+    abortRef.current = controller;
+    setError(null);
+    setPipeline({ stage: 'prepare', progress: 0, message: 'Preparing…' });
 
     try {
-      // Simulate pipeline stages (real pipeline uses FFmpeg.wasm)
-      const stages: { stage: PipelineStage; progress: number; message: string }[] = [
-        { stage: 'analyze', progress: 10, message: 'Analyzing source file...' },
-        { stage: 'prepare', progress: 25, message: 'Preparing encoder...' },
-        { stage: 'encode', progress: 50, message: 'Converting media...' },
-        { stage: 'optimize', progress: 80, message: 'Optimizing output...' },
-        { stage: 'finalize', progress: 95, message: 'Finalizing...' },
-      ];
+      const outcome = await convert({
+        data: source.data,
+        fileName: source.fileName,
+        options,
+        analysis,
+        signal: controller.signal,
+        onProgress: ({ ratio, seconds }) =>
+          setPipeline({
+            stage: 'encode',
+            progress: Math.round(ratio * 100),
+            message: analysis.duration
+              ? `Converting — ${formatClock(seconds)} of ${formatClock(analysis.duration)}`
+              : 'Converting…',
+          }),
+      });
 
-      for (const s of stages) {
-        if (abortRef.current?.signal.aborted) return;
-        setPipeline(s);
-        await new Promise((r) => setTimeout(r, 800));
-      }
-
-      const outputSize = Math.round(file.size * 0.6);
-      const outputBlob = new Blob([file], { type: `video/${options.container}` });
-
-      const resultBlobUrl = URL.createObjectURL(outputBlob);
+      const outputBlob = new Blob([outcome.data as unknown as BlobPart], {
+        type: mimeFor(options.container),
+      });
       const resultId = generateId();
-      const outputFileName = `converted-${file.name.replace(/\.[^.]+$/, '')}.${options.container}`;
+      const outputFileName = `${source.fileName.replace(/\.[^.]+$/, '')}.${options.container}`;
 
-      const resultData: ConversionResult = {
+      setResult({
         id: resultId,
-        blobUrl: resultBlobUrl,
+        blobUrl: URL.createObjectURL(outputBlob),
         fileName: outputFileName,
-        originalName: file.name,
-        originalSize: file.size,
-        outputSize,
+        originalName: source.fileName,
+        originalSize: source.data.byteLength,
+        outputSize: outcome.data.byteLength,
         container: options.container,
-        duration: 10,
-        encodingTime: 3000,
+        duration: analysis.duration,
+        encodingTime: outcome.elapsedMs,
         preset: null,
-        mimeType: `video/${options.container}`,
+        mimeType: mimeFor(options.container),
         timestamp: Date.now(),
-      };
+      });
 
-      setResult(resultData);
-      setPipeline({ stage: 'done', progress: 100, message: 'Conversion complete!' });
-
-      // Add to history
-      const savedBytes = file.size - outputSize;
-      const savedPercent = file.size > 0 ? Math.round((savedBytes / file.size) * 100) : 0;
+      const savedBytes = source.data.byteLength - outcome.data.byteLength;
       const entry: HistoryEntry = {
         id: resultId,
         fileName: outputFileName,
         originalFormat: analysis.container || '',
         outputFormat: options.container,
-        originalSize: file.size,
-        outputSize,
+        originalSize: source.data.byteLength,
+        outputSize: outcome.data.byteLength,
         savedBytes,
-        savedPercent,
+        savedPercent: source.data.byteLength > 0
+          ? Math.round((savedBytes / source.data.byteLength) * 100)
+          : 0,
         timestamp: Date.now(),
         options,
       };
@@ -264,12 +298,15 @@ export default function MediaStudioClient({ standalone = true, initialTab }: Med
         return updated;
       });
 
-      await new Promise((r) => setTimeout(r, 1500));
       setPipeline(null);
-    } catch {
+    } catch (err) {
       setPipeline(null);
+      if (err instanceof DOMException && err.name === 'AbortError') return;
+      /* ffmpeg's own last words are more useful than "conversion failed". */
+      const message = err instanceof Error ? err.message : String(err);
+      setError(lastError(message) ?? message);
     }
-  }, [file, analysis, options]);
+  }, [source, analysis, options]);
 
   const handleCancel = useCallback(() => {
     abortRef.current?.abort();
@@ -279,8 +316,12 @@ export default function MediaStudioClient({ standalone = true, initialTab }: Med
   /* ─── Reset ──────────────────────────────────────────────────────────── */
 
   const handleReset = useCallback(() => {
-    setFile(null);
-    setFileUrl(null);
+    setSource(null);
+    setFileUrl((previous) => {
+      if (previous) URL.revokeObjectURL(previous);
+      return null;
+    });
+    setError(null);
     setAnalysis(null);
     setResult(null);
     setEstimation(null);
@@ -355,6 +396,13 @@ export default function MediaStudioClient({ standalone = true, initialTab }: Med
               />
             )}
 
+            {error && (
+              <div className="flex items-start gap-2 rounded-lg border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                <span className="break-words">{error}</span>
+              </div>
+            )}
+
             {!pipeline && (
               <>
                 {/* Result (after conversion) */}
@@ -367,17 +415,15 @@ export default function MediaStudioClient({ standalone = true, initialTab }: Med
                 ) : (
                   <>
                     {/* Upload Zone */}
-                    {!file && (
-                      <UploadZone onFile={handleFile} />
-                    )}
+                    {!source && <SourcePanel onSource={handleSource} />}
 
                     {/* File loaded — show controls */}
-                    {file && analysis && (
+                    {source && analysis && (
                       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                         {/* Left — preview + analysis */}
                         <div className="space-y-4">
                           {fileUrl && analysis.hasVideo && (
-                            <VideoPreview src={fileUrl} fileName={file.name} />
+                            <VideoPreview src={fileUrl} fileName={source.fileName} />
                           )}
                           <AnalysisCards analysis={analysis} />
 
