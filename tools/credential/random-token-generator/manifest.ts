@@ -24,28 +24,28 @@ export const randomTokenGenerator = defineTool({
   seo: {
     meta: {
       en: {
-        title: 'Random Token Generator — Create Auth Tokens & One-Time Codes',
+        title: 'Random Token Generator',
         description: 'Generate cryptographically random tokens in hex, base64, and base64url formats. Free client-side token generator.',
         keywords: ['random token', 'token generator', 'auth token', 'one-time code', 'bearer token'],
       },
       ru: {
-        title: 'Генератор случайных токенов — Создайте токены авторизации',
+        title: 'Генератор случайных токенов',
         description: 'Создавайте криптостойкие токены. Бесплатный генератор.',
       },
       de: {
-        title: 'Token-Generator — Erstellen Sie Authentifizierungs-Tokens',
+        title: 'Token-Generator',
         description: 'Erstellen Sie kryptografisch zufällige Tokens. Kostenloser Generator.',
       },
       es: {
-        title: 'Generador de tokens aleatorios — Cree tokens de autenticación',
+        title: 'Generador de tokens aleatorios',
         description: 'Genere tokens criptográficamente aleatorios. Generador gratuito.',
       },
       fr: {
-        title: 'Générateur de jetons aléatoires — Créez des jetons d\'auth',
+        title: 'Générateur de jetons aléatoires',
         description: 'Générez des jetons cryptographiquement aléatoires. Générateur gratuit.',
       },
       pt: {
-        title: 'Gerador de tokens aleatórios — Crie tokens de autenticação',
+        title: 'Gerador de tokens aleatórios',
         description: 'Gere tokens criptograficamente aleatórios. Gerador gratuito.',
       },
     },

@@ -14,27 +14,27 @@ const WIFI_PASSWORD_GENERATOR: CredentialDeepLinkManifest = {
   initialMode: { activeTab: 'passwords', passwordMode: 'random' },
   copy: {
     en: {
-      title: 'WiFi Password Generator — Create Secure Router Passwords',
+      title: 'WiFi Password Generator',
       description: 'Generate strong WiFi router passwords — 20 characters with all character classes, excluding ambiguous characters. Perfect for router admin and network security.',
     },
     ru: {
-      title: 'Генератор паролей WiFi — Создавайте безопасные пароли роутера',
+      title: 'Генератор паролей WiFi',
       description: 'Генерируйте надежные пароли WiFi — 20 символов со всеми классами, исключая неоднозначные символы.',
     },
     de: {
-      title: 'WiFi-Passwort-Generator — Erstellen Sie sichere Router-Passwörter',
+      title: 'WiFi-Passwort-Generator',
       description: 'Generieren Sie starke WiFi-Passwörter — 20 Zeichen mit allen Zeichenklassen, ohne mehrdeutige Zeichen.',
     },
     es: {
-      title: 'Generador de contraseñas WiFi — Cree contraseñas de router seguras',
+      title: 'Generador de contraseñas WiFi',
       description: 'Genere contraseñas WiFi seguras — 20 caracteres con todas las clases, excluyendo caracteres ambiguos.',
     },
     fr: {
-      title: 'Générateur de mot de passe WiFi — Créez des mots de passe routeur sécurisés',
+      title: 'Générateur de mot de passe WiFi',
       description: 'Générez des mots de passe WiFi robustes — 20 caractères avec toutes les classes, sans caractères ambigus.',
     },
     pt: {
-      title: 'Gerador de senhas WiFi — Crie senhas de roteador seguras',
+      title: 'Gerador de senhas WiFi',
       description: 'Gere senhas WiFi fortes — 20 caracteres com todas as classes, excluindo caracteres ambíguos.',
     },
   },
@@ -46,27 +46,27 @@ const HUMAN_PASSWORD_GENERATOR: CredentialDeepLinkManifest = {
   initialMode: { activeTab: 'passwords', passwordMode: 'human' },
   copy: {
     en: {
-      title: 'Human Password Generator — Memorable & Secure Phrases',
+      title: 'Human Password Generator',
       description: 'Create grammatically coherent, memorable passwords like "MyDogLikesPizza92!" — easy to remember, hard to crack.',
     },
     ru: {
-      title: 'Генератор человеческих паролей — Запоминающиеся фразы',
+      title: 'Генератор человеческих паролей',
       description: 'Создавайте грамматически связные запоминающиеся пароли вроде "MyDogLikesPizza92!" — легко запомнить, сложно взломать.',
     },
     de: {
-      title: 'Menschenlesbarer Passwort-Generator — Einprägsame & sichere Phrasen',
+      title: 'Menschenlesbarer Passwort-Generator',
       description: 'Erstellen Sie grammatikalisch kohärente, einprägsame Passwörter wie "MyDogLikesPizza92!" — leicht zu merken, schwer zu knacken.',
     },
     es: {
-      title: 'Generador de contraseñas legibles — Frases memorables y seguras',
+      title: 'Generador de contraseñas legibles',
       description: 'Cree contraseñas gramaticalmente coherentes como "MyDogLikesPizza92!" — fáciles de recordar, difíciles de descifrar.',
     },
     fr: {
-      title: 'Générateur de mots de passe lisibles — Phrases mémorables et sécurisées',
+      title: 'Générateur de mots de passe lisibles',
       description: 'Créez des mots de passe grammaticalement cohérents comme "MyDogLikesPizza92!" — faciles à retenir, difficiles à cracker.',
     },
     pt: {
-      title: 'Gerador de senhas legíveis — Frases memoráveis e seguras',
+      title: 'Gerador de senhas legíveis',
       description: 'Crie senhas gramaticalmente coerentes como "MyDogLikesPizza92!" — fáceis de lembrar, difíceis de quebrar.',
     },
   },
@@ -78,11 +78,11 @@ const PIN_GENERATOR: CredentialDeepLinkManifest = {
   initialMode: { activeTab: 'pins-secrets' },
   copy: {
     en: {
-      title: 'PIN Generator — Create Secure PIN Codes (4, 6, 8 Digit)',
+      title: 'PIN Generator',
       description: 'Generate secure PIN codes in 4, 6, or 8 digit lengths with optional no-consecutive-repeats constraint. Free client-side PIN generator.',
     },
     ru: {
-      title: 'Генератор PIN-кодов — Создавайте безопасные PIN-коды',
+      title: 'Генератор PIN-кодов',
       description: 'Генерируйте безопасные PIN-коды длиной 4, 6 или 8 цифр с опцией запрета последовательных повторов. Бесплатно.',
     },
     de: {
@@ -94,7 +94,7 @@ const PIN_GENERATOR: CredentialDeepLinkManifest = {
       description: 'Genere códigos PIN seguros de 4, 6 u 8 dígitos con opción sin repeticiones consecutivas. Generador gratuito.',
     },
     fr: {
-      title: 'Générateur de code PIN — Créez des codes PIN sécurisés',
+      title: 'Générateur de code PIN',
       description: 'Générez des codes PIN sécurisés en 4, 6 ou 8 chiffres avec option sans répétitions consécutives. Générateur gratuit côté client.',
     },
     pt: {

@@ -29,23 +29,23 @@ export const sessionSecretGenerator = defineTool({
         keywords: ['session secret', 'session key', 'cookie secret', 'session signing', 'express session'],
       },
       ru: {
-        title: 'Генератор секретов сессий — Безопасные ключи сессий',
+        title: 'Генератор секретов сессий',
         description: 'Создавайте безопасные секреты сессий. Бесплатный генератор.',
       },
       de: {
-        title: 'Session-Secret-Generator — Sichere Sitzungsschlüssel',
+        title: 'Session-Secret-Generator',
         description: 'Erstellen Sie sichere Sitzungsgeheimnisse. Kostenloser Generator.',
       },
       es: {
-        title: 'Generador de secretos de sesión — Claves de sesión seguras',
+        title: 'Generador de secretos de sesión',
         description: 'Cree secretos de sesión seguros. Generador gratuito.',
       },
       fr: {
-        title: 'Générateur de secret de session — Clés de session sécurisées',
+        title: 'Générateur de secret de session',
         description: 'Créez des secrets de session sécurisés. Générateur gratuit.',
       },
       pt: {
-        title: 'Gerador de segredos de sessão — Chaves de sessão seguras',
+        title: 'Gerador de segredos de sessão',
         description: 'Crie segredos de sessão seguros. Gerador gratuito.',
       },
     },

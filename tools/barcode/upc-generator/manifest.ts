@@ -25,7 +25,7 @@ export const upcGenerator = defineTool({
   seo: {
     meta: {
       en: {
-        title: 'UPC Generator — Create UPC-A & UPC-E Barcodes Online',
+        title: 'UPC Generator',
         description: 'Generate UPC-A and UPC-E barcodes for North American retail products. Free online UPC barcode generator with check digit and export.',
         keywords: ['UPC generator', 'UPC-A barcode', 'UPC-E barcode', 'retail barcode', 'North America'],
       },
@@ -38,11 +38,11 @@ export const upcGenerator = defineTool({
         description: 'Erstellen Sie UPC-A und UPC-E Barcodes. Kostenloser Generator.',
       },
       es: {
-        title: 'Generador UPC — Cree códigos de barras UPC-A y UPC-E',
+        title: 'Generador UPC',
         description: 'Cree códigos de barras UPC-A y UPC-E. Generador gratuito.',
       },
       fr: {
-        title: 'Générateur UPC — Créez des codes-barres UPC-A et UPC-E',
+        title: 'Générateur UPC',
         description: 'Créez des codes-barres UPC-A et UPC-E. Générateur gratuit.',
       },
       pt: {

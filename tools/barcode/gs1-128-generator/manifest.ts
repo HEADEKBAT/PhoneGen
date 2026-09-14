@@ -20,12 +20,12 @@ export const gs1128Generator = defineTool({
   ui: { component: GS1128GeneratorUI, icon: Scan },
   seo: {
     meta: {
-      en: { title: 'GS1-128 Generator — Create Supply Chain Barcodes with AIs', description: 'Generate GS1-128 barcodes with Application Identifiers for supply chain data. Free online GS1-128 barcode generator.', keywords: ['GS1-128 generator', 'GS1-128 barcode', 'supply chain barcode', 'application identifier'] },
-      ru: { title: 'Генератор GS1-128 — Создание штрихкодов для цепочек поставок', description: 'Создавайте штрихкоды GS1-128. Бесплатный генератор.' },
+      en: { title: 'GS1-128 Generator', description: 'Generate GS1-128 barcodes with Application Identifiers for supply chain data. Free online GS1-128 barcode generator.', keywords: ['GS1-128 generator', 'GS1-128 barcode', 'supply chain barcode', 'application identifier'] },
+      ru: { title: 'Генератор GS1-128', description: 'Создавайте штрихкоды GS1-128. Бесплатный генератор.' },
       de: { title: 'GS1-128 Generator — Barcodes für Lieferketten', description: 'Erstellen Sie GS1-128 Barcodes. Kostenloser Generator.' },
-      es: { title: 'Generador GS1-128 — Cree códigos de barras para cadena de suministro', description: 'Cree códigos de barras GS1-128. Generador gratuito.' },
-      fr: { title: 'Générateur GS1-128 — Codes-barres pour chaîne d\'approvisionnement', description: 'Créez des codes-barres GS1-128. Générateur gratuit.' },
-      pt: { title: 'Gerador GS1-128 — Crie códigos de barras para cadeia de suprimentos', description: 'Crie códigos de barras GS1-128. Gerador gratuito.' },
+      es: { title: 'Generador GS1-128', description: 'Cree códigos de barras GS1-128. Generador gratuito.' },
+      fr: { title: 'Générateur GS1-128', description: 'Créez des codes-barres GS1-128. Générateur gratuit.' },
+      pt: { title: 'Gerador GS1-128', description: 'Crie códigos de barras GS1-128. Gerador gratuito.' },
     },
     faqs,
   },

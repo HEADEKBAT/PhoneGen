@@ -29,11 +29,11 @@ export const uuidGenerator = defineTool({
         keywords: ['uuid generator', 'uuid v4', 'guid', 'unique identifier', 'random id'],
       },
       ru: {
-        title: 'Генератор UUID — Создайте уникальные идентификаторы',
+        title: 'Генератор UUID',
         description: 'Создавайте UUID v4 идентификаторы. Бесплатный генератор.',
       },
       de: {
-        title: 'UUID-Generator — Erstellen Sie eindeutige Identifikatoren',
+        title: 'UUID-Generator',
         description: 'Erstellen Sie UUID v4 Identifikatoren. Kostenloser Generator.',
       },
       es: {

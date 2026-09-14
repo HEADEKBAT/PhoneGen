@@ -17,7 +17,7 @@ export const paletteGenerator = defineTool({
       ru: { title: 'Генератор палитр — Создание цветовых палитр онлайн', description: 'Создавайте цветовые палитры. Бесплатный генератор.' },
       de: { title: 'Paletten-Generator — Farbpaletten online erstellen', description: 'Erstellen Sie Farbpaletten. Kostenloser Generator.' },
       es: { title: 'Generador de paletas — Cree paletas de colores', description: 'Cree paletas de colores. Generador gratuito.' },
-      fr: { title: 'Générateur de palettes — Créez des palettes de couleurs', description: 'Créez des palettes de couleurs. Générateur gratuit.' },
+      fr: { title: 'Générateur de palettes', description: 'Créez des palettes de couleurs. Générateur gratuit.' },
       pt: { title: 'Gerador de paletas — Crie paletas de cores', description: 'Crie paletas de cores. Gerador gratuito.' },
     },
   },

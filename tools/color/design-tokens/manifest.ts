@@ -13,7 +13,7 @@ export const designTokens = defineTool({
   ui: { component: DesignTokensUI, icon: Code },
   seo: {
     meta: {
-      en: { title: 'Design Tokens — Export Colors as CSS, JSON, Tailwind, SCSS', description: 'Export your colors as design tokens — CSS custom properties, Tailwind config, JSON, SCSS variables.', keywords: ['design tokens', 'CSS variables', 'Tailwind', 'color export'] },
+      en: { title: 'Design Tokens', description: 'Export your colors as design tokens — CSS custom properties, Tailwind config, JSON, SCSS variables.', keywords: ['design tokens', 'CSS variables', 'Tailwind', 'color export'] },
       ru: { title: 'Дизайн-токены — Экспорт цветов', description: 'Экспортируйте цвета как дизайн-токены.' },
       de: { title: 'Design-Tokens — Farben exportieren', description: 'Exportieren Sie Farben als Design-Tokens.' },
       es: { title: 'Tokens de diseño — Exporte colores', description: 'Exporte colores como tokens.' },

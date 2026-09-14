@@ -30,24 +30,24 @@ export const qrCodeGenerator = defineTool({
   seo: {
     meta: {
       en: {
-        title: 'QR Code Generator — Create Custom QR Codes Online Free',
+        title: 'QR Code Generator',
         description: 'Generate custom QR codes for URLs, Wi-Fi, vCard, email, social media, and 37+ data types. Free online QR code generator with designer, logo upload, custom colors, and multiple export formats.',
         keywords: ['QR code generator', 'QR creator', 'free QR code', 'custom QR code', 'QR with logo', 'Wi-Fi QR code', 'vCard QR code', 'QR code designer'],
       },
       ru: {
-        title: 'Генератор QR-кодов — Создание QR-кодов онлайн бесплатно',
+        title: 'Генератор QR-кодов',
         description: 'Создавайте QR-коды для URL, Wi-Fi, vCard, email, соцсетей и 37+ типов данных. Бесплатный генератор с дизайнером, загрузкой логотипа и экспортом.',
       },
       de: {
-        title: 'QR-Code Generator — Kostenlos QR-Codes online erstellen',
+        title: 'QR-Code Generator',
         description: 'Erstellen Sie QR-Codes für URLs, WLAN, vCard, E-Mail, soziale Medien und 37+ Datentypen. Kostenloser Generator mit Designer, Logo-Upload und Export.',
       },
       es: {
-        title: 'Generador de Códigos QR — Crea Códigos QR Gratis Online',
+        title: 'Generador de Códigos QR',
         description: 'Cree códigos QR para URL, Wi-Fi, vCard, email, redes sociales y más de 37 tipos de datos. Generador gratuito con diseñador, carga de logotipo y exportación.',
       },
       fr: {
-        title: 'Générateur de QR Code — Créez des QR Codes Gratuits en Ligne',
+        title: 'Générateur de QR Code',
         description: 'Créez des QR codes pour URL, Wi-Fi, vCard, email, réseaux sociaux et 37+ types de données. Générateur gratuit avec design, logo et export.',
       },
       pt: {

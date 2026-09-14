@@ -20,12 +20,12 @@ export const issnGenerator = defineTool({
   ui: { component: ISSNGeneratorUI, icon: Newspaper },
   seo: {
     meta: {
-      en: { title: 'ISSN Generator — Create Serial Publication Barcodes', description: 'Generate ISSN barcodes for magazines, journals, and periodicals. Free online ISSN barcode generator with issue number add-on.', keywords: ['ISSN generator', 'ISSN barcode', 'serial publication', 'magazine barcode', 'journal barcode'] },
-      ru: { title: 'Генератор ISSN — Создание штрихкодов для серийных изданий', description: 'Создавайте штрихкоды ISSN для журналов. Бесплатный генератор.' },
-      de: { title: 'ISSN Generator — Barcodes für Zeitschriften erstellen', description: 'Erstellen Sie ISSN Barcodes für Zeitschriften. Kostenloser Generator.' },
-      es: { title: 'Generador ISSN — Cree códigos de barras para publicaciones', description: 'Cree códigos de barras ISSN. Generador gratuito.' },
-      fr: { title: 'Générateur ISSN — Codes-barres pour publications en série', description: 'Créez des codes-barres ISSN. Générateur gratuit.' },
-      pt: { title: 'Gerador ISSN — Crie códigos de barras para publicações', description: 'Crie códigos de barras ISSN. Gerador gratuito.' },
+      en: { title: 'ISSN Generator', description: 'Generate ISSN barcodes for magazines, journals, and periodicals. Free online ISSN barcode generator with issue number add-on.', keywords: ['ISSN generator', 'ISSN barcode', 'serial publication', 'magazine barcode', 'journal barcode'] },
+      ru: { title: 'Генератор ISSN', description: 'Создавайте штрихкоды ISSN для журналов. Бесплатный генератор.' },
+      de: { title: 'ISSN Generator', description: 'Erstellen Sie ISSN Barcodes für Zeitschriften. Kostenloser Generator.' },
+      es: { title: 'Generador ISSN', description: 'Cree códigos de barras ISSN. Generador gratuito.' },
+      fr: { title: 'Générateur ISSN', description: 'Créez des codes-barres ISSN. Générateur gratuit.' },
+      pt: { title: 'Gerador ISSN', description: 'Crie códigos de barras ISSN. Gerador gratuito.' },
     },
     faqs,
   },

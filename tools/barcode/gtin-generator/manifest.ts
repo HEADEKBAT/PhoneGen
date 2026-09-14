@@ -22,10 +22,10 @@ export const gtinGenerator = defineTool({
   seo: {
     meta: {
       en: { title: 'GTIN Generator — Create Global Trade Item Numbers', description: 'Generate GTIN-13 barcodes for supply chain product identification. Free online GTIN barcode generator with check digit.', keywords: ['GTIN generator', 'GTIN barcode', 'Global Trade Item Number', 'supply chain barcode'] },
-      ru: { title: 'Генератор GTIN — Создание глобальных номеров товаров', description: 'Создавайте штрихкоды GTIN. Бесплатный генератор.' },
+      ru: { title: 'Генератор GTIN', description: 'Создавайте штрихкоды GTIN. Бесплатный генератор.' },
       de: { title: 'GTIN Generator — Globale Artikelnummern erstellen', description: 'Erstellen Sie GTIN Barcodes. Kostenloser Generator.' },
-      es: { title: 'Generador GTIN — Cree números globales de productos', description: 'Cree códigos de barras GTIN. Generador gratuito.' },
-      fr: { title: 'Générateur GTIN — Créez des numéros d\'articles globaux', description: 'Créez des codes-barres GTIN. Générateur gratuit.' },
+      es: { title: 'Generador GTIN', description: 'Cree códigos de barras GTIN. Generador gratuito.' },
+      fr: { title: 'Générateur GTIN', description: 'Créez des codes-barres GTIN. Générateur gratuit.' },
       pt: { title: 'Gerador GTIN — Crie números globais de produtos', description: 'Crie códigos de barras GTIN. Gerador gratuito.' },
     },
     faqs,

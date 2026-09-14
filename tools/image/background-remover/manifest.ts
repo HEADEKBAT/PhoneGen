@@ -13,12 +13,12 @@ export const backgroundRemover = defineTool({
   ui: { component: BackgroundRemoverUI, icon: ImageIcon },
   seo: {
     meta: {
-      en: { title: 'Background Remover — Remove Image Backgrounds Online Free', description: 'Remove backgrounds from images instantly. Free online background remover with edge refinement.', keywords: ['background remover', 'remove background', 'image background removal', 'transparent background'] },
-      ru: { title: 'Удаление фона — Убрать фон с изображения онлайн бесплатно', description: 'Удалите фон с изображений мгновенно. Бесплатный онлайн инструмент с улучшением краев.' },
-      de: { title: 'Hintergrund entfernen — Bildhintergrund online kostenlos entfernen', description: 'Entfernen Sie den Hintergrund von Bildern sofort. Kostenloses Online-Tool.' },
-      es: { title: 'Eliminar fondo — Quitar fondo de imagen online gratis', description: 'Elimine el fondo de las imágenes al instante. Herramienta gratuita.' },
-      fr: { title: 'Supprimer l\'arrière-plan — Enlever le fond d\'image en ligne gratuit', description: 'Supprimez l\'arrière-plan des images instantanément. Outil gratuit.' },
-      pt: { title: 'Remover fundo — Tirar fundo de imagem online grátis', description: 'Remova o fundo das imagens instantaneamente. Ferramenta gratuita.' },
+      en: { title: 'Background Remover', description: 'Remove backgrounds from images instantly. Free online background remover with edge refinement.', keywords: ['background remover', 'remove background', 'image background removal', 'transparent background'] },
+      ru: { title: 'Удаление фона', description: 'Удалите фон с изображений мгновенно. Бесплатный онлайн инструмент с улучшением краев.' },
+      de: { title: 'Hintergrund entfernen', description: 'Entfernen Sie den Hintergrund von Bildern sofort. Kostenloses Online-Tool.' },
+      es: { title: 'Eliminar fondo', description: 'Elimine el fondo de las imágenes al instante. Herramienta gratuita.' },
+      fr: { title: 'Supprimer l\'arrière-plan', description: 'Supprimez l\'arrière-plan des images instantanément. Outil gratuit.' },
+      pt: { title: 'Remover fundo', description: 'Remova o fundo das imagens instantaneamente. Ferramenta gratuita.' },
     },
   },
   capabilities: { history: false, share: false, favorites: false },

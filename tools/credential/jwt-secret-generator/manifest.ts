@@ -33,7 +33,7 @@ export const jwtSecretGenerator = defineTool({
         description: 'Создавайте криптостойкие JWT секреты. Бесплатный генератор.',
       },
       de: {
-        title: 'JWT-Secret-Generator — Erstellen Sie HMAC-Signierschlüssel',
+        title: 'JWT-Secret-Generator',
         description: 'Erstellen Sie kryptografisch starke JWT-Geheimnisse. Kostenloser Generator.',
       },
       es: {
@@ -41,11 +41,11 @@ export const jwtSecretGenerator = defineTool({
         description: 'Genere secretos JWT criptográficamente seguros. Generador gratuito.',
       },
       fr: {
-        title: 'Générateur de secret JWT — Créez des clés de signature HMAC',
+        title: 'Générateur de secret JWT',
         description: 'Générez des secrets JWT cryptographiquement forts. Générateur gratuit.',
       },
       pt: {
-        title: 'Gerador de segredos JWT — Crie chaves de assinatura HMAC',
+        title: 'Gerador de segredos JWT',
         description: 'Gere segredos JWT criptograficamente fortes. Gerador gratuito.',
       },
     },

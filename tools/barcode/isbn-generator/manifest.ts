@@ -20,11 +20,11 @@ export const isbnGenerator = defineTool({
   ui: { component: ISBNGeneratorUI, icon: Book },
   seo: {
     meta: {
-      en: { title: 'ISBN Generator — Create Book Barcodes (ISBN-13 & ISBN-10)', description: 'Generate ISBN-13 and ISBN-10 barcodes for books. Free online ISBN barcode generator with correct check digits and export.', keywords: ['ISBN generator', 'ISBN barcode', 'ISBN-13', 'ISBN-10', 'book barcode'] },
+      en: { title: 'ISBN Generator', description: 'Generate ISBN-13 and ISBN-10 barcodes for books. Free online ISBN barcode generator with correct check digits and export.', keywords: ['ISBN generator', 'ISBN barcode', 'ISBN-13', 'ISBN-10', 'book barcode'] },
       ru: { title: 'Генератор ISBN — Создание штрихкодов для книг', description: 'Создавайте штрихкоды ISBN для книг. Бесплатный генератор.' },
       de: { title: 'ISBN Generator — Buch-Barcodes erstellen', description: 'Erstellen Sie ISBN Barcodes für Bücher. Kostenloser Generator.' },
-      es: { title: 'Generador ISBN — Cree códigos de barras para libros', description: 'Cree códigos de barras ISBN para libros. Generador gratuito.' },
-      fr: { title: 'Générateur ISBN — Créez des codes-barres pour livres', description: 'Créez des codes-barres ISBN pour livres. Générateur gratuit.' },
+      es: { title: 'Generador ISBN', description: 'Cree códigos de barras ISBN para libros. Generador gratuito.' },
+      fr: { title: 'Générateur ISBN', description: 'Créez des codes-barres ISBN pour livres. Générateur gratuit.' },
       pt: { title: 'Gerador ISBN — Crie códigos de barras para livros', description: 'Crie códigos de barras ISBN para livros. Gerador gratuito.' },
     },
     faqs,

@@ -29,23 +29,23 @@ export const webhookSecretGenerator = defineTool({
         keywords: ['webhook secret', 'webhook signing', 'whsec', 'payload signature', 'webhook security'],
       },
       ru: {
-        title: 'Генератор секретов вебхуков — Создайте подписанные секреты',
+        title: 'Генератор секретов вебхуков',
         description: 'Создавайте безопасные секреты вебхуков. Бесплатный генератор.',
       },
       de: {
-        title: 'Webhook-Secret-Generator — Erstellen Sie Signiergeheimnisse',
+        title: 'Webhook-Secret-Generator',
         description: 'Erstellen Sie sichere Webhook-Geheimnisse. Kostenloser Generator.',
       },
       es: {
-        title: 'Generador de secretos de webhook — Cree secretos de firma',
+        title: 'Generador de secretos de webhook',
         description: 'Genere secretos de webhook seguros. Generador gratuito.',
       },
       fr: {
-        title: 'Générateur de secret webhook — Créez des secrets de signature',
+        title: 'Générateur de secret webhook',
         description: 'Générez des secrets webhook sécurisés. Générateur gratuit.',
       },
       pt: {
-        title: 'Gerador de segredos de webhook — Crie segredos de assinatura',
+        title: 'Gerador de segredos de webhook',
         description: 'Gere segredos de webhook seguros. Gerador gratuito.',
       },
     },

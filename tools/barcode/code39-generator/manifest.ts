@@ -21,11 +21,11 @@ export const code39Generator = defineTool({
   ui: { component: Code39GeneratorUI, icon: Scan },
   seo: {
     meta: {
-      en: { title: 'Code 39 Generator — Create Alphanumeric Barcodes Online', description: 'Generate Code 39 barcodes for industrial and government applications. Free online Code 39 barcode generator with alphanumeric encoding.', keywords: ['Code 39 generator', 'Code 39 barcode', 'industrial barcode', 'alphanumeric barcode', 'military logistics'] },
+      en: { title: 'Code 39 Generator', description: 'Generate Code 39 barcodes for industrial and government applications. Free online Code 39 barcode generator with alphanumeric encoding.', keywords: ['Code 39 generator', 'Code 39 barcode', 'industrial barcode', 'alphanumeric barcode', 'military logistics'] },
       ru: { title: 'Генератор Code 39 — Создание штрихкодов Code 39', description: 'Создавайте штрихкоды Code 39. Бесплатный генератор.' },
       de: { title: 'Code 39 Generator — Code 39 Barcodes erstellen', description: 'Erstellen Sie Code 39 Barcodes. Kostenloser Generator.' },
       es: { title: 'Generador Code 39 — Cree códigos de barras Code 39', description: 'Cree códigos de barras Code 39. Generador gratuito.' },
-      fr: { title: 'Générateur Code 39 — Créez des codes-barres Code 39', description: 'Créez des codes-barres Code 39. Générateur gratuit.' },
+      fr: { title: 'Générateur Code 39', description: 'Créez des codes-barres Code 39. Générateur gratuit.' },
       pt: { title: 'Gerador Code 39 — Crie códigos de barras Code 39', description: 'Crie códigos de barras Code 39. Gerador gratuito.' },
     },
     faqs,

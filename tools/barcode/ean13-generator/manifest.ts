@@ -25,16 +25,16 @@ export const ean13Generator = defineTool({
   seo: {
     meta: {
       en: {
-        title: 'EAN-13 Generator — Create Valid EAN-13 Barcodes Online',
+        title: 'EAN-13 Generator',
         description: 'Generate EAN-13 barcodes with correct check digits. Free online EAN-13 barcode generator with SVG/PNG export and bulk generation.',
         keywords: ['EAN-13 generator', 'EAN-13 barcode', 'retail barcode', 'product barcode', 'check digit'],
       },
       ru: {
-        title: 'Генератор EAN-13 — Создание штрихкодов EAN-13 онлайн',
+        title: 'Генератор EAN-13',
         description: 'Создавайте штрихкоды EAN-13 с правильными контрольными цифрами. Бесплатный генератор.',
       },
       de: {
-        title: 'EAN-13 Generator — EAN-13 Barcodes online erstellen',
+        title: 'EAN-13 Generator',
         description: 'Erstellen Sie EAN-13 Barcodes mit korrekten Prüfziffern. Kostenloser Generator.',
       },
       es: {

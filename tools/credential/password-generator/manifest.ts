@@ -27,28 +27,28 @@ export const passwordGenerator = defineTool({
   seo: {
     meta: {
       en: {
-        title: 'Password Generator — Create Strong Random Passwords',
+        title: 'Password Generator',
         description: 'Generate strong, secure random passwords with configurable length, character types, and complexity. Free client-side password generator.',
         keywords: ['password generator', 'strong password', 'random password', 'secure password', 'password creator'],
       },
       ru: {
-        title: 'Генератор паролей — Создайте надежные случайные пароли',
+        title: 'Генератор паролей',
         description: 'Создавайте надежные случайные пароли с настраиваемой длиной и сложностью. Бесплатный генератор паролей.',
       },
       de: {
-        title: 'Passwort-Generator — Erstellen Sie starke Zufallspasswörter',
+        title: 'Passwort-Generator',
         description: 'Erstellen Sie starke, sichere Zufallspasswörter. Kostenloser Passwort-Generator.',
       },
       es: {
-        title: 'Generador de contraseñas — Cree contraseñas seguras',
+        title: 'Generador de contraseñas',
         description: 'Cree contraseñas seguras con longitud y tipos de caracteres configurables. Generador gratuito.',
       },
       fr: {
-        title: 'Générateur de mots de passe — Créez des mots de passe forts',
+        title: 'Générateur de mots de passe',
         description: 'Créez des mots de passe forts et sécurisés. Générateur gratuit.',
       },
       pt: {
-        title: 'Gerador de senhas — Crie senhas fortes e aleatórias',
+        title: 'Gerador de senhas',
         description: 'Crie senhas fortes e seguras. Gerador gratuito.',
       },
     },

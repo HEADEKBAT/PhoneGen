@@ -21,12 +21,12 @@ export const checkDigitCalculator = defineTool({
   ui: { component: CheckDigitCalculatorUI, icon: Calculator },
   seo: {
     meta: {
-      en: { title: 'Check Digit Calculator — Calculate Barcode Check Digits', description: 'Calculate check digits for EAN-13, UPC-A, EAN-8, GTIN, and ISBN barcodes. Free online check digit calculator with step-by-step explanation.', keywords: ['check digit calculator', 'barcode check digit', 'EAN check digit', 'UPC check digit', 'ISBN check digit'] },
-      ru: { title: 'Калькулятор контрольных цифр — Расчёт для штрихкодов', description: 'Рассчитайте контрольные цифры для штрихкодов. Бесплатный калькулятор.' },
+      en: { title: 'Check Digit Calculator', description: 'Calculate check digits for EAN-13, UPC-A, EAN-8, GTIN, and ISBN barcodes. Free online check digit calculator with step-by-step explanation.', keywords: ['check digit calculator', 'barcode check digit', 'EAN check digit', 'UPC check digit', 'ISBN check digit'] },
+      ru: { title: 'Калькулятор контрольных цифр', description: 'Рассчитайте контрольные цифры для штрихкодов. Бесплатный калькулятор.' },
       de: { title: 'Prüfziffer-Rechner — Berechnung für Barcodes', description: 'Berechnen Sie Prüfziffern für Barcodes. Kostenloser Rechner.' },
-      es: { title: 'Calculadora de dígitos de verificación — Para códigos de barras', description: 'Calcule dígitos de verificación. Calculadora gratuita.' },
-      fr: { title: 'Calculateur de chiffres de contrôle — Pour codes-barres', description: 'Calculez les chiffres de contrôle. Calculateur gratuit.' },
-      pt: { title: 'Calculadora de dígitos de verificação — Para códigos de barras', description: 'Calcule dígitos de verificação. Calculadora gratuita.' },
+      es: { title: 'Calculadora de dígitos de verificación', description: 'Calcule dígitos de verificación. Calculadora gratuita.' },
+      fr: { title: 'Calculateur de chiffres de contrôle', description: 'Calculez les chiffres de contrôle. Calculateur gratuit.' },
+      pt: { title: 'Calculadora de dígitos de verificação', description: 'Calcule dígitos de verificação. Calculadora gratuita.' },
     },
     faqs,
   },

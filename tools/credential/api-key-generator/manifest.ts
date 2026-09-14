@@ -33,7 +33,7 @@ export const apiKeyGenerator = defineTool({
         description: 'Создавайте реалистичные API ключи для тестирования. Бесплатный генератор.',
       },
       de: {
-        title: 'API-Key-Generator — Erstellen Sie Test-API-Schlüssel',
+        title: 'API-Key-Generator',
         description: 'Erstellen Sie realistische API-Schlüssel für Tests. Kostenloser Generator.',
       },
       es: {

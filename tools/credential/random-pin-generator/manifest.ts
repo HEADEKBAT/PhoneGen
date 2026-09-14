@@ -29,7 +29,7 @@ export const randomPinGenerator = defineTool({
         keywords: ['pin generator', 'pin code', 'numeric password', 'atm pin', 'access code'],
       },
       ru: {
-        title: 'Генератор PIN-кодов — Создайте безопасные числовые коды',
+        title: 'Генератор PIN-кодов',
         description: 'Создавайте случайные PIN-коды. Бесплатный генератор.',
       },
       de: {
@@ -41,7 +41,7 @@ export const randomPinGenerator = defineTool({
         description: 'Cree códigos PIN aleatorios. Generador gratuito.',
       },
       fr: {
-        title: 'Générateur de PIN — Créez des codes numériques sécurisés',
+        title: 'Générateur de PIN',
         description: 'Créez des codes PIN aléatoires. Générateur gratuit.',
       },
       pt: {

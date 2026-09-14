@@ -25,7 +25,7 @@ export const passwordStrengthChecker = defineTool({
   seo: {
     meta: {
       en: {
-        title: 'Password Strength Checker — Analyze Password Security',
+        title: 'Password Strength Checker',
         description: 'Check password strength, calculate entropy, estimate crack time. Free client-side password analyzer.',
         keywords: ['password strength', 'password checker', 'entropy calculator', 'crack time', 'password security'],
       },
@@ -38,15 +38,15 @@ export const passwordStrengthChecker = defineTool({
         description: 'Überprüfen Sie die Passwortstärke. Kostenloser Analysator.',
       },
       es: {
-        title: 'Comprobador de seguridad de contraseñas — Análisis de seguridad',
+        title: 'Comprobador de seguridad de contraseñas',
         description: 'Compruebe la seguridad de las contraseñas. Analizador gratuito.',
       },
       fr: {
-        title: 'Vérificateur de sécurité de mot de passe — Analyse de sécurité',
+        title: 'Vérificateur de sécurité de mot de passe',
         description: 'Vérifiez la sécurité des mots de passe. Analyseur gratuit.',
       },
       pt: {
-        title: 'Verificador de segurança de senhas — Análise de segurança',
+        title: 'Verificador de segurança de senhas',
         description: 'Verifique a segurança das senhas. Analisador gratuito.',
       },
     },

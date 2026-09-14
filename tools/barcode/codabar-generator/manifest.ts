@@ -20,11 +20,11 @@ export const codabarGenerator = defineTool({
   ui: { component: CodabarGeneratorUI, icon: Scan },
   seo: {
     meta: {
-      en: { title: 'Codabar Generator — Create Library & Blood Bank Barcodes', description: 'Generate Codabar barcodes for libraries, blood banks, and parcel tracking. Free online Codabar generator with start/stop characters.', keywords: ['Codabar generator', 'Codabar barcode', 'library barcode', 'blood bank barcode'] },
+      en: { title: 'Codabar Generator', description: 'Generate Codabar barcodes for libraries, blood banks, and parcel tracking. Free online Codabar generator with start/stop characters.', keywords: ['Codabar generator', 'Codabar barcode', 'library barcode', 'blood bank barcode'] },
       ru: { title: 'Генератор Codabar — Создание штрихкодов Codabar', description: 'Создавайте штрихкоды Codabar. Бесплатный генератор.' },
       de: { title: 'Codabar Generator — Codabar Barcodes erstellen', description: 'Erstellen Sie Codabar Barcodes. Kostenloser Generator.' },
       es: { title: 'Generador Codabar — Cree códigos de barras Codabar', description: 'Cree códigos de barras Codabar. Generador gratuito.' },
-      fr: { title: 'Générateur Codabar — Créez des codes-barres Codabar', description: 'Créez des codes-barres Codabar. Générateur gratuit.' },
+      fr: { title: 'Générateur Codabar', description: 'Créez des codes-barres Codabar. Générateur gratuit.' },
       pt: { title: 'Gerador Codabar — Crie códigos de barras Codabar', description: 'Crie códigos de barras Codabar. Gerador gratuito.' },
     },
     faqs,

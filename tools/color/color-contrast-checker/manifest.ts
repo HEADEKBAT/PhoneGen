@@ -13,7 +13,7 @@ export const colorContrastChecker = defineTool({
   ui: { component: ColorContrastCheckerUI, icon: Eye },
   seo: {
     meta: {
-      en: { title: 'Color Contrast Checker — WCAG Accessibility Checker', description: 'Check color contrast ratios for WCAG AA and AAA compliance. Free online accessibility checker.', keywords: ['contrast checker', 'WCAG', 'accessibility', 'color contrast'] },
+      en: { title: 'Color Contrast Checker', description: 'Check color contrast ratios for WCAG AA and AAA compliance. Free online accessibility checker.', keywords: ['contrast checker', 'WCAG', 'accessibility', 'color contrast'] },
       ru: { title: 'Проверка контраста — WCAG доступность', description: 'Проверяйте контрастность цветов. Бесплатно.' },
       de: { title: 'Kontrast-Prüfer — WCAG-Barrierefreiheit', description: 'Prüfen Sie Farbkontraste. Kostenlos.' },
       es: { title: 'Verificador de contraste — Accesibilidad WCAG', description: 'Verifique el contraste. Gratuito.' },

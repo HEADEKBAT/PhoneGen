@@ -24,28 +24,28 @@ export const ean8Generator = defineTool({
   seo: {
     meta: {
       en: {
-        title: 'EAN-8 Generator — Create Compact EAN-8 Barcodes Online',
+        title: 'EAN-8 Generator',
         description: 'Generate EAN-8 barcodes for small products and shelf labels. Free online EAN-8 barcode generator with check digit and export.',
         keywords: ['EAN-8 generator', 'EAN-8 barcode', 'compact barcode', 'shelf label', 'small product barcode'],
       },
       ru: {
-        title: 'Генератор EAN-8 — Создание компактных штрихкодов EAN-8',
+        title: 'Генератор EAN-8',
         description: 'Создавайте компактные штрихкоды EAN-8. Бесплатный генератор.',
       },
       de: {
-        title: 'EAN-8 Generator — Kompakte EAN-8 Barcodes erstellen',
+        title: 'EAN-8 Generator',
         description: 'Erstellen Sie kompakte EAN-8 Barcodes. Kostenloser Generator.',
       },
       es: {
-        title: 'Generador EAN-8 — Cree códigos de barras EAN-8 compactos',
+        title: 'Generador EAN-8',
         description: 'Cree códigos de barras EAN-8 compactos. Generador gratuito.',
       },
       fr: {
-        title: 'Générateur EAN-8 — Créez des codes-barres EAN-8 compacts',
+        title: 'Générateur EAN-8',
         description: 'Créez des codes-barres EAN-8 compacts. Générateur gratuit.',
       },
       pt: {
-        title: 'Gerador EAN-8 — Crie códigos de barras EAN-8 compactos',
+        title: 'Gerador EAN-8',
         description: 'Crie códigos de barras EAN-8 compactos. Gerador gratuito.',
       },
     },

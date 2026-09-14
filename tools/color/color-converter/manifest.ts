@@ -13,7 +13,7 @@ export const colorConverter = defineTool({
   ui: { component: ColorConverterUI, icon: Repeat },
   seo: {
     meta: {
-      en: { title: 'Color Converter — Convert Between HEX, RGB, HSL, OKLCH', description: 'Convert colors between HEX, RGB, HSL, OKLCH, LAB, and more. Free online color converter with live preview.', keywords: ['color converter', 'HEX to RGB', 'RGB to HSL', 'color space'] },
+      en: { title: 'Color Converter', description: 'Convert colors between HEX, RGB, HSL, OKLCH, LAB, and more. Free online color converter with live preview.', keywords: ['color converter', 'HEX to RGB', 'RGB to HSL', 'color space'] },
       ru: { title: 'Конвертер цветов — HEX, RGB, HSL', description: 'Конвертируйте цвета между форматами. Бесплатно.' },
       de: { title: 'Farbkonverter — HEX, RGB, HSL', description: 'Konvertieren Sie Farben. Kostenlos.' },
       es: { title: 'Conversor de colores — HEX, RGB, HSL', description: 'Convierta colores. Gratuito.' },

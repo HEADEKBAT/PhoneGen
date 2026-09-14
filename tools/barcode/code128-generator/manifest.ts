@@ -25,7 +25,7 @@ export const code128Generator = defineTool({
   seo: {
     meta: {
       en: {
-        title: 'Code 128 Generator — Create High-Density Barcodes Online',
+        title: 'Code 128 Generator',
         description: 'Generate Code 128 barcodes for logistics, shipping, and inventory. Free online Code 128 barcode generator with alphanumeric support.',
         keywords: ['Code 128 generator', 'Code 128 barcode', 'logistics barcode', 'alphanumeric barcode', 'high-density'],
       },
@@ -38,11 +38,11 @@ export const code128Generator = defineTool({
         description: 'Erstellen Sie Code 128 Barcodes für Logistik. Kostenloser Generator.',
       },
       es: {
-        title: 'Generador Code 128 — Cree códigos de barras Code 128',
+        title: 'Generador Code 128',
         description: 'Cree códigos de barras Code 128 para logística. Generador gratuito.',
       },
       fr: {
-        title: 'Générateur Code 128 — Créez des codes-barres Code 128',
+        title: 'Générateur Code 128',
         description: 'Créez des codes-barres Code 128 pour la logistique. Générateur gratuit.',
       },
       pt: {

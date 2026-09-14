@@ -24,12 +24,12 @@ export const passphraseGenerator = defineTool({
   seo: {
     meta: {
       en: {
-        title: 'Passphrase Generator — Memorable XKCD-Style Passphrases',
+        title: 'Passphrase Generator',
         description: 'Generate memorable passphrases using random word lists. More secure than traditional passwords and easier to remember. Free passphrase generator.',
         keywords: ['passphrase generator', 'xkcd password', 'memorable password', 'diceware', 'word list password'],
       },
       ru: {
-        title: 'Генератор кодовых фраз — Запоминающиеся фразы-пароли',
+        title: 'Генератор кодовых фраз',
         description: 'Создавайте запоминающиеся кодовые фразы. Бесплатный генератор.',
       },
       de: {
@@ -37,11 +37,11 @@ export const passphraseGenerator = defineTool({
         description: 'Erstellen Sie einprägsame Passphrasen. Kostenloser Generator.',
       },
       es: {
-        title: 'Generador de frases de contraseña — Frases memorables',
+        title: 'Generador de frases de contraseña',
         description: 'Cree frases de contraseña memorables. Generador gratuito.',
       },
       fr: {
-        title: 'Générateur de phrases de passe — Phrases mémorables',
+        title: 'Générateur de phrases de passe',
         description: 'Créez des phrases de passe mémorables. Générateur gratuit.',
       },
       pt: {

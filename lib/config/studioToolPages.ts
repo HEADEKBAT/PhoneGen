@@ -38,27 +38,27 @@ const BARCODE_GENERATOR: StudioToolPageManifest = {
   Tool: BarcodeStudioClientLoader,
   copy: {
     en: {
-      title: 'Barcode Studio — Free Online Barcode Generator & Creator',
+      title: 'Free Online Barcode Generator — Barcode Studio',
       description: 'Create, validate, and export professional barcodes — EAN-13, UPC, Code 128, ISBN, and more. Free online barcode studio with live preview, check digit calculator, and bulk generation.',
     },
     ru: {
-      title: 'Barcode Studio — Бесплатный онлайн генератор штрихкодов',
+      title: 'Генератор штрихкодов онлайн — Barcode Studio',
       description: 'Создавайте, проверяйте и экспортируйте профессиональные штрихкоды — EAN-13, UPC, Code 128, ISBN. Бесплатная студия с предпросмотром.',
     },
     de: {
-      title: 'Barcode Studio — Kostenloser Online-Barcode-Generator',
+      title: 'Barcode-Generator online — Barcode Studio',
       description: 'Erstellen, validieren und exportieren Sie professionelle Barcodes — EAN-13, UPC, Code 128, ISBN. Kostenloses Studio mit Live-Vorschau.',
     },
     es: {
-      title: 'Barcode Studio — Generador de códigos de barras gratuito',
+      title: 'Generador de códigos de barras — Barcode Studio',
       description: 'Cree, valide y exporte códigos de barras profesionales — EAN-13, UPC, Code 128, ISBN. Estudio gratuito con vista previa en vivo.',
     },
     fr: {
-      title: 'Barcode Studio — Générateur de codes-barres gratuit en ligne',
+      title: 'Générateur de codes-barres — Barcode Studio',
       description: 'Créez, validez et exportez des codes-barres professionnels — EAN-13, UPC, Code 128, ISBN. Studio gratuit avec aperçu en direct.',
     },
     pt: {
-      title: 'Barcode Studio — Gerador de códigos de barras gratuito',
+      title: 'Gerador de códigos de barras — Barcode Studio',
       description: 'Crie, valide e exporte códigos de barras profissionais — EAN-13, UPC, Code 128, ISBN. Estúdio gratuito com pré-visualização.',
     },
   },
@@ -70,27 +70,27 @@ const COLOR_GENERATOR: StudioToolPageManifest = {
   Tool: ColorStudioLoader,
   copy: {
     en: {
-      title: 'Color Studio — Free Online Color Palette, Gradient & Converter Tool',
+      title: 'Color Palettes & Gradients — Color Studio',
       description: 'Create, convert, and analyze colors — palettes, gradients, WCAG contrast checking, color harmonies, and developer-friendly exports. Free online color studio.',
     },
     ru: {
-      title: 'Color Studio — Бесплатный онлайн инструмент для цветовых палитр, градиентов и конвертации',
+      title: 'Палитры и градиенты — Color Studio',
       description: 'Создавайте, конвертируйте и анализируйте цвета — палитры, градиенты, проверка контраста WCAG. Бесплатная студия.',
     },
     de: {
-      title: 'Color Studio — Kostenloses Online-Tool für Farbpaletten, Verläufe und Konverter',
+      title: 'Farbpaletten und Verläufe — Color Studio',
       description: 'Farben erstellen, konvertieren und analysieren — Paletten, Verläufe, WCAG-Kontrastprüfung. Kostenloses Studio.',
     },
     es: {
-      title: 'Color Studio — Herramienta gratuita de paletas, degradados y conversión de colores',
+      title: 'Paletas y degradados — Color Studio',
       description: 'Cree, convierta y analice colores — paletas, degradados, verificación de contraste WCAG. Estudio gratuito.',
     },
     fr: {
-      title: 'Color Studio — Outil de palette de couleurs, dégradés et conversion gratuit',
+      title: 'Palettes et dégradés — Color Studio',
       description: 'Créez, convertissez et analysez les couleurs — palettes, dégradés, vérification de contraste WCAG. Studio gratuit.',
     },
     pt: {
-      title: 'Color Studio — Ferramenta gratuita de paletas, gradientes e conversão de cores',
+      title: 'Paletas e gradientes — Color Studio',
       description: 'Crie, converta e analise cores — paletas, gradientes, verificação de contraste WCAG. Estúdio gratuito.',
     },
   },
@@ -102,27 +102,27 @@ const CRYPTO_WALLET_PLAYGROUND: StudioToolPageManifest = {
   Tool: CryptoPlaygroundLoader,
   copy: {
     en: {
-      title: 'Crypto Wallet Playground — Interactive Web3 Testing Toolkit',
+      title: 'Web3 Testing Toolkit — Crypto Wallet Playground',
       description: 'Generate wallet addresses, create BIP39 mnemonics, validate and analyze addresses, explore HD derivation trees, and more. All client-side.',
     },
     ru: {
-      title: 'Crypto Wallet Playground — Интерактивный набор инструментов для Web3 тестирования',
+      title: 'Инструменты для Web3 — Crypto Wallet Playground',
       description: 'Генерируйте адреса кошельков, создавайте BIP39 мнемоники, проверяйте и анализируйте адреса, изучайте деревья деривации HD и многое другое. Всё на стороне клиента.',
     },
     de: {
-      title: 'Crypto Wallet Playground — Interaktives Web3-Testkit',
+      title: 'Web3-Testkit — Crypto Wallet Playground',
       description: 'Generieren Sie Wallet-Adressen, erstellen Sie BIP39-Mnemoniken, validieren und analysieren Sie Adressen, erkunden Sie HD-Ableitungsbäume und mehr. Alles clientseitig.',
     },
     es: {
-      title: 'Crypto Wallet Playground — Kit de pruebas Web3 interactivo',
+      title: 'Kit de pruebas Web3 — Crypto Wallet Playground',
       description: 'Genere direcciones de billetera, cree mnemónicos BIP39, valide y analice direcciones, explore árboles de derivación HD, y más. Todo del lado del cliente.',
     },
     fr: {
-      title: 'Crypto Wallet Playground — Kit de test Web3 interactif',
+      title: 'Kit de test Web3 — Crypto Wallet Playground',
       description: 'Générez des adresses de portefeuille, créez des mnémoniques BIP39, validez et analysez des adresses, explorez les arbres de dérivation HD, et plus. Tout côté client.',
     },
     pt: {
-      title: 'Crypto Wallet Playground — Kit de teste Web3 interativo',
+      title: 'Kit de teste Web3 — Crypto Wallet Playground',
       description: 'Gere endereços de carteira, crie mnemônicos BIP39, valide e analise endereços, explore árvores de derivação HD, e mais. Tudo no navegador.',
     },
   },
@@ -134,27 +134,27 @@ const IMAGE_STUDIO: StudioToolPageManifest = {
   Tool: ImageStudioLoader,
   copy: {
     en: {
-      title: 'Image Studio — Free Online Image Tools: Background Remover, Upscaler & Editor',
+      title: 'Background Remover & Upscaler — Image Studio',
       description: 'Professional image processing toolkit — remove backgrounds, upscale images, apply filters, and edit photos. Free online image studio with AI-powered tools.',
     },
     ru: {
-      title: 'Image Studio — Бесплатные онлайн-инструменты для изображений: удаление фона, увеличение и редактирование',
+      title: 'Удаление фона и апскейл — Image Studio',
       description: 'Профессиональный набор инструментов для обработки изображений — удаление фона, увеличение, фильтры и редактирование. Бесплатная онлайн-студия.',
     },
     de: {
-      title: 'Image Studio — Kostenlose Online-Bildtools: Hintergrund entfernen, Hochskalieren und Bearbeiten',
+      title: 'Hintergrund entfernen — Image Studio',
       description: 'Professionelles Bildbearbeitungs-Toolkit — Hintergrund entfernen, hochskalieren, Filter anwenden und Fotos bearbeiten. Kostenloses Online-Studio.',
     },
     es: {
-      title: 'Image Studio — Herramientas de imagen gratuitas en línea: eliminación de fondos, ampliación y edición',
+      title: 'Quitar fondo y ampliar — Image Studio',
       description: 'Kit de herramientas profesional de procesamiento de imágenes — eliminar fondos, ampliar, aplicar filtros y editar fotos. Estudio gratuito en línea.',
     },
     fr: {
-      title: 'Studio d\'image — Outils d\'image gratuits en ligne : Suppression d\'arrière-plan, agrandissement et édition',
+      title: 'Supprimer l\'arrière-plan — Image Studio',
       description: 'Boîte à outils professionnelle de traitement d\'image — suppression d\'arrière-plan, agrandissement, filtres et édition. Studio gratuit en ligne avec outils IA.',
     },
     pt: {
-      title: 'Image Studio — Ferramentas de imagem gratuitas online: remoção de fundo, upscaling e edição',
+      title: 'Remover fundo e ampliar — Image Studio',
       description: 'Kit de ferramentas profissional de processamento de imagens — remover fundo, ampliar, aplicar filtros e editar fotos. Estúdio gratuito online.',
     },
   },
@@ -166,27 +166,27 @@ const MEDIA_STUDIO: StudioToolPageManifest = {
   Tool: MediaStudioLoader,
   copy: {
     en: {
-      title: 'Media Studio — Free Online Video Converter, Compressor & Editor',
+      title: 'Video Converter & Compressor — Media Studio',
       description: 'Professional video processing toolkit — convert, compress, resize, and edit video files. Free online media studio powered by FFmpeg.wasm — all in your browser.',
     },
     ru: {
-      title: 'Media Studio — Бесплатный онлайн-конвертер, компрессор и редактор видео',
+      title: 'Конвертер и сжатие видео — Media Studio',
       description: 'Профессиональный набор инструментов для обработки видео — конвертация, сжатие, изменение размера и редактирование. Бесплатная онлайн-студия.',
     },
     de: {
-      title: 'Media Studio — Kostenloser Online-Videokonverter, -kompressor und -editor',
+      title: 'Video umwandeln und komprimieren — Media Studio',
       description: 'Professionelles Videobearbeitungs-Toolkit — konvertieren, komprimieren, skalieren und bearbeiten Sie Videos. Kostenloses Online-Studio.',
     },
     es: {
-      title: 'Media Studio — Conversor, compresor y editor de vídeo gratuito en línea',
+      title: 'Convertir y comprimir vídeo — Media Studio',
       description: 'Kit de herramientas profesional de procesamiento de vídeo — convertir, comprimir, redimensionar y editar vídeos. Estudio gratuito en línea.',
     },
     fr: {
-      title: 'Media Studio — Convertisseur, compresseur et éditeur vidéo gratuit en ligne',
+      title: 'Convertir et compresser une vidéo — Media Studio',
       description: 'Boîte à outils professionnelle de traitement vidéo — convertir, compresser, redimensionner et éditer des vidéos. Studio gratuit en ligne avec FFmpeg.wasm.',
     },
     pt: {
-      title: 'Media Studio — Conversor, compressor e editor de vídeo gratuito online',
+      title: 'Converter e comprimir vídeo — Media Studio',
       description: 'Kit de ferramentas profissional de processamento de vídeo — converter, comprimir, redimensionar e editar vídeos. Estúdio gratuito online.',
     },
   },
@@ -198,27 +198,27 @@ const QR_GENERATOR: StudioToolPageManifest = {
   Tool: QRStudioLoader,
   copy: {
     en: {
-      title: 'QR Studio — Free Online QR Code Generator & Designer',
+      title: 'QR Code Generator — QR Studio',
       description: 'Create, customize, and export professional QR codes — URLs, Wi-Fi, vCard, email, SMS, social media, and 30+ content types. Free online QR studio with live preview, logo upload, and multiple export formats.',
     },
     ru: {
-      title: 'QR Studio — Бесплатный онлайн генератор и дизайнер QR-кодов',
+      title: 'Генератор QR-кодов — QR Studio',
       description: 'Создавайте, настраивайте и экспортируйте профессиональные QR-коды — URL, Wi-Fi, vCard, email, SMS, соцсети и 30+ типов контента. Бесплатная студия с предпросмотром.',
     },
     de: {
-      title: 'QR Studio — Kostenloser Online-QR-Code-Generator & Designer',
+      title: 'QR-Code-Generator — QR Studio',
       description: 'Erstellen, anpassen und exportieren Sie professionelle QR-Codes — URLs, WLAN, vCard, E-Mail, SMS, soziale Medien und über 30 Inhaltstypen. Kostenloses Studio mit Live-Vorschau.',
     },
     es: {
-      title: 'QR Studio — Generador y diseñador de códigos QR gratuito',
+      title: 'Generador de códigos QR — QR Studio',
       description: 'Cree, personalice y exporte códigos QR profesionales — URL, Wi-Fi, vCard, email, SMS, redes sociales y más de 30 tipos de contenido. Estudio gratuito con vista previa en vivo.',
     },
     fr: {
-      title: 'QR Studio — Générateur et designer de codes QR gratuit en ligne',
+      title: 'Générateur de QR codes — QR Studio',
       description: 'Créez, personnalisez et exportez des codes QR professionnels — URL, Wi-Fi, vCard, email, SMS, réseaux sociaux et plus de 30 types de contenu. Studio gratuit avec aperçu en direct.',
     },
     pt: {
-      title: 'QR Studio — Gerador e designer de códigos QR grátis',
+      title: 'Gerador de códigos QR — QR Studio',
       description: 'Crie, personalize e exporte códigos QR profissionais — URLs, Wi-Fi, vCard, email, SMS, redes sociais e mais de 30 tipos de conteúdo. Estúdio gratuito com pré-visualização.',
     },
   },

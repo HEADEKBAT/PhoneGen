@@ -712,7 +712,7 @@ const BIP39_GENERATOR_PAGE: CryptoSEOPageConfig = {
     es: {
       faqs: MNEMONIC_FAQS_ES,
       ctaLabel: 'Generar frase semilla',
-      title: 'Generador de frase semilla BIP39 — 12 a 24 palabras',
+      title: 'Generador de frase semilla BIP39',
       description: 'Genere frases semilla BIP39 para pruebas. Varias longitudes y varios idiomas. Gratis, en el navegador.',
       heroTitle: 'Generador de frase semilla BIP39',
       heroSubtitle: 'Mnemónicas conformes a BIP39. Varias longitudes, varios idiomas.',

@@ -20,12 +20,12 @@ export const pharmacodeGenerator = defineTool({
   ui: { component: PharmacodeGeneratorUI, icon: Pill },
   seo: {
     meta: {
-      en: { title: 'Pharmacode Generator — Create Pharmaceutical Barcodes', description: 'Generate Pharmacode barcodes for medicine packaging. Free online Pharmacode generator for pharmaceutical production lines.', keywords: ['Pharmacode generator', 'pharmaceutical barcode', 'medicine barcode', 'production line barcode'] },
-      ru: { title: 'Генератор Pharmacode — Создание фармацевтических штрихкодов', description: 'Создавайте штрихкоды Pharmacode. Бесплатный генератор.' },
-      de: { title: 'Pharmacode Generator — Pharmazeutische Barcodes erstellen', description: 'Erstellen Sie Pharmacode Barcodes. Kostenloser Generator.' },
-      es: { title: 'Generador Pharmacode — Cree códigos de barras farmacéuticos', description: 'Cree códigos de barras Pharmacode. Generador gratuito.' },
-      fr: { title: 'Générateur Pharmacode — Codes-barres pharmaceutiques', description: 'Créez des codes-barres Pharmacode. Générateur gratuit.' },
-      pt: { title: 'Gerador Pharmacode — Crie códigos de barras farmacêuticos', description: 'Crie códigos de barras Pharmacode. Gerador gratuito.' },
+      en: { title: 'Pharmacode Generator', description: 'Generate Pharmacode barcodes for medicine packaging. Free online Pharmacode generator for pharmaceutical production lines.', keywords: ['Pharmacode generator', 'pharmaceutical barcode', 'medicine barcode', 'production line barcode'] },
+      ru: { title: 'Генератор Pharmacode', description: 'Создавайте штрихкоды Pharmacode. Бесплатный генератор.' },
+      de: { title: 'Pharmacode Generator', description: 'Erstellen Sie Pharmacode Barcodes. Kostenloser Generator.' },
+      es: { title: 'Generador Pharmacode', description: 'Cree códigos de barras Pharmacode. Generador gratuito.' },
+      fr: { title: 'Générateur Pharmacode', description: 'Créez des codes-barres Pharmacode. Générateur gratuit.' },
+      pt: { title: 'Gerador Pharmacode', description: 'Crie códigos de barras Pharmacode. Gerador gratuito.' },
     },
     faqs,
   },

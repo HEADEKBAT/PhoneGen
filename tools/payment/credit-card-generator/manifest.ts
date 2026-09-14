@@ -29,28 +29,28 @@ export const creditCardGenerator = defineTool({
   seo: {
     meta: {
       en: {
-        title: 'Credit Card Generator — Generate Test Card Numbers for 15+ Networks',
+        title: 'Credit Card Generator',
         description: 'Generate valid test credit card numbers for Visa, Mastercard, Amex, Discover, JCB, and 10+ payment networks. Free online credit card generator with Luhn validation, BIN lookup, and multiple export formats.',
         keywords: ['credit card generator', 'test card numbers', 'fake credit card', 'payment testing', 'card number generator', 'Luhn validation', 'BIN generator'],
       },
       ru: {
-        title: 'Генератор кредитных карт — Создание тестовых номеров карт для 15+ сетей',
+        title: 'Генератор кредитных карт',
         description: 'Создавайте тестовые номера кредитных карт для Visa, Mastercard, Amex и других платежных систем. Бесплатный генератор с проверкой Луна.',
       },
       de: {
-        title: 'Kreditkartengenerator — Testkartennummern für 15+ Netzwerke',
+        title: 'Kreditkartengenerator',
         description: 'Generieren Sie gültige Testkreditkartennummern. Kostenloser Generator mit Luhn-Prüfung.',
       },
       es: {
-        title: 'Generador de tarjetas de crédito — Números de prueba para 15+ redes',
+        title: 'Generador de tarjetas de crédito',
         description: 'Genere números de tarjetas de crédito de prueba válidos. Generador gratuito con validación Luhn.',
       },
       fr: {
-        title: 'Générateur de cartes de crédit — Numéros de test pour 15+ réseaux',
+        title: 'Générateur de cartes de crédit',
         description: 'Générez des numéros de cartes de crédit de test valides. Générateur gratuit avec validation Luhn.',
       },
       pt: {
-        title: 'Gerador de cartões de crédito — Números de teste para 15+ redes',
+        title: 'Gerador de cartões de crédito',
         description: 'Gere números de cartão de crédito de teste válidos. Gerador gratuito com validação Luhn.',
       },
     },
@@ -67,42 +67,42 @@ export const creditCardGenerator = defineTool({
     quick: {
       seo: {
         meta: {
-          en: { title: 'Quick Card Generator — Generate Test Cards Instantly', description: 'Quick mode for generating single test credit card numbers instantly with one click.' },
+          en: { title: 'Quick Card Generator', description: 'Quick mode for generating single test credit card numbers instantly with one click.' },
         },
       },
     },
     advanced: {
       seo: {
         meta: {
-          en: { title: 'Advanced Card Generator — Full Control Over Card Parameters', description: 'Generate test credit cards with full control over network, BIN, expiry, CVV, and cardholder details.' },
+          en: { title: 'Advanced Card Generator', description: 'Generate test credit cards with full control over network, BIN, expiry, CVV, and cardholder details.' },
         },
       },
     },
     bin: {
       seo: {
         meta: {
-          en: { title: 'BIN Card Generator — Generate Cards from BIN Numbers', description: 'Generate test credit card numbers from a specific BIN/IIN prefix. Perfect for testing specific issuing banks.' },
+          en: { title: 'BIN Card Generator', description: 'Generate test credit card numbers from a specific BIN/IIN prefix. Perfect for testing specific issuing banks.' },
         },
       },
     },
     bulk: {
       seo: {
         meta: {
-          en: { title: 'Bulk Card Generator — Generate 100s of Test Cards at Once', description: 'Generate up to 1000 test credit card numbers at once and export in TXT, CSV, JSON, SQL, XML, or YAML format.' },
+          en: { title: 'Bulk Card Generator', description: 'Generate up to 1000 test credit card numbers at once and export in TXT, CSV, JSON, SQL, XML, or YAML format.' },
         },
       },
     },
     developer: {
       seo: {
         meta: {
-          en: { title: 'Developer Card Generator — Raw PAN, Regex & Validation Rules', description: 'Developer mode for raw PAN data, formatted numbers, masked numbers, regex patterns, and validation rules.' },
+          en: { title: 'Developer Card Generator', description: 'Developer mode for raw PAN data, formatted numbers, masked numbers, regex patterns, and validation rules.' },
         },
       },
     },
     'negative-testing': {
       seo: {
         meta: {
-          en: { title: 'Negative Testing Cards — Invalid, Expired & Edge-Case Cards', description: 'Generate credit cards with invalid checksums, wrong lengths, expired dates, and other edge cases for negative testing.' },
+          en: { title: 'Negative Testing Cards', description: 'Generate credit cards with invalid checksums, wrong lengths, expired dates, and other edge cases for negative testing.' },
         },
       },
     },
