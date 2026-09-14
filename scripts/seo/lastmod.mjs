@@ -80,7 +80,12 @@ const GROUPS = {
   crypto: ['lib/config/cryptoSEOPages.ts', 'lib/config/cryptoRoutes.ts'],
   media: ['lib/config/mediaSEOPages.ts', 'lib/config/mediaRoutes.ts'],
   standalone: ['lib/config/staticRoutes.ts'],
-  'phone-country': ['lib/countryRegistry.ts', 'lib/countryRegistry'],
+  'phone-country': [
+    'lib/countryRegistry.ts',
+    'lib/generatePhoneMetadata.ts',
+    'app/[locale]/phone-generator',
+    'components/MainContent.tsx',
+  ],
 };
 
 /**
