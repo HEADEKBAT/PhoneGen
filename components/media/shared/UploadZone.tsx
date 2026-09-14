@@ -10,7 +10,11 @@ interface UploadZoneProps {
   disabled?: boolean;
 }
 
-const DEFAULT_ACCEPT = '.mp4,.mov,.avi,.mkv,.webm,.gif,.mp3,.wav,.ogg,.aac,.m4a,.flac';
+/* .ts and .m3u8 are here because a stream assembled from HLS arrives as one
+   of them, and someone who saved a recording by hand should be able to drop
+   it in rather than being told the format is unsupported. */
+const DEFAULT_ACCEPT =
+  '.mp4,.mov,.avi,.mkv,.webm,.gif,.ts,.m2ts,.mts,.m4v,.mp3,.wav,.ogg,.aac,.m4a,.flac,.opus';
 const DEFAULT_MAX_SIZE = 500 * 1024 * 1024; // 500MB
 
 export default function UploadZone({

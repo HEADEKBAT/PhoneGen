@@ -22,44 +22,50 @@ export type MediaSEOPageConfig = StudioSEOConfig & { id: string };
 
 const VIDEO_FAQS: SEOFaq[] = [
   { q: 'Is this video converter free?', a: 'Yes, completely free. All video conversion happens in your browser using FFmpeg.wasm. There are no limits, watermarks, or hidden charges.' },
-  { q: 'Are my videos uploaded to a server?', a: 'No. All processing happens entirely in your browser. Your files never leave your device. This ensures complete privacy and security.' },
-  { q: 'What is the maximum file size?', a: 'The maximum file size is 500 MB. This is limited by browser memory and FFmpeg.wasm constraints.' },
-  { q: 'What formats are supported?', a: 'We support MP4, MOV, AVI, MKV, WEBM, GIF for video, and MP3, WAV, OGG, AAC, M4A, FLAC for audio.' },
+  { q: 'Are my videos uploaded to a server?', a: 'Files you pick from your device are not: they are decoded and encoded in this tab, and never sent anywhere. There is one exception, and it only applies to links: if a stream\'s host does not allow browsers to read its files directly, the segments are fetched through our proxy and passed straight to your browser. Nothing is stored there, and the conversion itself still happens on your machine.' },
+  { q: 'Can I convert an m3u8 or HLS link?', a: 'Yes. Paste the playlist URL and the segments are downloaded and joined here. If the playlist offers several qualities you choose one first. AES-128 streams are decrypted in the browser; DRM-protected ones (SAMPLE-AES, Widevine, FairPlay) cannot be converted by anyone without the licence, and you will be told so rather than handed a broken file. Live playlists have no end, so there is nothing finite to convert — use a VOD link.' },
+  { q: 'What is the maximum file size?', a: '500 MB for a file you pick, and around 2 GB for a stream assembled from a link. Both are limits of browser memory rather than policy: everything is held in this tab while it works. Changing only the container — an HLS recording into MP4, say — copies the streams instead of re-encoding them and is far lighter on both memory and time than a full conversion.' },
+  { q: 'What formats are supported?', a: 'Video: MP4, MOV, AVI, MKV, WEBM, GIF. Audio: MP3, WAV, OGG, AAC, M4A, FLAC. As input you can also give an m3u8/HLS playlist or an MPEG-TS stream.' },
 ];
 
 const VIDEO_FAQS_RU: SEOFaq[] = [
   { q: 'Конвертер видео бесплатный?', a: 'Да, полностью. Вся конвертация идёт в браузере через FFmpeg.wasm. Ни ограничений, ни водяных знаков, ни скрытых платежей.' },
-  { q: 'Загружаются ли мои видео на сервер?', a: 'Нет. Вся обработка идёт целиком в вашем браузере. Файлы не покидают устройство, поэтому приватность полная.' },
-  { q: 'Какой максимальный размер файла?', a: '500 МБ. Ограничение задано памятью браузера и возможностями FFmpeg.wasm.' },
-  { q: 'Какие форматы поддерживаются?', a: 'Видео: MP4, MOV, AVI, MKV, WEBM, GIF. Аудио: MP3, WAV, OGG, AAC, M4A, FLAC.' },
+  { q: 'Загружаются ли мои видео на сервер?', a: 'Файлы с вашего устройства — нет: они декодируются и кодируются прямо в этой вкладке и никуда не отправляются. Исключение одно и касается только ссылок: если хост потока не разрешает браузеру читать свои файлы напрямую, сегменты идут через наш прокси и сразу отдаются вашему браузеру. Там ничего не сохраняется, а сама конвертация в любом случае происходит на вашей машине.' },
+  { q: 'Можно ли сконвертировать ссылку m3u8 или HLS?', a: 'Да. Вставьте ссылку на плейлист — сегменты скачаются и соберутся здесь. Если плейлист предлагает несколько качеств, сначала выберите нужное. Потоки с AES-128 расшифровываются в браузере; защищённые DRM (SAMPLE-AES, Widevine, FairPlay) не сконвертирует никто без лицензии, и вам об этом скажут, а не отдадут битый файл. У прямого эфира нет конца, то есть нечего конвертировать — нужна ссылка на запись.' },
+  { q: 'Какой максимальный размер файла?', a: '500 МБ для файла с устройства и около 2 ГБ для потока, собранного по ссылке. И то и другое — предел памяти браузера, а не правило: пока идёт работа, всё держится в этой вкладке. Смена только контейнера — скажем, запись HLS в MP4 — копирует потоки вместо перекодирования и обходится куда дешевле и по памяти, и по времени.' },
+  { q: 'Какие форматы поддерживаются?', a: 'Видео: MP4, MOV, AVI, MKV, WEBM, GIF. Аудио: MP3, WAV, OGG, AAC, M4A, FLAC. На вход можно дать ещё плейлист m3u8/HLS или поток MPEG-TS.' },
 ];
 
 const VIDEO_FAQS_DE: SEOFaq[] = [
   { q: 'Ist der Video-Konverter kostenlos?', a: 'Ja, vollständig. Die gesamte Umwandlung läuft im Browser über FFmpeg.wasm. Keine Limits, keine Wasserzeichen, keine versteckten Kosten.' },
-  { q: 'Werden meine Videos auf einen Server geladen?', a: 'Nein. Die gesamte Verarbeitung findet in Ihrem Browser statt. Ihre Dateien verlassen das Gerät nie, die Privatsphäre bleibt vollständig gewahrt.' },
-  { q: 'Wie groß darf die Datei sein?', a: 'Maximal 500 MB. Die Grenze ergibt sich aus dem Browser-Speicher und den Möglichkeiten von FFmpeg.wasm.' },
-  { q: 'Welche Formate werden unterstützt?', a: 'Video: MP4, MOV, AVI, MKV, WEBM, GIF. Audio: MP3, WAV, OGG, AAC, M4A, FLAC.' },
+  { q: 'Werden meine Videos auf einen Server geladen?', a: 'Dateien von Ihrem Gerät nicht: Sie werden in diesem Tab dekodiert und kodiert und nirgendwohin gesendet. Es gibt eine Ausnahme, und sie betrifft nur Links: Erlaubt der Host eines Streams dem Browser nicht, seine Dateien direkt zu lesen, laufen die Segmente über unseren Proxy und gehen unmittelbar an Ihren Browser weiter. Dort wird nichts gespeichert, und die Umwandlung selbst findet weiterhin auf Ihrem Rechner statt.' },
+  { q: 'Kann ich einen m3u8- oder HLS-Link umwandeln?', a: 'Ja. Fügen Sie die Playlist-URL ein, und die Segmente werden hier geladen und zusammengefügt. Bietet die Playlist mehrere Qualitäten, wählen Sie zuerst eine aus. AES-128-Streams werden im Browser entschlüsselt; DRM-geschützte (SAMPLE-AES, Widevine, FairPlay) kann ohne Lizenz niemand umwandeln, und das wird Ihnen gesagt, statt Ihnen eine kaputte Datei zu geben. Ein Livestream hat kein Ende — nehmen Sie einen VOD-Link.' },
+  { q: 'Wie groß darf die Datei sein?', a: '500 MB für eine Datei von Ihrem Gerät und rund 2 GB für einen über einen Link zusammengesetzten Stream. Beides sind Grenzen des Browser-Speichers, keine Regeln: Während der Arbeit liegt alles in diesem Tab. Nur den Container zu wechseln — etwa eine HLS-Aufnahme nach MP4 — kopiert die Streams, statt sie neu zu kodieren, und kostet erheblich weniger Speicher und Zeit.' },
+  { q: 'Welche Formate werden unterstützt?', a: 'Video: MP4, MOV, AVI, MKV, WEBM, GIF. Audio: MP3, WAV, OGG, AAC, M4A, FLAC. Als Eingabe sind auch eine m3u8/HLS-Playlist oder ein MPEG-TS-Stream möglich.' },
 ];
 
 const VIDEO_FAQS_ES: SEOFaq[] = [
   { q: '¿El conversor de vídeo es gratuito?', a: 'Sí, del todo. Toda la conversión se ejecuta en el navegador con FFmpeg.wasm. Sin límites, sin marcas de agua y sin cargos ocultos.' },
-  { q: '¿Se suben mis vídeos a un servidor?', a: 'No. Todo el procesamiento ocurre íntegramente en su navegador. Sus archivos nunca salen del dispositivo, así que la privacidad es total.' },
-  { q: '¿Cuál es el tamaño máximo de archivo?', a: '500 MB. El límite lo imponen la memoria del navegador y las posibilidades de FFmpeg.wasm.' },
-  { q: '¿Qué formatos admite?', a: 'Vídeo: MP4, MOV, AVI, MKV, WEBM, GIF. Audio: MP3, WAV, OGG, AAC, M4A, FLAC.' },
+  { q: '¿Se suben mis vídeos a un servidor?', a: 'Los archivos de su dispositivo no: se decodifican y codifican en esta pestaña y no se envían a ninguna parte. Hay una excepción, y solo afecta a los enlaces: si el host de un stream no permite que el navegador lea sus archivos directamente, los segmentos pasan por nuestro proxy y van de inmediato a su navegador. Allí no se guarda nada, y la conversión sigue ocurriendo en su equipo.' },
+  { q: '¿Puedo convertir un enlace m3u8 o HLS?', a: 'Sí. Pegue la URL de la lista y los segmentos se descargan y se unen aquí. Si la lista ofrece varias calidades, primero elige una. Los streams con AES-128 se descifran en el navegador; los protegidos con DRM (SAMPLE-AES, Widevine, FairPlay) no los convierte nadie sin la licencia, y se le dirá en lugar de entregarle un archivo roto. Una emisión en directo no tiene final: use un enlace de vídeo bajo demanda.' },
+  { q: '¿Cuál es el tamaño máximo de archivo?', a: '500 MB para un archivo de su dispositivo y unos 2 GB para un stream montado desde un enlace. Ambos son límites de la memoria del navegador, no normas: mientras trabaja, todo se mantiene en esta pestaña. Cambiar solo el contenedor —una grabación HLS a MP4, por ejemplo— copia los flujos en vez de recodificarlos y cuesta mucho menos memoria y tiempo.' },
+  { q: '¿Qué formatos admite?', a: 'Vídeo: MP4, MOV, AVI, MKV, WEBM, GIF. Audio: MP3, WAV, OGG, AAC, M4A, FLAC. Como entrada también admite una lista m3u8/HLS o un flujo MPEG-TS.' },
 ];
 
 const VIDEO_FAQS_FR: SEOFaq[] = [
   { q: 'Le convertisseur vidéo est-il gratuit ?', a: 'Oui, entièrement. Toute la conversion se fait dans le navigateur via FFmpeg.wasm. Aucune limite, aucun filigrane, aucun frais caché.' },
-  { q: 'Mes vidéos sont-elles envoyées sur un serveur ?', a: 'Non. Tout le traitement a lieu entièrement dans votre navigateur. Vos fichiers ne quittent jamais votre appareil, la confidentialité est totale.' },
-  { q: 'Quelle est la taille maximale de fichier ?', a: '500 Mo. Cette limite vient de la mémoire du navigateur et des capacités de FFmpeg.wasm.' },
-  { q: 'Quels formats sont pris en charge ?', a: 'Vidéo : MP4, MOV, AVI, MKV, WEBM, GIF. Audio : MP3, WAV, OGG, AAC, M4A, FLAC.' },
+  { q: 'Mes vidéos sont-elles envoyées sur un serveur ?', a: 'Les fichiers de votre appareil, non : ils sont décodés et encodés dans cet onglet et ne partent nulle part. Il y a une exception, et elle ne concerne que les liens : si l’hôte d’un flux n’autorise pas le navigateur à lire ses fichiers directement, les segments transitent par notre proxy et sont transmis aussitôt à votre navigateur. Rien n’y est conservé, et la conversion, elle, se fait toujours sur votre machine.' },
+  { q: 'Puis-je convertir un lien m3u8 ou HLS ?', a: 'Oui. Collez l’URL de la playlist et les segments sont téléchargés puis assemblés ici. Si la playlist propose plusieurs qualités, vous en choisissez une d’abord. Les flux AES-128 sont déchiffrés dans le navigateur ; ceux protégés par DRM (SAMPLE-AES, Widevine, FairPlay) ne sont convertibles par personne sans la licence, et on vous le dira plutôt que de vous rendre un fichier corrompu. Un direct n’a pas de fin : prenez un lien de replay.' },
+  { q: 'Quelle est la taille maximale de fichier ?', a: '500 Mo pour un fichier de votre appareil et environ 2 Go pour un flux assemblé depuis un lien. Ce sont des limites de la mémoire du navigateur, pas des règles : pendant le travail, tout tient dans cet onglet. Ne changer que le conteneur — un enregistrement HLS vers MP4, par exemple — copie les flux au lieu de les réencoder et coûte bien moins en mémoire et en temps.' },
+  { q: 'Quels formats sont pris en charge ?', a: 'Vidéo : MP4, MOV, AVI, MKV, WEBM, GIF. Audio : MP3, WAV, OGG, AAC, M4A, FLAC. En entrée, une playlist m3u8/HLS ou un flux MPEG-TS sont aussi acceptés.' },
 ];
 
 const VIDEO_FAQS_PT: SEOFaq[] = [
   { q: 'O conversor de vídeo é gratuito?', a: 'Sim, totalmente. Toda a conversão roda no navegador via FFmpeg.wasm. Sem limites, sem marcas d’água e sem cobranças ocultas.' },
-  { q: 'Os meus vídeos são enviados para um servidor?', a: 'Não. Todo o processamento acontece inteiramente no seu navegador. Os arquivos nunca saem do dispositivo, então a privacidade é total.' },
-  { q: 'Qual é o tamanho máximo de arquivo?', a: '500 MB. O limite vem da memória do navegador e das possibilidades do FFmpeg.wasm.' },
-  { q: 'Quais formatos são suportados?', a: 'Vídeo: MP4, MOV, AVI, MKV, WEBM, GIF. Áudio: MP3, WAV, OGG, AAC, M4A, FLAC.' },
+  { q: 'Os meus vídeos são enviados para um servidor?', a: 'Os arquivos do seu dispositivo não: eles são decodificados e codificados nesta aba e não são enviados a lugar nenhum. Há uma exceção, e ela vale só para links: se o host de um stream não deixa o navegador ler os seus arquivos diretamente, os segmentos passam pelo nosso proxy e seguem imediatamente para o seu navegador. Nada fica guardado lá, e a conversão continua acontecendo na sua máquina.' },
+  { q: 'Posso converter um link m3u8 ou HLS?', a: 'Sim. Cole a URL da playlist e os segmentos são baixados e unidos aqui. Se a playlist oferecer várias qualidades, você escolhe uma primeiro. Streams com AES-128 são descriptografados no navegador; os protegidos por DRM (SAMPLE-AES, Widevine, FairPlay) ninguém converte sem a licença, e você será avisado em vez de receber um arquivo quebrado. Uma transmissão ao vivo não tem fim: use um link de VOD.' },
+  { q: 'Qual é o tamanho máximo de arquivo?', a: '500 MB para um arquivo do seu dispositivo e cerca de 2 GB para um stream montado a partir de um link. Os dois são limites da memória do navegador, não regras: enquanto o trabalho corre, tudo fica nesta aba. Trocar apenas o contêiner — uma gravação HLS para MP4, por exemplo — copia os fluxos em vez de recodificá-los e custa bem menos memória e tempo.' },
+  { q: 'Quais formatos são suportados?', a: 'Vídeo: MP4, MOV, AVI, MKV, WEBM, GIF. Áudio: MP3, WAV, OGG, AAC, M4A, FLAC. Na entrada também vale uma playlist m3u8/HLS ou um fluxo MPEG-TS.' },
 ];
 
 const COMPRESS_FAQS: SEOFaq[] = [
