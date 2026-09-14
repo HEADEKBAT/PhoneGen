@@ -13,6 +13,7 @@ import { ALL_MEDIA_SEO_PAGES } from '@/lib/config/mediaSEOPages';
 import { isRedirectedSlug } from '@/lib/config/legacyRedirects';
 import { TOOL_PAGE_PRODUCT_IDS, STANDALONE_SEO_ROUTES } from '@/lib/config/staticRoutes';
 import { getAllRegionCodes } from '@/lib/countryRegistry';
+import { lastmodFor, type LastmodGroup } from '@/lib/config/lastmod';
 
 /**
  * Dynamic sitemap — builds every URL from the Products and Generators registries.
@@ -46,22 +47,27 @@ function isShipped(status: string): boolean {
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
   const seen = new Set<string>();
-  const now = new Date();
 
-  const add = (
-    path: string,
-    priority: number,
-    changeFrequency: 'weekly' | 'monthly' = 'weekly',
-  ) => {
+  /**
+   * `lastModified` is the newer of the page's content group and the locale's
+   * dictionary — see scripts/seo/lastmod.mjs for why, and `npm run check` for
+   * what keeps the dates from drifting behind git.
+   *
+   * `priority` and `changeFrequency` are deliberately absent: Google states it
+   * ignores both, and every URL here carried the same two invented numbers.
+   */
+  const add = (path: string, group: LastmodGroup, locale: string) => {
     const url = `${BASE_URL}${path}`;
     if (seen.has(url)) return;
     seen.add(url);
-    entries.push({ url, lastModified: now, changeFrequency, priority });
+
+    const lastModified = lastmodFor(group, locale);
+    entries.push(lastModified ? { url, lastModified } : { url });
   };
 
   /* ── Homepages per locale ───────────────────────────────────────── */
   for (const locale of SEO_LOCALES) {
-    add(`/${locale}`, 1.0);
+    add(`/${locale}`, 'home', locale);
   }
 
   /* ── Product landing pages per locale ────────────────────────────── */
@@ -73,7 +79,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const locale of SEO_LOCALES) {
     for (const product of ALL_PRODUCTS) {
       if (!isShipped(product.status)) continue;
-      add(`/${locale}/${product.slug}`, product.seoPriority);
+      add(`/${locale}/${product.slug}`, 'product-landing', locale);
     }
   }
 
@@ -97,7 +103,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
          The country loop below already covers these. */
       if (generatorProductsWithCountryRoutes.has(generator.productId)) continue;
 
-      add(`/${locale}/${product.slug}/${generator.slug}`, generator.seoPriority);
+      add(`/${locale}/${product.slug}/${generator.slug}`, 'generator-tool', locale);
     }
   }
 
@@ -110,7 +116,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     for (const productId of TOOL_PAGE_PRODUCT_IDS) {
       const product = productById.get(productId);
       if (!product) continue;
-      add(`/${locale}/${product.slug}/tool`, 0.8);
+      add(`/${locale}/${product.slug}/tool`, 'studio-tool', locale);
     }
   }
 
@@ -120,21 +126,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     for (const page of ALL_SEO_PAGES) {
       if (productSlugs.has(page.slug)) continue; // skip SEO pages that share a slug with a product page
       if (isRedirectedSlug(page.slug)) continue; // 308 → /credential-generator/{slug}
-      add(`/${locale}/${page.slug}`, 0.9);
+      add(`/${locale}/${page.slug}`, 'credential', locale);
     }
   }
 
   /* ── Credential tool pages under /credential-generator/{slug} ────── */
   for (const locale of SEO_LOCALES) {
     for (const page of ALL_SEO_PAGES) {
-      add(`/${locale}/credential-generator/${page.slug}`, 0.9);
+      add(`/${locale}/credential-generator/${page.slug}`, 'credential', locale);
     }
   }
 
   /* ── Barcode tool pages under /barcode-generator/{slug} ──────────── */
   for (const locale of SEO_LOCALES) {
     for (const page of ALL_BARCODE_SEO_PAGES) {
-      add(`/${locale}/barcode-generator/${page.slug}`, 0.9);
+      add(`/${locale}/barcode-generator/${page.slug}`, 'barcode', locale);
     }
   }
 
@@ -142,14 +148,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const locale of SEO_LOCALES) {
     for (const page of ALL_BARCODE_SEO_PAGES) {
       if (isRedirectedSlug(page.slug)) continue; // 308 → /barcode-generator/{slug}
-      add(`/${locale}/${page.slug}`, 0.9);
+      add(`/${locale}/${page.slug}`, 'barcode', locale);
     }
   }
 
   /* ── Color tool pages under /color-generator/{slug} ──────────────── */
   for (const locale of SEO_LOCALES) {
     for (const page of COLOR_TOOL_ROUTES) {
-      add(`/${locale}/color-generator/${page.slug}`, 0.9);
+      add(`/${locale}/color-generator/${page.slug}`, 'color', locale);
     }
   }
 
@@ -157,28 +163,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const locale of SEO_LOCALES) {
     for (const page of ALL_PAYMENT_SEO_PAGES) {
       if (isRedirectedSlug(page.slug)) continue;
-      add(`/${locale}/${page.slug}`, 0.9);
+      add(`/${locale}/${page.slug}`, 'payment', locale);
     }
   }
 
   /* ── Payment tool pages under /payment-studio/{slug} ─────────────── */
   for (const locale of SEO_LOCALES) {
     for (const page of ALL_PAYMENT_SEO_PAGES) {
-      add(`/${locale}/payment-studio/${page.slug}`, 0.9);
+      add(`/${locale}/payment-studio/${page.slug}`, 'payment', locale);
     }
   }
 
   /* ── Image tool pages under /image-studio/{slug} ─────────────────── */
   for (const locale of SEO_LOCALES) {
     for (const page of IMAGE_TOOL_ROUTES) {
-      add(`/${locale}/image-studio/${page.slug}`, 0.9);
+      add(`/${locale}/image-studio/${page.slug}`, 'image', locale);
     }
   }
 
   /* ── QR tool pages under /qr-generator/{slug} ────────────────────── */
   for (const locale of SEO_LOCALES) {
     for (const page of QR_TOOL_ROUTES) {
-      add(`/${locale}/qr-generator/${page.slug}`, 0.9);
+      add(`/${locale}/qr-generator/${page.slug}`, 'qr', locale);
     }
   }
 
@@ -186,14 +192,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const locale of SEO_LOCALES) {
     for (const page of ALL_CRYPTO_SEO_PAGES) {
       if (isRedirectedSlug(page.slug)) continue;
-      add(`/${locale}/${page.slug}`, 0.9);
+      add(`/${locale}/${page.slug}`, 'crypto', locale);
     }
   }
 
   /* ── Crypto Wallet tool pages under /crypto-wallet-playground/{slug} ── */
   for (const locale of SEO_LOCALES) {
     for (const page of CRYPTO_TOOL_ROUTES) {
-      add(`/${locale}/crypto-wallet-playground/${page.slug}`, 0.9);
+      add(`/${locale}/crypto-wallet-playground/${page.slug}`, 'crypto', locale);
     }
   }
 
@@ -201,14 +207,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const locale of SEO_LOCALES) {
     for (const page of ALL_MEDIA_SEO_PAGES) {
       if (isRedirectedSlug(page.slug)) continue;
-      add(`/${locale}/${page.slug}`, 0.9);
+      add(`/${locale}/${page.slug}`, 'media', locale);
     }
   }
 
   /* ── Media Studio tool pages under /media-studio/{slug} ──────────── */
   for (const locale of SEO_LOCALES) {
     for (const page of MEDIA_TOOL_ROUTES) {
-      add(`/${locale}/media-studio/${page.slug}`, 0.9);
+      add(`/${locale}/media-studio/${page.slug}`, 'media', locale);
     }
   }
 
@@ -218,13 +224,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   for (const locale of SEO_LOCALES) {
     for (const route of STANDALONE_SEO_ROUTES) {
       if (isRedirectedSlug(route.slug)) continue;
-      add(`/${locale}/${route.slug}`, route.priority);
+      add(`/${locale}/${route.slug}`, 'standalone', locale);
     }
   }
 
   /* ── About pages per locale ──────────────────────────────────────── */
   for (const locale of SEO_LOCALES) {
-    add(`/${locale}/about`, 0.8, 'monthly');
+    add(`/${locale}/about`, 'about', locale);
   }
 
   /* ── Country-specific phone generator pages ──────────────────────── */
@@ -233,7 +239,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   if (phoneProduct) {
     for (const locale of SEO_LOCALES) {
       for (const region of regions) {
-        add(`/${locale}/${phoneProduct.slug}/${region}`, 0.7);
+        add(`/${locale}/${phoneProduct.slug}/${region}`, 'phone-country', locale);
       }
     }
   }
