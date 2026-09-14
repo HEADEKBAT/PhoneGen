@@ -5,15 +5,16 @@
  * <body>. Get it wrong and the build fails with "Missing Root Layout tags" —
  * after the install and the compile, several minutes in.
  *
- * This project moved that shell out of `app/layout.tsx` and into
- * `app/[locale]/layout.tsx`, so `lang` could be the locale from the URL rather
- * than a hardcoded "en" contradicting the hreflang on the same page. That move
- * only works while `app/layout.tsx` does not exist: if it comes back, it
- * becomes the root again and has to carry the shell itself.
+ * Learned the hard way: `app/[locale]/layout.tsx` does NOT become the root
+ * layout when `app/layout.tsx` is deleted. Removing it 404s the entire locale
+ * tree — every page, not just the root — because a dynamic segment's layout
+ * is not eligible for the role. The shell stays in `app/layout.tsx`, which is
+ * also why `lang` cannot be set there: a root layout cannot see a route param
+ * nested below it. The locale layout sets it instead.
  *
  * Four rules, all of them things the build would otherwise tell you slowly:
  *
- *   1. No `app/layout.tsx`, or it has <html> and <body>.
+ *   1. `app/layout.tsx` exists and has <html> and <body>.
  *   2. Every top-level segment holding a page has a layout with both tags.
  *   3. No layout exports `metadata` and `generateMetadata` together.
  *   4. `globals.css` is imported by a root layout, exactly once.
@@ -48,26 +49,21 @@ const uiSegments = new Set(
 );
 
 const rootLayout = join(APP, 'layout.tsx');
-if (existsSync(rootLayout)) {
+if (!existsSync(rootLayout)) {
+  problems.push(
+    'app/layout.tsx is missing. Nothing else takes its place — a dynamic segment ' +
+      "such as app/[locale]/layout.tsx is not eligible, and without a root layout every " +
+      'route under it answers 404.',
+  );
+} else {
   const src = read(rootLayout);
   if (!src.includes('<html') || !src.includes('<body')) {
-    problems.push(
-      'app/layout.tsx exists, which makes it the root layout — it must contain <html> and <body>, ' +
-        'or be deleted so each top-level segment provides its own.',
-    );
+    problems.push('app/layout.tsx is the root layout and must contain <html> and <body>.');
   }
-} else {
-  for (const segment of [...uiSegments].sort()) {
-    const layout = join(APP, segment, 'layout.tsx');
-    if (!existsSync(layout)) {
-      problems.push(`app/${segment}/ has pages but no layout.tsx to supply <html> and <body>.`);
-      continue;
-    }
-    const src = read(layout);
-    if (!src.includes('<html') || !src.includes('<body')) {
-      problems.push(`${rel(layout)} is a root layout and is missing <html> or <body>.`);
-    }
-  }
+}
+
+if (uiSegments.size === 0) {
+  problems.push('No page.tsx anywhere under app/ — nothing would render.');
 }
 
 /* 3 — Next forbids both metadata exports from one file. */

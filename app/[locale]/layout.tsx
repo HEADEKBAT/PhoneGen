@@ -1,6 +1,5 @@
 import { type ReactNode } from 'react';
 import { type Metadata } from 'next';
-import '../globals.css';
 import { LOCALES } from '@/lib/config';
 import { BASE_URL } from '@/lib/config';
 import { PLATFORM_CONFIG } from '@/lib/config';
@@ -12,7 +11,6 @@ import LanguageCookie from '@/components/LanguageCookie';
 import JsonLd from '@/components/JsonLd';
 import YandexMetrica from '@/components/YandexMetrica';
 import { Analytics } from '@vercel/analytics/react';
-import { FONT_CLASSES } from '@/app/fonts';
 
 type Props = {
   children: ReactNode;
@@ -108,30 +106,40 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * instead of English that turns Russian a moment after hydration. Exactly one
  * dictionary is serialised into the payload.
  *
- * <html> and <body> are here rather than in the root layout for the same
- * reason — `lang` has to be the URL's language, and the root layout cannot
- * see a segment nested below it.
+ * <html> stays in the root layout — Next will not accept a dynamic segment's
+ * layout as the root, and removing app/layout.tsx 404s this entire tree. The
+ * `lang` attribute it cannot know is set from here instead.
  */
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
   const language = toLocale(locale);
 
   return (
-    <html lang={language} className={FONT_CLASSES} suppressHydrationWarning>
-      <head />
-      <body className="min-h-screen flex flex-col grain-overlay">
-        <ThemeProvider>
-          <TranslationsProvider locale={language} dictionary={getDictionary(locale)}>
-            <LanguageCookie locale={language} />
-            <JsonLd />
-            <AppHeader />
-            {children}
-            <AppFooter />
-          </TranslationsProvider>
-          <Analytics />
-          <YandexMetrica />
-        </ThemeProvider>
-      </body>
-    </html>
+    <TranslationsProvider locale={language} dictionary={getDictionary(locale)}>
+      {/*
+        The root layout owns <html> and cannot see this segment, so it sets no
+        `lang` at all — better than the "en" it used to hardcode on all six
+        locales. This closes the gap without making the tree dynamic: the
+        script runs while the parser is still reading the document, so the
+        attribute is in place before first paint and before hydration, for
+        readers and for any crawler that executes scripts. One that does not is
+        left with hreflang and the content itself, both of which are correct
+        now.
+      */}
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `document.documentElement.lang=${JSON.stringify(language)}`,
+        }}
+      />
+      <LanguageCookie locale={language} />
+      <ThemeProvider>
+        <JsonLd />
+        <AppHeader />
+        {children}
+        <AppFooter />
+        <Analytics />
+        <YandexMetrica />
+      </ThemeProvider>
+    </TranslationsProvider>
   );
 }
