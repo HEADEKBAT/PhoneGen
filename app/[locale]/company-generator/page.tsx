@@ -15,12 +15,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Company Generator — Generate Realistic Company Profiles',
-  fr: 'Générateur d\'entreprise — Créez des profils d\'entreprise réalistes',
-  es: 'Generador de empresas — Cree perfiles empresariales realistas',
-  pt: 'Gerador de empresas — Crie perfis empresariais realistas',
-  de: 'Unternehmens-Generator — Erstellen Sie realistische Firmenprofile',
-  ru: 'Генератор компаний — Создавайте реалистичные профили компаний',
+  en: 'Company Generator',
+  fr: 'Générateur d\'entreprise',
+  es: 'Generador de empresas',
+  pt: 'Gerador de empresas',
+  de: 'Unternehmens-Generator',
+  ru: 'Генератор компаний',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

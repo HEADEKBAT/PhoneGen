@@ -9,8 +9,8 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Phone Number Generator — Generate Valid Phone Numbers',
-  fr: 'Générateur de numéros de téléphone — Numéros valides',
+  en: 'Phone Number Generator',
+  fr: 'Générateur de numéros de téléphone',
   es: 'Generador de números de teléfono — Números válidos',
   pt: 'Gerador de números de telefone — Números válidos',
   de: 'Telefonnummern-Generator — Gültige Nummern',

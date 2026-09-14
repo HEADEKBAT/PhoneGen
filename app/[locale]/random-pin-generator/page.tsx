@@ -9,10 +9,10 @@ type Props = {
 
 const TITLES: Record<string, string> = {
   'en': 'Random PIN Generator — Create Secure Numeric Codes',
-  'ru': 'Генератор PIN-кодов — Создайте безопасные числовые коды',
+  'ru': 'Генератор PIN-кодов',
   'de': 'PIN-Generator — Erstellen Sie sichere Zahlencodes',
   'es': 'Generador de PIN — Cree códigos numéricos seguros',
-  'fr': 'Générateur de PIN — Créez des codes numériques sécurisés',
+  'fr': 'Générateur de PIN',
   'pt': 'Gerador de PIN — Crie códigos numéricos seguros',
 };
 

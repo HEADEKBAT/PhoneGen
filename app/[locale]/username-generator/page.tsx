@@ -15,12 +15,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Username Generator — Create Unique Usernames in 7 Styles',
-  fr: 'Générateur de nom d\'utilisateur — Créez des noms uniques en 7 styles',
-  es: 'Generador de nombres de usuario — Cree nombres únicos en 7 estilos',
-  pt: 'Gerador de nome de usuário — Crie nomes únicos em 7 estilos',
-  de: 'Benutzernamen-Generator — Erstellen Sie einzigartige Namen in 7 Stilen',
-  ru: 'Генератор имен пользователей — Создайте уникальные имена в 7 стилях',
+  en: 'Username Generator',
+  fr: 'Générateur de nom d\'utilisateur',
+  es: 'Generador de nombres de usuario',
+  pt: 'Gerador de nome de usuário',
+  de: 'Benutzernamen-Generator',
+  ru: 'Генератор имен пользователей',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

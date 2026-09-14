@@ -9,12 +9,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  'en': 'Pharmacode Generator — Create Pharmaceutical Barcodes',
-  'ru': 'Pharmacode Generator — Create Pharmaceutical Barcodes',
-  'de': 'Pharmacode Generator — Create Pharmaceutical Barcodes',
-  'es': 'Pharmacode Generator — Create Pharmaceutical Barcodes',
-  'fr': 'Pharmacode Generator — Create Pharmaceutical Barcodes',
-  'pt': 'Pharmacode Generator — Create Pharmaceutical Barcodes',
+  'en': 'Pharmacode Generator',
+  'ru': 'Pharmacode Generator',
+  'de': 'Pharmacode Generator',
+  'es': 'Pharmacode Generator',
+  'fr': 'Pharmacode Generator',
+  'pt': 'Pharmacode Generator',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

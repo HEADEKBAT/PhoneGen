@@ -8,11 +8,11 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  'en': 'Passphrase Generator — Memorable XKCD-Style Passphrases',
-  'ru': 'Генератор кодовых фраз — Запоминающиеся фразы-пароли',
+  'en': 'Passphrase Generator',
+  'ru': 'Генератор кодовых фраз',
   'de': 'Passphrasen-Generator — Einprägsame XKCD-Phrasen',
-  'es': 'Generador de frases de contraseña — Frases memorables',
-  'fr': 'Générateur de phrases de passe — Phrases mémorables',
+  'es': 'Generador de frases de contraseña',
+  'fr': 'Générateur de phrases de passe',
   'pt': 'Gerador de frases secretas — Frases memoráveis',
 };
 

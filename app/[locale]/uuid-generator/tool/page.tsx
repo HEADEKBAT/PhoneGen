@@ -9,11 +9,11 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'UUID Generator — Create UUID v4 & v7 Identifiers Online',
-  fr: 'Générateur d\'UUID — Créez des identifiants UUID v4 et v7 en ligne',
-  es: 'Generador de UUID — Cree identificadores UUID v4 y v7 en línea',
-  de: 'UUID-Generator — Erstellen Sie UUID v4 & v7 Identifikatoren online',
-  pt: 'Gerador de UUID — Crie identificadores UUID v4 e v7 online',
+  en: 'UUID Generator',
+  fr: 'Générateur d\'UUID',
+  es: 'Generador de UUID',
+  de: 'UUID-Generator',
+  pt: 'Gerador de UUID',
   ru: 'Генератор UUID — Создайте UUID v4 и v7 онлайн',
 };
 

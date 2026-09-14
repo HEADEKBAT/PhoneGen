@@ -27,10 +27,10 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Barcode Generator — Generate EAN-13, UPC, Code 128 & More',
+  en: 'Barcode Generator',
   fr: 'Générateur de codes-barres — EAN-13, UPC, Code 128',
-  es: 'Generador de códigos de barras — EAN-13, UPC, Code 128',
-  pt: 'Gerador de códigos de barras — EAN-13, UPC, Code 128',
+  es: 'Generador de códigos de barras',
+  pt: 'Gerador de códigos de barras',
   de: 'Barcode-Generator — EAN-13, UPC, Code 128 & mehr',
   ru: 'Генератор штрихкодов — EAN-13, UPC, Code 128',
 };

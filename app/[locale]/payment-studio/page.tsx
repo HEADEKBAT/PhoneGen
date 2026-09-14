@@ -20,12 +20,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Payment Studio — Test Card Generator, BIN Lookup & Payment Testing Tools',
-  ru: 'Payment Studio — Генератор тестовых карт, BIN поиск и инструменты тестирования',
-  de: 'Payment Studio — Testkarten-Generator, BIN-Suche und Zahlungstest-Tools',
-  es: 'Payment Studio — Generador de tarjetas de prueba, BIN lookup y herramientas',
-  fr: 'Payment Studio — Générateur de cartes de test, recherche BIN et outils',
-  pt: 'Payment Studio — Gerador de cartões de teste, BIN lookup e ferramentas',
+  en: 'Test Card Numbers & BIN Tools — Payment Studio',
+  ru: 'Тестовые карты и BIN — Payment Studio',
+  de: 'Testkarten und BIN-Tools — Payment Studio',
+  es: 'Tarjetas de prueba y BIN — Payment Studio',
+  fr: 'Cartes de test et outils BIN — Payment Studio',
+  pt: 'Cartões de teste e BIN — Payment Studio',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

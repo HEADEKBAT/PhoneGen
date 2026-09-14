@@ -9,11 +9,11 @@ type Props = {
 
 const TITLES: Record<string, string> = {
   'en': 'Session Secret Generator — Secure Session Keys',
-  'ru': 'Генератор секретов сессий — Безопасные ключи сессий',
-  'de': 'Session-Secret-Generator — Sichere Sitzungsschlüssel',
-  'es': 'Generador de secretos de sesión — Claves de sesión seguras',
-  'fr': 'Générateur de secret de session — Clés de session sécurisées',
-  'pt': 'Gerador de segredos de sessão — Chaves de sessão seguras',
+  'ru': 'Генератор секретов сессий',
+  'de': 'Session-Secret-Generator',
+  'es': 'Generador de secretos de sesión',
+  'fr': 'Générateur de secret de session',
+  'pt': 'Gerador de segredos de sessão',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

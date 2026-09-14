@@ -16,12 +16,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Address Generator — Generate Realistic Addresses Worldwide',
-  fr: 'Générateur d\'adresses — Créez des adresses réalistes dans le monde entier',
-  es: 'Generador de direcciones — Cree direcciones realistas en todo el mundo',
-  pt: 'Gerador de endereços — Crie endereços realistas em todo o mundo',
-  de: 'Adressgenerator — Erstellen Sie realistische Adressen weltweit',
-  ru: 'Генератор адресов — Создавайте реалистичные адреса по всему миру',
+  en: 'Address Generator',
+  fr: 'Générateur d\'adresses',
+  es: 'Generador de direcciones',
+  pt: 'Gerador de endereços',
+  de: 'Adressgenerator',
+  ru: 'Генератор адресов',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

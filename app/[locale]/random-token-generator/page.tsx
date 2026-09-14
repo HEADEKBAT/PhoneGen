@@ -8,12 +8,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  'en': 'Random Token Generator — Auth Tokens & One-Time Codes',
+  'en': 'Random Token Generator',
   'ru': 'Генератор случайных токенов — Токены авторизации',
   'de': 'Token-Generator — Auth-Tokens und Einmalcodes',
-  'es': 'Generador de tokens aleatorios — Tokens de autenticación',
-  'fr': 'Générateur de jetons aléatoires — Jetons d’authentification',
-  'pt': 'Gerador de tokens aleatórios — Tokens de autenticação',
+  'es': 'Generador de tokens aleatorios',
+  'fr': 'Générateur de jetons aléatoires',
+  'pt': 'Gerador de tokens aleatórios',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

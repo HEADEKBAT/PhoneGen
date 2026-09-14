@@ -8,12 +8,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  'en': 'Password Generator — Create Strong Random Passwords',
-  'ru': 'Генератор паролей — Создайте надежные случайные пароли',
-  'de': 'Passwort-Generator — Erstellen Sie starke Zufallspasswörter',
-  'es': 'Generador de contraseñas — Cree contraseñas seguras',
-  'fr': 'Générateur de mots de passe — Créez des mots de passe forts',
-  'pt': 'Gerador de senhas — Crie senhas fortes e aleatórias',
+  'en': 'Password Generator',
+  'ru': 'Генератор паролей',
+  'de': 'Passwort-Generator',
+  'es': 'Generador de contraseñas',
+  'fr': 'Générateur de mots de passe',
+  'pt': 'Gerador de senhas',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

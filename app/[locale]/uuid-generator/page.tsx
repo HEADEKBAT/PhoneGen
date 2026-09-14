@@ -9,8 +9,8 @@ type Props = {
 
 const TITLES: Record<string, string> = {
   'en': 'UUID Generator — Create Unique Identifiers Online',
-  'ru': 'Генератор UUID — Создайте уникальные идентификаторы',
-  'de': 'UUID-Generator — Erstellen Sie eindeutige Identifikatoren',
+  'ru': 'Генератор UUID',
+  'de': 'UUID-Generator',
   'es': 'Generador de UUID — Cree identificadores únicos',
   'fr': 'Générateur d’UUID — Créez des identifiants uniques',
   'pt': 'Gerador de UUID — Crie identificadores únicos',

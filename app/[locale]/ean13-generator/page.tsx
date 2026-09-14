@@ -9,12 +9,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  'en': 'EAN-13 Generator — Create Valid EAN-13 Barcodes Online',
-  'ru': 'EAN-13 Generator — Create Valid EAN-13 Barcodes Online',
-  'de': 'EAN-13 Generator — Create Valid EAN-13 Barcodes Online',
-  'es': 'EAN-13 Generator — Create Valid EAN-13 Barcodes Online',
-  'fr': 'EAN-13 Generator — Create Valid EAN-13 Barcodes Online',
-  'pt': 'EAN-13 Generator — Create Valid EAN-13 Barcodes Online',
+  'en': 'EAN-13 Generator',
+  'ru': 'EAN-13 Generator',
+  'de': 'EAN-13 Generator',
+  'es': 'EAN-13 Generator',
+  'fr': 'EAN-13 Generator',
+  'pt': 'EAN-13 Generator',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

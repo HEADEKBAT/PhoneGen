@@ -21,12 +21,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Credit Card Generator — Generate Test Card Numbers for 15+ Networks',
-  ru: 'Генератор кредитных карт — Тестовые номера для 15+ платежных систем',
-  de: 'Kreditkartengenerator — Testkartennummern für 15+ Netzwerke',
-  es: 'Generador de tarjetas de crédito — Números de prueba para 15+ redes',
-  fr: 'Générateur de cartes de crédit — Numéros de test pour 15+ réseaux',
-  pt: 'Gerador de cartões de crédito — Números de teste para 15+ redes',
+  en: 'Credit Card Generator',
+  ru: 'Генератор кредитных карт',
+  de: 'Kreditkartengenerator',
+  es: 'Generador de tarjetas de crédito',
+  fr: 'Générateur de cartes de crédit',
+  pt: 'Gerador de cartões de crédito',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

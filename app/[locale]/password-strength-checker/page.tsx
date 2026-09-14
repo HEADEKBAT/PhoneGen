@@ -8,12 +8,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  'en': 'Password Strength Checker — Analyze Password Security',
+  'en': 'Password Strength Checker',
   'ru': 'Проверка надежности пароля — Анализ безопасности',
   'de': 'Passwort-Stärke-Prüfung — Sicherheitsanalyse',
   'es': 'Comprobador de seguridad de contraseña — Análisis',
   'fr': 'Vérificateur de force de mot de passe — Analyse',
-  'pt': 'Verificador de força de senha — Análise de segurança',
+  'pt': 'Verificador de força de senha',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

@@ -9,12 +9,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  'en': 'UPC Generator — Create UPC-A &amp; UPC-E Barcodes Online',
-  'ru': 'UPC Generator — Create UPC-A &amp; UPC-E Barcodes Online',
-  'de': 'UPC Generator — Create UPC-A &amp; UPC-E Barcodes Online',
-  'es': 'UPC Generator — Create UPC-A &amp; UPC-E Barcodes Online',
-  'fr': 'UPC Generator — Create UPC-A &amp; UPC-E Barcodes Online',
-  'pt': 'UPC Generator — Create UPC-A &amp; UPC-E Barcodes Online',
+  'en': 'UPC Generator',
+  'ru': 'UPC Generator',
+  'de': 'UPC Generator',
+  'es': 'UPC Generator',
+  'fr': 'UPC Generator',
+  'pt': 'UPC Generator',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

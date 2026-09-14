@@ -16,12 +16,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'QR Code Generator — Create Custom QR Codes Online Free',
-  fr: 'Générateur de QR Code — Créez des codes QR personnalisés gratuitement',
-  es: 'Generador de Códigos QR — Cree códigos QR personalizados gratis',
-  pt: 'Gerador de QR Code — Crie códigos QR personalizados grátis',
-  de: 'QR-Code-Generator — Erstellen Sie individuelle QR-Codes kostenlos',
-  ru: 'Генератор QR-кодов — Создавайте кастомные QR-коды онлайн бесплатно',
+  en: 'QR Code Generator',
+  fr: 'Générateur de QR Code',
+  es: 'Generador de Códigos QR',
+  pt: 'Gerador de QR Code',
+  de: 'QR-Code-Generator',
+  ru: 'Генератор QR-кодов',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

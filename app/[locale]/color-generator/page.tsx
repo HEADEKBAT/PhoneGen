@@ -9,12 +9,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Color Studio — Professional Color Palette & Gradient Generator',
-  fr: 'Color Studio — Générateur de palettes de couleurs et dégradés',
-  es: 'Color Studio — Generador de paletas de colores y degradados',
-  pt: 'Color Studio — Gerador de paletas de cores e gradientes',
-  de: 'Color Studio — Farbpaletten- und Verlaufsgenerator',
-  ru: 'Color Studio — Генератор цветовых палитр и градиентов',
+  en: 'Color Generator — Palettes & Converters',
+  fr: 'Générateur de couleurs — palettes et conversion',
+  es: 'Generador de colores — paletas y conversión',
+  pt: 'Gerador de cores — paletas e conversão',
+  de: 'Farbgenerator — Paletten und Konverter',
+  ru: 'Генератор цветов — палитры и конвертеры',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

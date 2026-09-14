@@ -9,12 +9,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Media Studio — Free Online Video Converter, Compressor & Editor',
-  fr: 'Media Studio — Convertisseur, compresseur et éditeur vidéo gratuit en ligne',
-  es: 'Media Studio — Conversor, compresor y editor de vídeo gratuito en línea',
-  pt: 'Media Studio — Conversor, compressor e editor de vídeo gratuito online',
-  de: 'Media Studio — Kostenloser Online-Videokonverter, -kompressor und -editor',
-  ru: 'Media Studio — Бесплатный онлайн-конвертер, компрессор и редактор видео',
+  en: 'Free Online Video Tools — Media Studio',
+  fr: 'Outils vidéo en ligne — Media Studio',
+  es: 'Herramientas de vídeo online — Media Studio',
+  pt: 'Ferramentas de vídeo online — Media Studio',
+  de: 'Online-Videotools — Media Studio',
+  ru: 'Онлайн-инструменты для видео — Media Studio',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

@@ -9,12 +9,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Accessibility Color Checker — WCAG Contrast & Color Accessibility Tool',
-  fr: 'Vérificateur de couleurs d\'accessibilité — Outil de contraste et accessibilité WCAG',
-  es: 'Verificador de accesibilidad de color — Herramienta de contraste WCAG',
-  pt: 'Verificador de acessibilidade de cores — Ferramenta de contraste WCAG',
-  de: 'Barrierefreiheits-Farbprüfer — WCAG-Kontrast- und Farbzugänglichkeitstool',
-  ru: 'Проверка цветов на доступность — Инструмент контраста и доступности WCAG',
+  en: 'Accessibility Color Checker',
+  fr: 'Vérificateur de couleurs d\'accessibilité',
+  es: 'Verificador de accesibilidad de color',
+  pt: 'Verificador de acessibilidade de cores',
+  de: 'Barrierefreiheits-Farbprüfer',
+  ru: 'Проверка цветов на доступность',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

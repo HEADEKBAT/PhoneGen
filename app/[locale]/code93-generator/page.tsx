@@ -9,12 +9,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  'en': 'Code 93 Generator — Create Compact Industrial Barcodes',
-  'ru': 'Code 93 Generator — Create Compact Industrial Barcodes',
-  'de': 'Code 93 Generator — Create Compact Industrial Barcodes',
-  'es': 'Code 93 Generator — Create Compact Industrial Barcodes',
-  'fr': 'Code 93 Generator — Create Compact Industrial Barcodes',
-  'pt': 'Code 93 Generator — Create Compact Industrial Barcodes',
+  'en': 'Code 93 Generator',
+  'ru': 'Code 93 Generator',
+  'de': 'Code 93 Generator',
+  'es': 'Code 93 Generator',
+  'fr': 'Code 93 Generator',
+  'pt': 'Code 93 Generator',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

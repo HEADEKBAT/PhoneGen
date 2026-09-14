@@ -9,12 +9,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  'en': 'GS1-128 Generator — Create Supply Chain Barcodes with AIs',
-  'ru': 'GS1-128 Generator — Create Supply Chain Barcodes with AIs',
-  'de': 'GS1-128 Generator — Create Supply Chain Barcodes with AIs',
-  'es': 'GS1-128 Generator — Create Supply Chain Barcodes with AIs',
-  'fr': 'GS1-128 Generator — Create Supply Chain Barcodes with AIs',
-  'pt': 'GS1-128 Generator — Create Supply Chain Barcodes with AIs',
+  'en': 'GS1-128 Generator',
+  'ru': 'GS1-128 Generator',
+  'de': 'GS1-128 Generator',
+  'es': 'GS1-128 Generator',
+  'fr': 'GS1-128 Generator',
+  'pt': 'GS1-128 Generator',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

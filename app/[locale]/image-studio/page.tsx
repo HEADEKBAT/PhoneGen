@@ -9,12 +9,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Image Studio — Free Online Image Tools: Background Remover, Upscaler & Editor',
-  fr: 'Studio d\'image — Outils d\'image gratuits en ligne : Suppression d\'arrière-plan, agrandissement et édition',
-  es: 'Image Studio — Herramientas de imagen gratuitas en línea: eliminación de fondos, ampliación y edición',
-  pt: 'Image Studio — Ferramentas de imagem gratuitas online: remoção de fundo, upscaling e edição',
-  de: 'Image Studio — Kostenlose Online-Bildtools: Hintergrund entfernen, Hochskalieren und Bearbeiten',
-  ru: 'Image Studio — Бесплатные онлайн-инструменты для изображений: удаление фона, увеличение и редактирование',
+  en: 'Free Online Image Tools — Image Studio',
+  fr: 'Outils d\'image en ligne — Image Studio',
+  es: 'Herramientas de imagen online — Image Studio',
+  pt: 'Ferramentas de imagem online — Image Studio',
+  de: 'Online-Bildtools — Image Studio',
+  ru: 'Онлайн-инструменты для изображений — Image Studio',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

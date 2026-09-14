@@ -9,11 +9,11 @@ type Props = {
 
 const TITLES: Record<string, string> = {
   'en': 'JWT Secret Generator — Create HMAC Signing Secrets',
-  'ru': 'Генератор JWT секретов — Создайте секреты подписи HMAC',
-  'de': 'JWT-Secret-Generator — Erstellen Sie HMAC-Signaturgeheimnisse',
-  'es': 'Generador de secretos JWT — Cree secretos de firma HMAC',
-  'fr': 'Générateur de secret JWT — Créez des secrets de signature',
-  'pt': 'Gerador de segredos JWT — Crie segredos de assinatura',
+  'ru': 'Генератор JWT секретов',
+  'de': 'JWT-Secret-Generator',
+  'es': 'Generador de secretos JWT',
+  'fr': 'Générateur de secret JWT',
+  'pt': 'Gerador de segredos JWT',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

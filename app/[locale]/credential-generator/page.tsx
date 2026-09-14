@@ -24,12 +24,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Credential Generator — Password, PIN, Secret & API Key Generator',
-  fr: 'Générateur de mots de passe — PIN, secrets et clés API',
-  es: 'Generador de credenciales — Contraseñas, PIN, secretos y claves API',
-  pt: 'Gerador de credenciais — Senhas, PIN, segredos e chaves de API',
-  de: 'Passwort-Generator — PIN, Geheimnisse und API-Schlüssel',
-  ru: 'Генератор учетных данных — Пароли, PIN, секреты и API ключи',
+  en: 'Credential Generator',
+  fr: 'Générateur de mots de passe',
+  es: 'Generador de credenciales',
+  pt: 'Gerador de credenciais',
+  de: 'Passwort-Generator',
+  ru: 'Генератор учетных данных',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

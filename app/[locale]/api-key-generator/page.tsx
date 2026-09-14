@@ -10,7 +10,7 @@ type Props = {
 const TITLES: Record<string, string> = {
   'en': 'API Key Generator — Create Test API Keys Online',
   'ru': 'Генератор API ключей — Создайте тестовые ключи API',
-  'de': 'API-Key-Generator — Erstellen Sie Test-API-Schlüssel',
+  'de': 'API-Key-Generator',
   'es': 'Generador de claves API — Cree claves de prueba',
   'fr': 'Générateur de clés API — Créez des clés de test',
   'pt': 'Gerador de chaves de API — Crie chaves de teste',

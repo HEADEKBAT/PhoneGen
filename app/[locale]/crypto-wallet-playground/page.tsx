@@ -17,12 +17,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Crypto Wallet Playground — Free Online Web3 Testing Tools',
-  fr: 'Crypto Wallet Playground — Outils de test Web3 gratuits en ligne',
-  es: 'Crypto Wallet Playground — Herramientas de prueba Web3 gratuitas',
-  pt: 'Crypto Wallet Playground — Ferramentas de teste Web3 grátis',
-  de: 'Crypto Wallet Playground — Kostenlose Online-Web3-Testtools',
-  ru: 'Crypto Wallet Playground — Бесплатные онлайн инструменты для Web3 тестирования',
+  en: 'Crypto Wallet Generator & Validator — Playground',
+  fr: 'Générer et valider un portefeuille — Playground',
+  es: 'Generar y validar monederos cripto — Playground',
+  pt: 'Gerar e validar carteiras cripto — Playground',
+  de: 'Krypto-Wallet erzeugen und prüfen — Playground',
+  ru: 'Генератор и проверка криптокошельков — Playground',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

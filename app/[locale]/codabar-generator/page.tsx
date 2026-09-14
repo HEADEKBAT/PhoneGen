@@ -9,12 +9,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  'en': 'Codabar Generator — Create Library &amp; Blood Bank Barcodes',
-  'ru': 'Codabar Generator — Create Library &amp; Blood Bank Barcodes',
-  'de': 'Codabar Generator — Create Library &amp; Blood Bank Barcodes',
-  'es': 'Codabar Generator — Create Library &amp; Blood Bank Barcodes',
-  'fr': 'Codabar Generator — Create Library &amp; Blood Bank Barcodes',
-  'pt': 'Codabar Generator — Create Library &amp; Blood Bank Barcodes',
+  'en': 'Codabar Generator',
+  'ru': 'Codabar Generator',
+  'de': 'Codabar Generator',
+  'es': 'Codabar Generator',
+  'fr': 'Codabar Generator',
+  'pt': 'Codabar Generator',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

@@ -9,12 +9,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  'en': 'ISBN Generator — Create Book Barcodes (ISBN-13 &amp; ISBN-10)',
-  'ru': 'ISBN Generator — Create Book Barcodes (ISBN-13 &amp; ISBN-10)',
-  'de': 'ISBN Generator — Create Book Barcodes (ISBN-13 &amp; ISBN-10)',
-  'es': 'ISBN Generator — Create Book Barcodes (ISBN-13 &amp; ISBN-10)',
-  'fr': 'ISBN Generator — Create Book Barcodes (ISBN-13 &amp; ISBN-10)',
-  'pt': 'ISBN Generator — Create Book Barcodes (ISBN-13 &amp; ISBN-10)',
+  'en': 'ISBN Generator',
+  'ru': 'ISBN Generator',
+  'de': 'ISBN Generator',
+  'es': 'ISBN Generator',
+  'fr': 'ISBN Generator',
+  'pt': 'ISBN Generator',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

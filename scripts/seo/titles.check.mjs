@@ -30,10 +30,11 @@ import { dirname, join } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
-/* Titles live in two places: the registries under lib/config, and one manifest
-   per interactive tool under tools/. Scanning only the first missed 119 of
-   them, including the site's longest at 81 characters. */
-const SOURCES = [join(ROOT, 'lib', 'config'), join(ROOT, 'tools')];
+/* Titles live in three places, and every one of them had drifted past the
+   limit: the registries under lib/config, one manifest per interactive tool
+   under tools/, and a `TITLES` map inside the page file for each product
+   landing. Checking only the first found 166 of 285. */
+const SOURCES = [join(ROOT, 'lib', 'config'), join(ROOT, 'tools'), join(ROOT, 'app')];
 
 function walk(dir, out = []) {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -59,10 +60,23 @@ for (const file of SOURCES.flatMap((dir) => walk(dir))) {
   const src = readFileSync(file, 'utf8');
   const where = file.slice(ROOT.length + 1).split('\\').join('/');
 
-  /* `(?<![A-Za-z])` so this matches `title:` but not `heroTitle:` or
-     `defaultTitle:`, which are headings and fallbacks rather than <title>. */
-  for (const match of src.matchAll(/(?<![A-Za-z])title:\s*'((?:[^'\\]|\\.)*)'/g)) {
-    const text = match[1].replace(/\\'/g, "'").replace(/\\\\/g, '\\');
+  /* Two shapes:
+       • `title: '…'` — a registry or manifest field. `(?<![A-Za-z])` so this
+         matches `title:` but not `heroTitle:` or `defaultTitle:`, which are
+         headings and fallbacks rather than <title>.
+       • the entries of a `const TITLES: Record<string, string>` map, keyed by
+         locale, in a product landing page. */
+  const titlesMap = src.match(/const TITLES: Record<string, string> = \{([\s\S]*?)\n\};/);
+  const candidates = [
+    ...[...src.matchAll(/(?<![A-Za-z])title:\s*'((?:[^'\\]|\\.)*)'/g)].map((m) => m[1]),
+    ...(titlesMap
+      /* The locale key is quoted in some of these files and bare in others. */
+      ? [...titlesMap[1].matchAll(/\n  '?[a-z]{2}'?: '((?:[^'\\]|\\.)*)'/g)].map((m) => m[1])
+      : []),
+  ];
+
+  for (const raw of candidates) {
+    const text = raw.replace(/\\'/g, "'").replace(/\\\\/g, '\\');
     checked++;
 
     if (ALLOWED.has(text)) continue;

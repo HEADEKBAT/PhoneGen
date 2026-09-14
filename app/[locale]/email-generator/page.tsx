@@ -16,11 +16,11 @@ type Props = {
 
 const TITLES: Record<string, string> = {
   en: 'Email Generator — Create Realistic Email Addresses',
-  fr: 'Générateur d\'email — Créez des adresses email réalistes',
-  es: 'Generador de emails — Cree direcciones de correo realistas',
-  pt: 'Gerador de email — Crie endereços de email realistas',
-  de: 'E-Mail-Generator — Erstellen Sie realistische E-Mail-Adressen',
-  ru: 'Генератор email — Создавайте реалистичные email адреса',
+  fr: 'Générateur d\'email',
+  es: 'Generador de emails',
+  pt: 'Gerador de email',
+  de: 'E-Mail-Generator',
+  ru: 'Генератор email',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

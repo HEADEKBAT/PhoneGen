@@ -9,12 +9,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  'en': 'ISSN Generator — Create Serial Publication Barcodes',
-  'ru': 'ISSN Generator — Create Serial Publication Barcodes',
-  'de': 'ISSN Generator — Create Serial Publication Barcodes',
-  'es': 'ISSN Generator — Create Serial Publication Barcodes',
-  'fr': 'ISSN Generator — Create Serial Publication Barcodes',
-  'pt': 'ISSN Generator — Create Serial Publication Barcodes',
+  'en': 'ISSN Generator',
+  'ru': 'ISSN Generator',
+  'de': 'ISSN Generator',
+  'es': 'ISSN Generator',
+  'fr': 'ISSN Generator',
+  'pt': 'ISSN Generator',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

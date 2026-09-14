@@ -9,12 +9,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  'en': 'Check Digit Calculator — Calculate Barcode Check Digits Online',
-  'ru': 'Check Digit Calculator — Calculate Barcode Check Digits Online',
-  'de': 'Check Digit Calculator — Calculate Barcode Check Digits Online',
-  'es': 'Check Digit Calculator — Calculate Barcode Check Digits Online',
-  'fr': 'Check Digit Calculator — Calculate Barcode Check Digits Online',
-  'pt': 'Check Digit Calculator — Calculate Barcode Check Digits Online',
+  'en': 'Check Digit Calculator',
+  'ru': 'Check Digit Calculator',
+  'de': 'Check Digit Calculator',
+  'es': 'Check Digit Calculator',
+  'fr': 'Check Digit Calculator',
+  'pt': 'Check Digit Calculator',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

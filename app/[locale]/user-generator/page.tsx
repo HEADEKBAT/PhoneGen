@@ -16,12 +16,12 @@ type Props = {
 };
 
 const TITLES: Record<string, string> = {
-  en: 'Fake User Generator — Generate Realistic Test Users',
+  en: 'Fake User Generator',
   fr: "Générateur d'utilisateurs fictifs — Créez des profils réalistes",
-  es: 'Generador de usuarios ficticios — Cree perfiles realistas',
-  pt: 'Gerador de usuários fictícios — Crie perfis realistas',
-  de: 'Benutzer-Generator — Erstellen Sie realistische Testprofile',
-  ru: 'Генератор пользователей — Создайте реалистичные профили',
+  es: 'Generador de usuarios ficticios',
+  pt: 'Gerador de usuários fictícios',
+  de: 'Benutzer-Generator',
+  ru: 'Генератор пользователей',
 };
 
 const DESCRIPTIONS: Record<string, string> = {

@@ -9,11 +9,11 @@ type Props = {
 
 const TITLES: Record<string, string> = {
   'en': 'Webhook Secret Generator — Create Signing Secrets',
-  'ru': 'Генератор секретов вебхуков — Создайте секреты подписи',
-  'de': 'Webhook-Secret-Generator — Erstellen Sie Signaturgeheimnisse',
-  'es': 'Generador de secretos de webhook — Cree secretos de firma',
-  'fr': 'Générateur de secret webhook — Créez des secrets de signature',
-  'pt': 'Gerador de segredos de webhook — Crie segredos de assinatura',
+  'ru': 'Генератор секретов вебхуков',
+  'de': 'Webhook-Secret-Generator',
+  'es': 'Generador de secretos de webhook',
+  'fr': 'Générateur de secret webhook',
+  'pt': 'Gerador de segredos de webhook',
 };
 
 const DESCRIPTIONS: Record<string, string> = {
