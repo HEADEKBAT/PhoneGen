@@ -8,7 +8,7 @@
  * translation tables.
  */
 
-import { getLocalizedCountryName } from './countryRegistry';
+import { getCountryDisplayName } from './i18n/server';
 import { generateLocaleAlternates, BASE_URL } from './seo';
 
 /* ── Title templates per locale ─────────────────────────────────────── */
@@ -74,7 +74,7 @@ export function generatePhonePageMetadata(
   country: string,
   product: string = 'phone-generator',
 ): PhonePageMetadata {
-  const name = getLocalizedCountryName(locale, country);
+  const name = getCountryDisplayName(locale, country);
   const title = (TITLE_TEMPLATES[locale] || TITLE_TEMPLATES.en)(name);
   const description =
     (DESC_TEMPLATES[locale] || DESC_TEMPLATES.en)(name);

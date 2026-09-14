@@ -16,6 +16,7 @@ import de from './de.json';
 import es from './es.json';
 import fr from './fr.json';
 import pt from './pt.json';
+import { getLocalizedCountryName } from '../countryRegistry';
 
 const translations: Record<string, Record<string, unknown>> = { ru, en, de, es, fr, pt };
 
@@ -49,4 +50,21 @@ export function getT(locale: string): (key: string, params?: Record<string, stri
     }
     return text;
   };
+}
+
+/**
+ * Localized country name, dictionary first.
+ *
+ * `lib/i18n/*.json` carries 106 hand-written country names; the other ~140
+ * libphonenumber regions fall through to `Intl.DisplayNames`. The client has
+ * always resolved names this way (see lib/i18n/countryNames.ts), so page
+ * headings said «США» while the <title>, built from `Intl.DisplayNames` alone,
+ * said «Соединенные Штаты». Both go through here now.
+ */
+export function getCountryDisplayName(locale: string, isoCode: string): string {
+  const iso = isoCode.toUpperCase();
+  const key = `countries.${iso}`;
+  const translated = getT(locale)(key);
+  if (translated !== key) return translated;
+  return getLocalizedCountryName(locale, iso);
 }

@@ -5,9 +5,8 @@ import { useState, useEffect, useCallback, useTransition } from 'react';
 import GeneratorControls from './GeneratorControls';
 import PhoneList from './PhoneList';
 import InfoCard from './InfoCard';
-import { getCountry, generatePhoneNumbers, PhoneFormat, GenerationMode } from '@/lib/phoneGenerator';
+import { generatePhoneNumbers, PhoneFormat, GenerationMode } from '@/lib/phoneGenerator';
 import { useTranslations } from '@/lib/i18n';
-import { getCountryName } from '@/lib/i18n/countryNames';
 import { useCountryStore, useRecentlyUsedStore } from '@/lib/store';
 import CountrySelect from './CountrySelect';
 import { Loader2 } from 'lucide-react';
@@ -25,7 +24,7 @@ export default function MainContent({
   initialFormat?: PhoneFormat | null;
   initialMode?: GenerationMode | null;
 }) {
-  const { t, language } = useTranslations();
+  const { t } = useTranslations();
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -45,7 +44,6 @@ export default function MainContent({
     return '/generate';
   })();
   const addRecentlyUsed = useRecentlyUsedStore((state) => state.addRecentlyUsed);
-  const country = getCountry(selectedCountry);
   const [quantity, setQuantity] = useState(initialCount || 10);
   const [format, setFormat] = useState<PhoneFormat>(initialFormat || 'international');
   const [mode, setMode] = useState<GenerationMode>(initialMode || 'valid');
@@ -118,17 +116,11 @@ export default function MainContent({
   return (
     <main className="flex-1">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 py-8 space-y-6">
-        {/* Header Section */}
-        <section aria-labelledby="country-heading">
-          <div className="space-y-1">
-            <h1 id="country-heading" className="font-heading text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
-              {t('mainContent.heading', { country: getCountryName(t, language, country.code) })}
-            </h1>
-            <p className="text-sm text-muted-foreground">
-              {t('mainContent.subtitle', { code: country.code, country: getCountryName(t, language, country.code) })}
-            </p>
-          </div>
-        </section>
+        {/* The heading lives in app/[locale]/phone-generator/[country]/header.tsx.
+            It used to be here, inside a component loaded with `ssr: false`, so
+            every country URL served HTML with no <h1> and no text — see that
+            file for the full story. Rendering it on the server is the only
+            change; the markup is identical. */}
 
         {/* Country Select */}
         <div className="max-w-md">

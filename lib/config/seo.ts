@@ -98,7 +98,16 @@ function stripTrailingSlash(p: string): string {
   return p.endsWith('/') ? p.slice(0, -1) : p;
 }
 
-function generateHreflang(
+/**
+ * Canonical + hreflang alternates for one page.
+ *
+ * Exported because `lib/seo.ts` used to carry a second, slightly different
+ * implementation: it emitted the six locales but no `x-default`, so the About
+ * page and all ~1470 phone-generator country pages told Google nothing about
+ * which version to serve a visitor whose language matches none of the six.
+ * There is one implementation now.
+ */
+export function generateHreflang(
   locale: string,
   path: string,
 ): { canonical: string; languages: Record<string, string> } {

@@ -4,6 +4,7 @@ import { isSupportedRegion } from '@/lib/countryRegistry';
 import { LOCALES } from '@/lib/config';
 import { generatePhonePageMetadata } from '@/lib/generatePhoneMetadata';
 import { PhoneGeneratorLoader } from '@/components/dynamic';
+import CountryPageHeader from './header';
 
 type Props = {
   params: Promise<{ locale: string; country: string }>;
@@ -68,5 +69,10 @@ export default async function CountryPhonePage({ params }: Props) {
     notFound();
   }
 
-  return <PhoneGeneratorLoader country={upper} locale={locale} />;
+  return (
+    <>
+      <CountryPageHeader locale={locale} country={upper} />
+      <PhoneGeneratorLoader country={upper} locale={locale} />
+    </>
+  );
 }
