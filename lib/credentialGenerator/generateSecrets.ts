@@ -1,264 +1,238 @@
 /**
- * Secrets generator.
- * Generates various developer-oriented secret types:
- * - UUID v4
- * - JWT Secret (64 bytes, Base64URL)
- * - API Keys (pk_live/sk_test/ghp_/etc.)
- * - Webhook Secret (whsec_)
- * - Hex string of arbitrary length
- * - Base64 string of arbitrary length
+ * Developer secrets: UUIDs, signing keys, API-key-shaped strings, tokens.
+ *
+ * Everything here draws from `crypto.getRandomValues` by way of `./random`,
+ * which rejects the biased tail of the range instead of folding it back with
+ * `%`.
  */
 
-/* ── Helpers ──────────────────────────────────────────────────────────── */
+import { pickChar, randomString } from './random';
 
-const HEX_CHARS = '0123456789abcdef';
-const BASE64_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+/* ── Alphabets ───────────────────────────────────────────────────────── */
 
-function getRandomValues(length: number): Uint32Array {
-  const buf = new Uint32Array(length);
-  crypto.getRandomValues(buf);
-  return buf;
+const HEX = '0123456789abcdef';
+const ALNUM = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+/* The two base64 alphabets are genuinely different and are not
+   interchangeable. RFC 4648 §4 ends in `+/`; §5 ("base64url") ends in `-_` so
+   the value survives a URL or a filename. The file used to hold only the URL
+   alphabet and build the standard one as `BASE64_URL + '+/'` — a 66-character
+   mixture that is valid under neither RFC, so a token generated as "base64"
+   could contain `-` or `_` and no decoder would take it. */
+const BASE64_STD = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+const BASE64_URL = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+
+/** Base64url encoding of raw bytes, unpadded (RFC 4648 §5). */
+function base64UrlEncode(bytes: Uint8Array): string {
+  let out = '';
+  for (let i = 0; i < bytes.length; i += 3) {
+    const b1 = bytes[i];
+    const b2 = i + 1 < bytes.length ? bytes[i + 1] : 0;
+    const b3 = i + 2 < bytes.length ? bytes[i + 2] : 0;
+
+    out += BASE64_URL[b1 >> 2];
+    out += BASE64_URL[((b1 & 0x03) << 4) | (b2 >> 4)];
+    if (i + 1 < bytes.length) out += BASE64_URL[((b2 & 0x0f) << 2) | (b3 >> 6)];
+    if (i + 2 < bytes.length) out += BASE64_URL[b3 & 0x3f];
+  }
+  return out;
 }
 
-function pick(set: string, rand: number): string {
-  return set[rand % set.length];
+function randomBytes(count: number): Uint8Array {
+  const bytes = new Uint8Array(count);
+  crypto.getRandomValues(bytes);
+  return bytes;
 }
 
-function hexByte(): string {
-  const buf = new Uint8Array(1);
-  crypto.getRandomValues(buf);
-  return buf[0].toString(16).padStart(2, '0');
+function formatUuid(bytes: Uint8Array): string {
+  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
 }
 
-/* ── Generators ───────────────────────────────────────────────────────── */
+/* ── UUID ────────────────────────────────────────────────────────────── */
 
 /**
- * UUID v4 (random).
- * Format: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
- * Where y is one of [8, 9, a, b] (RFC 4122 variant)
+ * UUID v4 — 122 random bits (RFC 9562 §5.4).
  */
 export function generateUUID(): string {
-  const bytes = new Uint8Array(16);
-  crypto.getRandomValues(bytes);
-
-  // Set version 4 (4 most significant bits of byte 6 = 0100)
-  bytes[6] = (bytes[6] & 0x0f) | 0x40;
-  // Set variant (2 most significant bits of byte 8 = 10)
-  bytes[8] = (bytes[8] & 0x3f) | 0x80;
-
-  // Format as hex with dashes
-  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
+  const bytes = randomBytes(16);
+  bytes[6] = (bytes[6] & 0x0f) | 0x40; // version 4
+  bytes[8] = (bytes[8] & 0x3f) | 0x80; // variant 10
+  return formatUuid(bytes);
 }
 
-/**
- * JWT Secret (random bytes encoded as Base64URL).
- * @param byteLength Number of random bytes (default 64 for HS256)
- */
-export function generateJWTSecret(byteLength: number = 64): string {
-  const bytes = new Uint8Array(byteLength);
-  crypto.getRandomValues(bytes);
+/* UUID v7 monotonicity state. See the comment on `generateUUIDv7`. */
+let lastTimestamp = -1;
+let sequence = 0;
 
-  // Convert to Base64URL
-  let result = '';
-  for (let i = 0; i < bytes.length; i += 3) {
-    const b1 = bytes[i];
-    const b2 = i + 1 < bytes.length ? bytes[i + 1] : 0;
-    const b3 = i + 2 < bytes.length ? bytes[i + 2] : 0;
-
-    result += BASE64_CHARS[b1 >> 2];
-    result += BASE64_CHARS[((b1 & 0x3) << 4) | (b2 >> 4)];
-    if (i + 1 < bytes.length) {
-      result += BASE64_CHARS[((b2 & 0xf) << 2) | (b3 >> 6)];
-    }
-    if (i + 2 < bytes.length) {
-      result += BASE64_CHARS[b3 & 0x3f];
-    }
-  }
-
-  return result;
-}
+/** A v7 counter is 12 bits wide: it lives in `rand_a`, bytes 6–7 minus version. */
+const SEQUENCE_MAX = 0x0fff;
 
 /**
- * API Key generator. Creates realistic-looking test API keys.
- * NOTE: All keys are fake — for testing/development only.
- * @param type The key type: 'pk_live' | 'sk_test' | 'sk_live' | 'ghp' | 'ghpat'
- */
-export function generateApiKey(type: string = 'sk_test'): string {
-  const prefixes: Record<string, string> = {
-    'pk_live': 'pk_live_',
-    'pk_test': 'pk_test_',
-    'sk_live': 'sk_live_',
-    'sk_test': 'sk_test_',
-    'ghp': 'ghp_',
-    'ghpat': 'ghpat_',
-    'rk_live': 'rk_live_',
-    'rk_test': 'rk_test_',
-    'whsec': 'whsec_',
-  };
-
-  const prefix = prefixes[type] || 'sk_test_';
-  const suffixLength = type === 'ghp' ? 36 : type === 'ghpat' ? 32 : 24;
-  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  const randoms = getRandomValues(suffixLength);
-
-  let suffix = '';
-  for (let i = 0; i < suffixLength; i++) {
-    suffix += pick(chars, randoms[i]);
-  }
-
-  return prefix + suffix;
-}
-
-/**
- * Webhook secret (whsec_-prefixed).
- * @param byteLength Number of random bytes (default 32)
- */
-export function generateWebhookSecret(byteLength: number = 32): string {
-  const bytes = new Uint8Array(byteLength);
-  crypto.getRandomValues(bytes);
-
-  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  const randoms = getRandomValues(byteLength);
-
-  let suffix = '';
-  for (let i = 0; i < byteLength; i++) {
-    suffix += pick(chars, randoms[i]);
-  }
-
-  return `whsec_${suffix}`;
-}
-
-/**
- * Hex string of arbitrary length.
- * @param length Number of hex chars (default 32)
- */
-export function generateHex(length: number = 32): string {
-  let result = '';
-  for (let i = 0; i < length; i += 2) {
-    result += hexByte();
-  }
-  return result.slice(0, length);
-}
-
-/**
- * Base64 string of arbitrary length (URL-safe).
- * @param length Number of output chars (default 32)
- */
-export function generateBase64(length: number = 32): string {
-  const chars = BASE64_CHARS;
-  const randoms = getRandomValues(length);
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += pick(chars, randoms[i]);
-  }
-  return result;
-}
-
-/**
- * Database password — a single-quote-safe, double-quote-safe random string.
- * @param length Character length (default 20)
- */
-export function generateDatabasePassword(length: number = 20): string {
-  // Safe chars: no single/double quotes, no backslash, no $ for shell safety
-  const safe = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#%&*=+:?<>';
-  const randoms = getRandomValues(length);
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += pick(safe, randoms[i]);
-  }
-  return result;
-}
-
-/**
- * UUID v7 (time-ordered) per RFC 9562.
- * Format: tttttttt-tttt-7xxx-yxxx-xxxxxxxxxxxx
- * Where t = 48-bit Unix ms timestamp, x = random, y = RFC 4122 variant.
- * Time-ordered UUIDs are sortable by generation time.
+ * UUID v7 — a 48-bit Unix millisecond timestamp followed by random bits
+ * (RFC 9562 §5.7), so that generated identifiers sort by creation time. That
+ * ordering is the entire reason to choose v7 over v4: it keeps a B-tree
+ * primary key appending at the right-hand edge instead of scattering inserts
+ * across the index.
+ *
+ * ── Two things this had to get right ────────────────────────────────────────
+ *
+ * **The timestamp did not fit.** It was written with `(now >> 40) & 0xff`, and
+ * `>>` in JavaScript is a 32-bit operator: the operand is truncated to int32
+ * and the shift count is taken modulo 32, so `>> 40` is really `>> 8` and
+ * `>> 32` is `>> 0`. The top 16 bits of the timestamp were dropped and the
+ * remaining bytes came out transposed, leaving the leading byte cycling once
+ * every 65 seconds. Five UUIDs a minute apart sorted `fef8… e958… d3b8…
+ * be18… a878…` — descending, on the one property the page selling this
+ * generator advertises. `BigInt` shifts the full 48 bits.
+ *
+ * **A batch shares a millisecond.** The tool generates ten or a hundred at a
+ * time, well inside one tick, and with `rand_a` random those all sort at
+ * random against each other. RFC 9562 §6.2 allows a counter in the random
+ * field for exactly this; `sequence` is that counter, reset whenever the clock
+ * advances and carried into the next millisecond if it ever overflows.
  */
 export function generateUUIDv7(): string {
-  const bytes = new Uint8Array(16);
-  crypto.getRandomValues(bytes);
+  const bytes = randomBytes(16);
 
-  // 48-bit Unix timestamp (ms since epoch)
-  const now = Date.now();
-  bytes[0] = (now >> 40) & 0xff;
-  bytes[1] = (now >> 32) & 0xff;
-  bytes[2] = (now >> 24) & 0xff;
-  bytes[3] = (now >> 16) & 0xff;
-  bytes[4] = (now >> 8) & 0xff;
-  bytes[5] = now & 0xff;
+  let now = Date.now();
+  if (now === lastTimestamp) {
+    sequence += 1;
+    if (sequence > SEQUENCE_MAX) {
+      /* 4096 in a single millisecond. Borrow from the next one rather than
+         emit a duplicate ordering key. */
+      now = lastTimestamp + 1;
+      sequence = 0;
+    }
+  } else if (now < lastTimestamp) {
+    /* The wall clock went backwards (NTP step, daylight saving on a naive
+       clock). Keep issuing ordered values from where we were. */
+    now = lastTimestamp;
+    sequence += 1;
+  } else {
+    sequence = 0;
+  }
+  lastTimestamp = now;
 
-  // Set version 7 (4 most significant bits of byte 6 = 0111)
-  bytes[6] = (bytes[6] & 0x0f) | 0x70;
-  // Set variant (2 most significant bits of byte 8 = 10)
-  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  /* Split rather than shift: `>>` would truncate to int32 again, and BigInt
+     literals are not available at this project's ES2017 target. `hi` holds
+     bits 32-47 of the millisecond value, `lo` the low 32. */
+  const hi = Math.floor(now / 0x1_0000_0000);
+  const lo = now >>> 0;
+  bytes[0] = (hi >>> 8) & 0xff;
+  bytes[1] = hi & 0xff;
+  bytes[2] = (lo >>> 24) & 0xff;
+  bytes[3] = (lo >>> 16) & 0xff;
+  bytes[4] = (lo >>> 8) & 0xff;
+  bytes[5] = lo & 0xff;
 
-  // Format as hex with dashes
-  const hex = Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
-  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`;
+  bytes[6] = 0x70 | ((sequence >> 8) & 0x0f); // version 7 + counter high nibble
+  bytes[7] = sequence & 0xff; //                 counter low byte
+  bytes[8] = (bytes[8] & 0x3f) | 0x80; //        variant 10
+
+  return formatUuid(bytes);
 }
 
-/**
- * Random Token generator.
- * Creates a cryptographically random token in the specified encoding.
- * @param length Number of output characters (default 32)
- * @param type Encoding type: 'hex', 'base64', or 'base64url' (default 'hex')
- */
-export function generateRandomToken(length: number = 32, type: 'hex' | 'base64' | 'base64url' = 'hex'): string {
-  if (type === 'hex') {
-    return generateHex(length);
-  }
-  const chars = type === 'base64url' ? BASE64_CHARS : BASE64_CHARS + '+/';
-  const randoms = getRandomValues(length);
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += pick(chars, randoms[i]);
-  }
-  return result;
-}
+/* ── Signing keys ────────────────────────────────────────────────────── */
 
 /**
- * Session Secret — 32-byte random value encoded as Base64URL.
- * Suitable for session signing and cookie encryption.
- * @param byteLength Number of random bytes (default 32)
+ * JWT signing secret: random bytes as base64url.
+ *
+ * The default is 64 bytes because HS256 hashes its key down to the 64-byte
+ * block size of SHA-256 — a longer key buys nothing, a shorter one is what
+ * RFC 7518 §3.2 sets the floor for (32 bytes).
  */
+export function generateJWTSecret(byteLength: number = 64): string {
+  return base64UrlEncode(randomBytes(byteLength));
+}
+
+/** Session signing secret: 32 random bytes as base64url. */
 export function generateSessionSecret(byteLength: number = 32): string {
-  const bytes = new Uint8Array(byteLength);
-  crypto.getRandomValues(bytes);
+  return base64UrlEncode(randomBytes(byteLength));
+}
 
-  let result = '';
-  for (let i = 0; i < bytes.length; i += 3) {
-    const b1 = bytes[i];
-    const b2 = i + 1 < bytes.length ? bytes[i + 1] : 0;
-    const b3 = i + 2 < bytes.length ? bytes[i + 2] : 0;
+/* ── Prefixed keys ───────────────────────────────────────────────────── */
 
-    result += BASE64_CHARS[b1 >> 2];
-    result += BASE64_CHARS[((b1 & 0x3) << 4) | (b2 >> 4)];
-    if (i + 1 < bytes.length) {
-      result += BASE64_CHARS[((b2 & 0xf) << 2) | (b3 >> 6)];
-    }
-    if (i + 2 < bytes.length) {
-      result += BASE64_CHARS[b3 & 0x3f];
-    }
-  }
+const API_KEY_PREFIXES: Record<string, string> = {
+  pk_live: 'pk_live_',
+  pk_test: 'pk_test_',
+  sk_live: 'sk_live_',
+  sk_test: 'sk_test_',
+  ghp: 'ghp_',
+  ghpat: 'ghpat_',
+  rk_live: 'rk_live_',
+  rk_test: 'rk_test_',
+  whsec: 'whsec_',
+};
 
-  return result;
+/**
+ * An API key shaped like the ones the common services issue.
+ *
+ * These are random strings wearing a familiar prefix — nothing here is
+ * registered with anyone, and none of it will authenticate against anything.
+ * The shape is the point: it exercises the validation, logging and redaction
+ * paths that only fire on a string that looks like a real key.
+ */
+export function generateApiKey(type: string = 'sk_test'): string {
+  const prefix = API_KEY_PREFIXES[type] ?? 'sk_test_';
+  const suffixLength = type === 'ghp' ? 36 : type === 'ghpat' ? 32 : 24;
+  return prefix + randomString(ALNUM, suffixLength);
+}
+
+/** Webhook signing secret, in the `whsec_` shape the common providers use. */
+export function generateWebhookSecret(suffixLength: number = 32): string {
+  return `whsec_${randomString(ALNUM, suffixLength)}`;
+}
+
+/** OAuth 2.0 client secret, URL-safe, `os_`-prefixed. */
+export function generateOAuthSecret(suffixLength: number = 32): string {
+  return `os_${randomString(ALNUM, suffixLength)}`;
+}
+
+/* ── Plain strings ───────────────────────────────────────────────────── */
+
+/** A hex string of exactly `length` characters (4 bits each). */
+export function generateHex(length: number = 32): string {
+  return randomString(HEX, length);
+}
+
+/** A URL-safe base64 string of exactly `length` characters (6 bits each). */
+export function generateBase64(length: number = 32): string {
+  return randomString(BASE64_URL, length);
 }
 
 /**
- * OAuth Client Secret — 32-byte URL-safe secret with `os_` prefix.
- * Compatible with OAuth 2.0 client secret requirements.
- * @param byteLength Number of random bytes for the suffix (default 32)
+ * A random token in the requested encoding.
+ *
+ * `base64` draws from RFC 4648 §4 and `base64url` from §5 — the distinction
+ * matters the moment the token goes into a URL path or a filename.
  */
-export function generateOAuthSecret(byteLength: number = 32): string {
-  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  const randoms = getRandomValues(byteLength);
-
-  let suffix = '';
-  for (let i = 0; i < byteLength; i++) {
-    suffix += pick(chars, randoms[i]);
-  }
-
-  return `os_${suffix}`;
+export function generateRandomToken(
+  length: number = 32,
+  type: 'hex' | 'base64' | 'base64url' = 'hex',
+): string {
+  if (type === 'hex') return generateHex(length);
+  return randomString(type === 'base64url' ? BASE64_URL : BASE64_STD, length);
 }
+
+/**
+ * A database password safe to paste into a connection string.
+ *
+ * Drops the characters that break quoting somewhere along the way: quotes and
+ * backslash inside SQL or YAML, `$` and backtick inside a shell, `@`, `:`, `/`
+ * and `?` inside a `postgres://user:pass@host/db` URL.
+ */
+export function generateDatabasePassword(length: number = 20): string {
+  const safe = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!#%&*=+-_.';
+  return randomString(safe, length);
+}
+
+/** Exported so the entropy module counts the same alphabet these produce. */
+export const ALPHABET_SIZES = {
+  hex: HEX.length,
+  base64: BASE64_STD.length,
+  base64url: BASE64_URL.length,
+  alnum: ALNUM.length,
+} as const;
+
+export { pickChar };

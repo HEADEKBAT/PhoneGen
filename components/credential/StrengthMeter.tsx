@@ -1,101 +1,167 @@
 'use client';
 
-import { useCallback } from 'react';
-import type { PasswordScore } from '@/lib/credentialGenerator';
+import { useMemo } from 'react';
+import { ShieldCheck, ShieldX, TriangleAlert } from 'lucide-react';
+import type { Duration, PasswordScore, StrengthNote } from '@/lib/credentialGenerator';
+import { useTranslations } from '@/lib/i18n';
 
 interface StrengthMeterProps {
   score: PasswordScore | null;
 }
 
+/** Bar colour by band. Green is the site's brand; the warm end is the warning. */
+const BAND_COLOR: Record<string, string> = {
+  veryWeak: 'bg-red-500',
+  weak: 'bg-orange-500',
+  moderate: 'bg-amber-400',
+  strong: 'bg-lime-500',
+  veryStrong: 'bg-primary',
+};
+
+/**
+ * Entropy, three attack scenarios, and what the credential does and does not
+ * survive.
+ *
+ * ── Why three rows and not one number ───────────────────────────────────────
+ *
+ * This used to print "Offline crack: 3.2 hours" with no mention of what was
+ * doing the hashing. The same password falls in seconds against unsalted MD5
+ * and holds for longer than the universe against argon2id — six orders of
+ * magnitude apart — and which one applies is a property of the service, not of
+ * the password. A single unlabelled figure is not a simplification of that, it
+ * is a guess presented as a measurement.
+ *
+ * ── Why Intl and not a table of words ───────────────────────────────────────
+ *
+ * Durations are formatted with `Intl.NumberFormat`'s unit style, so "2 года"
+ * and "5 лет" come out of the platform's own plural rules rather than from six
+ * hand-written translations that would each need three plural forms.
+ */
 export default function StrengthMeter({ score }: StrengthMeterProps) {
+  const { t, language } = useTranslations();
+
+  /* Built once per locale, and read-only afterwards. */
+  const formatters = useMemo(() => {
+    const built: Partial<Record<string, Intl.NumberFormat>> = {};
+    for (const unit of ['second', 'minute', 'hour', 'day', 'month', 'year']) {
+      try {
+        built[unit] = new Intl.NumberFormat(language, {
+          style: 'unit',
+          unit,
+          unitDisplay: 'long',
+          maximumFractionDigits: 1,
+        });
+      } catch {
+        /* A runtime without unit style; the caller falls back to a bare
+           number rather than crashing the meter. */
+      }
+    }
+    return built;
+  }, [language]);
+
+  const formatDuration = (duration: Duration): string => {
+    if (duration.unit === 'instant') return t('credential.strength.instant');
+    if (duration.unit === 'centuries') return t('credential.strength.centuries');
+    /* Intl carries the CLDR plural rules for every locale this site serves, so
+       "2 года" and "5 лет" come from the platform rather than from six
+       hand-written translations with three plural forms each. */
+    const unit = duration.unit.replace(/s$/, '');
+    return formatters[unit]?.format(duration.value) ?? `${duration.value} ${unit}`;
+  };
+
   if (!score) return null;
 
-  const { score: value, bits, crackTime, isCommon, resistant, weak } = score;
+  const { score: value, bits, band, estimates, isCommon, resistant, weak } = score;
 
-  /* ── Color mapping ──────────────────────────────────────────────────── */
-  const getColor = (s: number): string => {
-    if (s < 20) return 'bg-red-500';
-    if (s < 40) return 'bg-orange-500';
-    if (s < 60) return 'bg-yellow-500';
-    if (s < 80) return 'bg-lime-500';
-    return 'bg-primary';
-  };
-
-  const getLabel = (s: number): string => {
-    if (s < 20) return 'Very Weak';
-    if (s < 40) return 'Weak';
-    if (s < 60) return 'Moderate';
-    if (s < 80) return 'Strong';
-    return 'Very Strong';
-  };
-
-  const color = getColor(value);
-  const label = getLabel(value);
+  const noteLabel = (note: StrengthNote) => t(`credential.strength.note.${note}`);
 
   return (
-    <div className="rounded-xl border border-border bg-card p-4 space-y-3">
-      {/* Score bar */}
-      <div className="flex items-center gap-3">
-        <div className="flex-1 h-2.5 rounded-full bg-muted overflow-hidden">
+    <div className="space-y-4 rounded-xl border border-border bg-card p-4">
+      {/* ── Bar ───────────────────────────────────────────────────────── */}
+      <div>
+        <div className="flex items-baseline justify-between gap-3">
+          <span className="font-heading text-sm font-semibold text-foreground">
+            {t(`credential.${band}`)}
+          </span>
+          <span className="font-mono text-xs text-muted-foreground tabular-nums">
+            {t('credential.strength.bits', { bits: String(bits) })}
+          </span>
+        </div>
+        <div
+          className="mt-2 h-2 overflow-hidden rounded-full bg-muted"
+          role="meter"
+          aria-valuenow={value}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label={t('credential.strength.title')}
+        >
           <div
-            className={`h-full rounded-full transition-all duration-300 ${color}`}
-            style={{ width: `${value}%` }}
+            className={`h-full rounded-full transition-[width,background-color] duration-300 ${BAND_COLOR[band] ?? 'bg-muted-foreground'}`}
+            style={{ width: `${Math.max(2, value)}%` }}
           />
         </div>
-        <span className="text-sm font-semibold text-foreground tabular-nums shrink-0">
-          {value}/100
-        </span>
       </div>
 
-      {/* Label + bits */}
-      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-        <span className="font-medium text-foreground">{label}</span>
-        <span className="tabular-nums">{bits} bits entropy</span>
+      {/* ── How long it holds, and against what ───────────────────────── */}
+      <dl className="space-y-1.5">
+        {estimates.map((estimate) => (
+          <div
+            key={estimate.scenario}
+            className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 rounded-lg bg-muted/50 px-3 py-2"
+          >
+            <dt className="text-xs text-foreground">
+              {t(`credential.strength.scenario.${estimate.scenario}.label`)}
+              <span className="ml-2 text-[0.6875rem] text-muted-foreground">
+                {t(`credential.strength.scenario.${estimate.scenario}.hint`)}
+              </span>
+            </dt>
+            <dd className="m-0 font-mono text-xs font-medium text-foreground tabular-nums">
+              {formatDuration(estimate.duration)}
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      {/* ── Checklists ────────────────────────────────────────────────── */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {resistant.length > 0 && (
+          <div>
+            <p className="mb-1 flex items-center gap-1.5 text-[0.6875rem] font-medium tracking-wide text-primary uppercase">
+              <ShieldCheck size={12} aria-hidden="true" />
+              {t('credential.strength.holds')}
+            </p>
+            <ul className="list-none space-y-0.5 p-0">
+              {resistant.map((note) => (
+                <li key={note} className="list-none text-xs text-muted-foreground">
+                  {noteLabel(note)}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {weak.length > 0 && (
+          <div>
+            <p className="mb-1 flex items-center gap-1.5 text-[0.6875rem] font-medium tracking-wide text-destructive uppercase">
+              <ShieldX size={12} aria-hidden="true" />
+              {t('credential.strength.falls')}
+            </p>
+            <ul className="list-none space-y-0.5 p-0">
+              {weak.map((note) => (
+                <li key={note} className="list-none text-xs text-muted-foreground">
+                  {noteLabel(note)}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
 
-      {/* Crack time */}
-      <div className="grid grid-cols-2 gap-2 text-xs">
-        <div className="rounded-lg bg-muted/50 px-3 py-2">
-          <span className="text-muted-foreground">Offline crack: </span>
-          <span className="font-medium text-foreground">{crackTime.offline}</span>
-        </div>
-        <div className="rounded-lg bg-muted/50 px-3 py-2">
-          <span className="text-muted-foreground">Online crack: </span>
-          <span className="font-medium text-foreground">{crackTime.online}</span>
-        </div>
-      </div>
-
-      {/* Resistant / Weak checklists */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-        <div className="space-y-1">
-          {resistant.length > 0 && (
-            <p className="font-medium text-primary mb-1">Resistant against:</p>
-          )}
-          {resistant.map((item) => (
-            <div key={item} className="flex items-center gap-1.5">
-              <span className="text-primary shrink-0">&#10003;</span>
-              <span className="text-muted-foreground">{item}</span>
-            </div>
-          ))}
-        </div>
-        <div className="space-y-1">
-          {weak.length > 0 && (
-            <p className="font-medium text-destructive mb-1">Weak against:</p>
-          )}
-          {weak.map((item) => (
-            <div key={item} className="flex items-center gap-1.5">
-              <span className="text-destructive shrink-0">&#10007;</span>
-              <span className="text-muted-foreground">{item}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Common password warning */}
       {isCommon && (
-        <div className="rounded-lg bg-destructive/10 border border-destructive/20 px-3 py-2 text-xs text-destructive">
-          This password appears in lists of common/leaked passwords. Do not use it.
-        </div>
+        <p className="flex items-start gap-2 rounded-lg border border-destructive/20 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+          <TriangleAlert size={14} aria-hidden="true" className="mt-px shrink-0" />
+          {t('credential.commonPasswordWarning')}
+        </p>
       )}
     </div>
   );

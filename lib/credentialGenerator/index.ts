@@ -1,15 +1,12 @@
 /* ── Public API ────────────────────────────────────────────────────────── */
 
-export { generateRandomPassword } from './generatePassword';
+export { generateRandomPassword, resolveCharsets } from './generatePassword';
 export type { RandomPasswordOptions } from './generatePassword';
 
-export { generateHumanPassword } from './generateHumanPassword';
-export type { HumanPasswordOptions } from './types';
-
-export { generatePassphrase } from './generatePassphrase';
+export { generatePassphrase, BITS_PER_WORD } from './generatePassphrase';
 export type { PassphraseOptions } from './types';
 
-export { generatePronounceable } from './generatePronounceable';
+export { generatePronounceable, SYLLABLE_SHAPES } from './generatePronounceable';
 export type { PronounceableOptions } from './types';
 
 export { generatePin } from './generatePin';
@@ -27,6 +24,7 @@ export {
   generateRandomToken,
   generateSessionSecret,
   generateOAuthSecret,
+  ALPHABET_SIZES,
 } from './generateSecrets';
 
 export { generateCredentialPair, generateCredentialPairs } from './generatePair';
@@ -36,15 +34,29 @@ export {
   getCharsetSize,
   calculateRandomPasswordEntropy,
   calculatePassphraseEntropy,
-  calculateHumanPasswordEntropy,
   calculatePronounceableEntropy,
-  estimateCrackTime,
-  getCrackTimeEstimates,
+  calculatePinEntropy,
+  calculateStringEntropy,
+  estimateCrackSeconds,
+  getCrackEstimates,
+  describeDuration,
+  bandForBits,
   scorePassword,
+  ATTACK_SCENARIOS,
+  STRENGTH_BANDS,
 } from './entropy';
-export type { CrackTimeEstimate, PasswordScore } from './entropy';
+export type {
+  CrackEstimate,
+  Duration,
+  PasswordScore,
+  AttackScenarioId,
+  StrengthBandId,
+  StrengthNote,
+} from './entropy';
 
 export { isCommonPassword } from './commonPasswords';
+
+export { randomInt, pickOne, pickChar, randomString, shuffled, distinctIndices } from './random';
 
 export type {
   CredentialResult,

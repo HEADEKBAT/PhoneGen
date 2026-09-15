@@ -18,7 +18,6 @@ import {
 import { useCredentialGeneratorStore, type CredentialGeneratorStore } from '@/lib/store';
 import {
   generateRandomPassword,
-  generateHumanPassword,
   generatePassphrase,
   generatePronounceable,
   generatePin,
@@ -32,15 +31,14 @@ import {
   generateRandomToken,
   generateSessionSecret,
   generateOAuthSecret,
-  generateDatabasePassword,
   generateCredentialPairs,
-  getCharsetSize,
   calculateRandomPasswordEntropy,
   calculatePassphraseEntropy,
-  calculateHumanPasswordEntropy,
+  calculatePinEntropy,
   calculatePronounceableEntropy,
+  calculateStringEntropy,
   scorePassword,
-  isCommonPassword,
+  ALPHABET_SIZES,
 } from '@/lib/credentialGenerator';
 import { SUPPORTED_COUNTRY_CODES, COUNTRY_NAMES } from '@/lib/userGenerator/countryLocaleMap';
 import type { PasswordMode, SecretMode } from '@/lib/credentialGenerator/types';
@@ -60,12 +58,12 @@ const TABS = [
 
 const PASSWORD_MODES: { id: PasswordMode; label: string; desc: string }[] = [
   { id: 'random', label: 'Random', desc: 'Full control' },
-  { id: 'human', label: 'Human Password', desc: 'Memorable phrases' },
   { id: 'passphrase', label: 'Passphrase', desc: 'XKCD-style' },
   { id: 'pronounceable', label: 'Pronounceable', desc: 'CVC-based' },
 ];
 
 const SECRET_MODES: { id: SecretMode; label: string }[] = [
+  { id: 'pin', label: 'PIN' },
   { id: 'uuid', label: 'UUID v4' },
   { id: 'uuid-v7', label: 'UUID v7' },
   { id: 'jwt', label: 'JWT Secret' },
@@ -79,6 +77,9 @@ const SECRET_MODES: { id: SecretMode; label: string }[] = [
 ];
 
 const QUANTITY_OPTIONS = [1, 5, 10, 25, 50, 100] as const;
+
+/** How many values one click produces on the password and secret tabs. */
+const BATCH_SIZE = 5;
 
 /* ── Copied indicator ref ─────────────────────────────────────────────── */
 
@@ -133,36 +134,38 @@ export default function CredentialTabs() {
 
   /* ── Score for last result ──────────────────────────────────────────── */
   const score = useMemo(() => {
-    if (store.activeTab !== 'passwords' || store.results.length === 0) return null;
+    if (store.results.length === 0) return null;
+    if (store.activeTab !== 'passwords' && store.activeTab !== 'pins-secrets') return null;
     const last = store.results[0];
+
+    if (store.activeTab === 'pins-secrets') {
+      return scorePassword(last, secretEntropyBits(store));
+    }
+
+    /* Entropy comes from the settings, not from the string: it is a property
+       of how the value was produced, and every option that narrows the draw —
+       the exclusion list included — has to reach the calculation. */
     let bits = 0;
-    // Rough entropy for display
     if (store.passwordMode === 'random') {
-      const cs = getCharsetSize({
+      bits = calculateRandomPasswordEntropy({
+        length: store.passwordLength,
         uppercase: store.passwordUppercase,
         lowercase: store.passwordLowercase,
         numbers: store.passwordNumbers,
         symbols: store.passwordSymbols,
-        avoidAmbiguous: store.passwordAvoidAmbiguous,
-      });
-      bits = calculateRandomPasswordEntropy(last.length, cs);
-    } else if (store.passwordMode === 'human') {
-      bits = calculateHumanPasswordEntropy({
-        includeNumber: store.humanIncludeNumber,
-        includeSymbol: store.humanIncludeSymbol,
+        excludeChars: store.passwordExcludeChars || undefined,
+        avoidAmbiguous: store.passwordAvoidAmbiguous || undefined,
       });
     } else if (store.passwordMode === 'passphrase') {
       bits = calculatePassphraseEntropy(store.passphraseWordCount);
     } else if (store.passwordMode === 'pronounceable') {
       bits = calculatePronounceableEntropy(store.pronounceableSyllables);
     }
-    return scorePassword(last, bits, store.passwordMode);
-  }, [store.results, store.activeTab, store.passwordMode,
-      store.passwordUppercase, store.passwordLowercase,
-      store.passwordNumbers, store.passwordSymbols,
-      store.passwordAvoidAmbiguous, store.humanIncludeNumber,
-      store.humanIncludeSymbol, store.passphraseWordCount,
-      store.pronounceableSyllables]);
+    return scorePassword(last, bits);
+    /* The whole store, because every setting feeds one branch or another and
+       this hook subscribes to all of them anyway: `useCredentialGeneratorStore()`
+       without a selector hands back a fresh state object on every change. */
+  }, [store]);
 
   /* ── Render ─────────────────────────────────────────────────────────── */
   return (
@@ -193,7 +196,7 @@ export default function CredentialTabs() {
       {store.activeTab === 'passwords' && (
         <div className="space-y-5">
           {/* Mode picker */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             {PASSWORD_MODES.map((mode) => {
               const isActive = store.passwordMode === mode.id;
               return (
@@ -217,7 +220,6 @@ export default function CredentialTabs() {
 
           {/* Active mode controls */}
           {store.passwordMode === 'random' && <RandomPasswordControls store={store} />}
-          {store.passwordMode === 'human' && <HumanPasswordControls store={store} />}
           {store.passwordMode === 'passphrase' && <PassphraseControls store={store} />}
           {store.passwordMode === 'pronounceable' && <PronounceableControls store={store} />}
         </div>
@@ -226,12 +228,31 @@ export default function CredentialTabs() {
       {/* ── Tab 2: PIN & Secrets ──────────────────────────────────────── */}
       {store.activeTab === 'pins-secrets' && (
         <div className="space-y-6">
-          {/* PIN section */}
+          {/* Secrets section */}
           <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
             <h3 className="font-heading font-semibold text-foreground text-sm mb-3 flex items-center gap-2">
-              <Lock size={14} />
-              PIN
+              <Hash size={14} />
+              Secrets
             </h3>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {SECRET_MODES.map((mode) => {
+                const isActive = store.secretMode === mode.id;
+                return (
+                  <button
+                    key={mode.id}
+                    onClick={() => store.setSecretMode(mode.id)}
+                    className={`h-8 px-3 rounded-lg border text-xs font-medium transition-colors ${
+                      isActive
+                        ? 'bg-primary text-primary-foreground border-primary'
+                        : 'border-border text-muted-foreground hover:text-foreground bg-background'
+                    }`}
+                  >
+                    {mode.label}
+                  </button>
+                );
+              })}
+            </div>
+            {store.secretMode === 'pin' && (
             <div className="flex flex-wrap gap-3">
               <ControlGroup label="Length">
                 <div className="flex gap-1">
@@ -262,32 +283,7 @@ export default function CredentialTabs() {
                 </label>
               </ControlGroup>
             </div>
-          </div>
-
-          {/* Secrets section */}
-          <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
-            <h3 className="font-heading font-semibold text-foreground text-sm mb-3 flex items-center gap-2">
-              <Hash size={14} />
-              Secrets
-            </h3>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {SECRET_MODES.map((mode) => {
-                const isActive = store.secretMode === mode.id;
-                return (
-                  <button
-                    key={mode.id}
-                    onClick={() => store.setSecretMode(mode.id)}
-                    className={`h-8 px-3 rounded-lg border text-xs font-medium transition-colors ${
-                      isActive
-                        ? 'bg-primary text-primary-foreground border-primary'
-                        : 'border-border text-muted-foreground hover:text-foreground bg-background'
-                    }`}
-                  >
-                    {mode.label}
-                  </button>
-                );
-              })}
-            </div>
+            )}
             {store.secretMode === 'hex' && (
               <ControlGroup label="Length">
                 <input
@@ -414,8 +410,11 @@ export default function CredentialTabs() {
             <CredentialExportBar results={store.results} />
           )}
 
-          {/* Score for passwords */}
-          {store.activeTab === 'passwords' && <StrengthMeter score={score} />}
+          {/* What the generated value is actually worth. Shown for secrets
+              too: a four-digit PIN is 13 bits and the page should say so. */}
+          {(store.activeTab === 'passwords' || store.activeTab === 'pins-secrets') && (
+            <StrengthMeter score={score} />
+          )}
 
           {/* Result items */}
           <div className="divide-y divide-border rounded-xl border border-border bg-card">
@@ -449,10 +448,9 @@ export default function CredentialTabs() {
 /* ── Generator functions (pure, no hooks) ─────────────────────────────── */
 
 function generatePasswords(store: ReturnType<typeof useCredentialGeneratorStore.getState>): string[] {
-  const count = 5; // default batch for passwords
   const results: string[] = [];
 
-  for (let i = 0; i < count; i++) {
+  for (let i = 0; i < BATCH_SIZE; i++) {
     switch (store.passwordMode) {
       case 'random': {
         results.push(generateRandomPassword({
@@ -463,14 +461,6 @@ function generatePasswords(store: ReturnType<typeof useCredentialGeneratorStore.
           symbols: store.passwordSymbols,
           excludeChars: store.passwordExcludeChars || undefined,
           avoidAmbiguous: store.passwordAvoidAmbiguous || undefined,
-        }));
-        break;
-      }
-      case 'human': {
-        results.push(generateHumanPassword({
-          capitalize: store.humanCapitalize,
-          includeNumber: store.humanIncludeNumber,
-          includeSymbol: store.humanIncludeSymbol,
         }));
         break;
       }
@@ -498,29 +488,77 @@ function generatePasswords(store: ReturnType<typeof useCredentialGeneratorStore.
   return results;
 }
 
-function generatePinsSecrets(store: ReturnType<typeof useCredentialGeneratorStore.getState>): string[] {
-  // Always generate one PIN + one Secret
-  const pin = generatePin({ length: store.pinLength, noRepeat: store.pinNoRepeat });
+/**
+ * Entropy of the selected secret kind, in bits.
+ *
+ * Every figure here is the size of the space the generator draws from, not a
+ * guess from the output string: a UUID v4 carries 122 random bits inside 128,
+ * six of which are pinned by the version and variant fields, and a v7 carries
+ * 62 — the other 62 are a timestamp and a counter, which an attacker who knows
+ * roughly when the value was made does not have to guess. That distinction is
+ * the reason a v7 is a fine database key and a poor session token.
+ */
+function secretEntropyBits(
+  store: ReturnType<typeof useCredentialGeneratorStore.getState>,
+): number {
+  const { alnum, base64url, hex } = ALPHABET_SIZES;
 
-  let secret: string;
   switch (store.secretMode) {
-    case 'uuid': secret = generateUUID(); break;
-    case 'uuid-v7': secret = generateUUIDv7(); break;
-    case 'jwt': secret = generateJWTSecret(); break;
-    case 'api-key': secret = generateApiKey('sk_test'); break;
-    case 'webhook': secret = generateWebhookSecret(); break;
-    case 'token': secret = generateRandomToken(store.tokenLength, store.tokenType); break;
-    case 'session': secret = generateSessionSecret(); break;
-    case 'oauth': secret = generateOAuthSecret(); break;
-    case 'hex': secret = generateHex(store.hexLength); break;
-    case 'base64': secret = generateBase64(store.base64Length); break;
-    default: secret = generateUUID();
+    case 'pin':
+      return calculatePinEntropy(store.pinLength, store.pinNoRepeat);
+    case 'uuid':
+      return 122;
+    case 'uuid-v7':
+      return 62;
+    case 'jwt':
+      return 64 * 8;
+    case 'session':
+      return 32 * 8;
+    case 'api-key':
+      return calculateStringEntropy(24, alnum);
+    case 'webhook':
+    case 'oauth':
+      return calculateStringEntropy(32, alnum);
+    case 'token':
+      return calculateStringEntropy(
+        store.tokenLength,
+        store.tokenType === 'hex' ? hex : base64url,
+      );
+    case 'hex':
+      return calculateStringEntropy(store.hexLength, hex);
+    case 'base64':
+      return calculateStringEntropy(store.base64Length, base64url);
+    default:
+      return 0;
   }
+}
 
-  return [
-    `PIN (${store.pinLength}-digit): ${pin}`,
-    `${store.secretMode.toUpperCase()}: ${secret}`,
-  ];
+/** One secret of the selected kind — the value and nothing else. */
+function generateSecretValue(
+  store: ReturnType<typeof useCredentialGeneratorStore.getState>,
+): string {
+  switch (store.secretMode) {
+    case 'pin': return generatePin({ length: store.pinLength, noRepeat: store.pinNoRepeat });
+    case 'uuid': return generateUUID();
+    case 'uuid-v7': return generateUUIDv7();
+    case 'jwt': return generateJWTSecret();
+    case 'api-key': return generateApiKey('sk_test');
+    case 'webhook': return generateWebhookSecret();
+    case 'token': return generateRandomToken(store.tokenLength, store.tokenType);
+    case 'session': return generateSessionSecret();
+    case 'oauth': return generateOAuthSecret();
+    case 'hex': return generateHex(store.hexLength);
+    case 'base64': return generateBase64(store.base64Length);
+    default: return generateUUID();
+  }
+}
+
+function generatePinsSecrets(
+  store: ReturnType<typeof useCredentialGeneratorStore.getState>,
+): string[] {
+  /* A batch, like the passwords tab — the values are what a fixture file or a
+     .env wants, and one at a time made this tab the slow way to fill either. */
+  return Array.from({ length: BATCH_SIZE }, () => generateSecretValue(store));
 }
 
 function generateDevPairs(store: ReturnType<typeof useCredentialGeneratorStore.getState>): string[] {
@@ -591,18 +629,6 @@ function RandomPasswordControls({ store }: { store: CredentialGeneratorStore }) 
         <ControlGroup label="Options">
           <Toggle value={store.passwordAvoidAmbiguous} onChange={store.setPasswordAvoidAmbiguous} label="Avoid ambiguous" />
         </ControlGroup>
-      </div>
-    </div>
-  );
-}
-
-function HumanPasswordControls({ store }: { store: CredentialGeneratorStore }) {
-  return (
-    <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
-      <div className="flex flex-wrap gap-3">
-        <Toggle value={store.humanCapitalize} onChange={store.setHumanCapitalize} label="Capitalize first letter" />
-        <Toggle value={store.humanIncludeNumber} onChange={store.setHumanIncludeNumber} label="Include number" />
-        <Toggle value={store.humanIncludeSymbol} onChange={store.setHumanIncludeSymbol} label="Include symbol" />
       </div>
     </div>
   );

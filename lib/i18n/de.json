@@ -108,7 +108,6 @@
     "devPairs": "Entwickler-Paare",
     "history": "Verlauf",
     "random": "Zufällig",
-    "humanPassword": "Menschenlesbares Passwort",
     "passphrase": "Passphrase",
     "pronounceable": "Aussprechbar",
     "generate": "Generieren",
@@ -137,8 +136,6 @@
     "historyStored": "Letzte {count} Einträge — nur im Browser gespeichert",
     "score": "Bewertung",
     "entropyBits": "{bits} Bit Entropie",
-    "offlineCrack": "Offline: {time}",
-    "onlineCrack": "Online: {time}",
     "veryWeak": "Sehr schwach",
     "weak": "Schwach",
     "moderate": "Mittel",
@@ -156,7 +153,38 @@
     "hex": "Hex",
     "base64": "Base64",
     "username": "Benutzername",
-    "password": "Passwort"
+    "password": "Passwort",
+    "strength": {
+      "title": "Stärke",
+      "bits": "{bits} Bit Entropie",
+      "instant": "sofort",
+      "centuries": "Jahrhunderte",
+      "scenario": {
+        "online": {
+          "label": "Online, mit Ratenbegrenzung",
+          "hint": "Ein Anmeldeformular, das Versuche drosselt — 100/s"
+        },
+        "fastHash": {
+          "label": "Gestohlene Datenbank, schneller Hash",
+          "hint": "MD5, SHA-1 oder NTLM auf einem GPU-Rig — 100 Milliarden/s"
+        },
+        "slowHash": {
+          "label": "Gestohlene Datenbank, langsamer Hash",
+          "hint": "bcrypt oder argon2id mit vernünftigen Kosten — 10 Tausend/s"
+        }
+      },
+      "holds": "Hält stand gegen",
+      "falls": "Fällt gegen",
+      "note": {
+        "common": "Steht in den Listen geleakter Passwörter",
+        "tooShort": "Unter 8 Zeichen",
+        "singleCharClass": "Nur eine Zeichenart",
+        "resistsOnline": "Online-Raten",
+        "resistsFastHash": "Eine mit MD5 gehashte Datenbank",
+        "resistsSlowHash": "Eine mit bcrypt gehashte Datenbank",
+        "resistsDictionary": "Wörterbücher und Leak-Listen"
+      }
+    }
   },
   "addressGenerator": {
     "heading": "Adressgenerator",

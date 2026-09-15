@@ -78,6 +78,5 @@ export const STANDALONE_SEO_ROUTES: StandaloneRouteEntry[] = [
 
   /* Password family */
   { slug: 'wifi-password-generator', family: 'password', priority: 0.8 },
-  { slug: 'human-password-generator', family: 'password', priority: 0.7 },
   { slug: 'pin-generator', family: 'password', priority: 0.7 },
 ];

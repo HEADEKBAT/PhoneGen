@@ -91,6 +91,18 @@ export const LEGACY_ONE_OFF_REDIRECTS: { from: string; to: string }[] = [
     from: 'accessibility-color-checker',
     to: 'color-generator/color-contrast-checker',
   },
+  {
+    /*
+     * The Human Password mode is gone — pronoun + verb + noun is 15.9 bits of
+     * structure however large the word banks get. This URL was indexed in six
+     * languages, so it keeps answering; it lands on the passphrase tool, which
+     * is what someone arriving here actually wants: something memorable, at 12
+     * bits a word. Straight to the real path, not to the /passphrase-generator
+     * alias, so the visitor is not redirected twice.
+     */
+    from: 'human-password-generator',
+    to: 'credential-generator/passphrase-generator',
+  },
 ];
 
 /**

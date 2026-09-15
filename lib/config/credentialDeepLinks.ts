@@ -1,9 +1,9 @@
 /**
  * Credential studio deep links — manifests for `createCredentialDeepLinkPage`.
  *
- * Three URLs that open the credential studio with a tab and mode already
- * chosen. The copy below is carried over verbatim from the three page files
- * this replaces; only the metadata plumbing around it changed.
+ * Two URLs that open the credential studio with a tab and mode already
+ * chosen. A third, /human-password-generator, was retired with the mode it
+ * opened; lib/config/legacyRedirects.ts sends it to the passphrase tool.
  */
 
 import type { CredentialDeepLinkManifest } from '@/core/credential-deep-link-factory';
@@ -40,42 +40,10 @@ const WIFI_PASSWORD_GENERATOR: CredentialDeepLinkManifest = {
   },
 };
 
-const HUMAN_PASSWORD_GENERATOR: CredentialDeepLinkManifest = {
-  slug: 'human-password-generator',
-  product: 'credential',
-  initialMode: { activeTab: 'passwords', passwordMode: 'human' },
-  copy: {
-    en: {
-      title: 'Human Password Generator',
-      description: 'Create grammatically coherent, memorable passwords like "MyDogLikesPizza92!" — easy to remember, hard to crack.',
-    },
-    ru: {
-      title: 'Генератор человеческих паролей',
-      description: 'Создавайте грамматически связные запоминающиеся пароли вроде "MyDogLikesPizza92!" — легко запомнить, сложно взломать.',
-    },
-    de: {
-      title: 'Menschenlesbarer Passwort-Generator',
-      description: 'Erstellen Sie grammatikalisch kohärente, einprägsame Passwörter wie "MyDogLikesPizza92!" — leicht zu merken, schwer zu knacken.',
-    },
-    es: {
-      title: 'Generador de contraseñas legibles',
-      description: 'Cree contraseñas gramaticalmente coherentes como "MyDogLikesPizza92!" — fáciles de recordar, difíciles de descifrar.',
-    },
-    fr: {
-      title: 'Générateur de mots de passe lisibles',
-      description: 'Créez des mots de passe grammaticalement cohérents comme "MyDogLikesPizza92!" — faciles à retenir, difficiles à cracker.',
-    },
-    pt: {
-      title: 'Gerador de senhas legíveis',
-      description: 'Crie senhas gramaticalmente coerentes como "MyDogLikesPizza92!" — fáceis de lembrar, difíceis de quebrar.',
-    },
-  },
-};
-
 const PIN_GENERATOR: CredentialDeepLinkManifest = {
   slug: 'pin-generator',
   product: 'credential',
-  initialMode: { activeTab: 'pins-secrets' },
+  initialMode: { activeTab: 'pins-secrets', secretMode: 'pin' },
   copy: {
     en: {
       title: 'PIN Generator',
@@ -106,7 +74,6 @@ const PIN_GENERATOR: CredentialDeepLinkManifest = {
 
 export const CREDENTIAL_DEEP_LINKS: Record<string, CredentialDeepLinkManifest> = {
   'wifi-password-generator': WIFI_PASSWORD_GENERATOR,
-  'human-password-generator': HUMAN_PASSWORD_GENERATOR,
   'pin-generator': PIN_GENERATOR,
 };
 

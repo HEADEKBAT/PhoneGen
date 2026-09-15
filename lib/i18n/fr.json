@@ -108,7 +108,6 @@
     "devPairs": "Paires",
     "history": "Historique",
     "random": "Aléatoire",
-    "humanPassword": "Mot de passe lisible",
     "passphrase": "Phrase de passe",
     "pronounceable": "Prononçable",
     "generate": "Générer",
@@ -137,8 +136,6 @@
     "historyStored": "Dernières {count} entrées — stockées uniquement dans le navigateur",
     "score": "Score",
     "entropyBits": "{bits} bits d'entropie",
-    "offlineCrack": "Hors ligne : {time}",
-    "onlineCrack": "En ligne : {time}",
     "veryWeak": "Très faible",
     "weak": "Faible",
     "moderate": "Modéré",
@@ -156,7 +153,38 @@
     "hex": "Hex",
     "base64": "Base64",
     "username": "Nom d'utilisateur",
-    "password": "Mot de passe"
+    "password": "Mot de passe",
+    "strength": {
+      "title": "Robustesse",
+      "bits": "{bits} bits d’entropie",
+      "instant": "instantanément",
+      "centuries": "des siècles",
+      "scenario": {
+        "online": {
+          "label": "En ligne, avec limitation",
+          "hint": "Un formulaire de connexion qui bride les tentatives — 100/s"
+        },
+        "fastHash": {
+          "label": "Base volée, hachage rapide",
+          "hint": "MD5, SHA-1 ou NTLM sur une machine à GPU — 100 milliards/s"
+        },
+        "slowHash": {
+          "label": "Base volée, hachage lent",
+          "hint": "bcrypt ou argon2id à un coût raisonnable — 10 mille/s"
+        }
+      },
+      "holds": "Résiste à",
+      "falls": "Cède face à",
+      "note": {
+        "common": "Figure dans les listes de mots de passe fuités",
+        "tooShort": "Moins de 8 caractères",
+        "singleCharClass": "Un seul type de caractère",
+        "resistsOnline": "Le devinage en ligne",
+        "resistsFastHash": "Une base hachée en MD5",
+        "resistsSlowHash": "Une base hachée en bcrypt",
+        "resistsDictionary": "Dictionnaires et listes de fuites"
+      }
+    }
   },
   "addressGenerator": {
     "heading": "Générateur d'adresses",

@@ -108,7 +108,6 @@
     "devPairs": "Пары",
     "history": "История",
     "random": "Случайный",
-    "humanPassword": "Человеческий пароль",
     "passphrase": "Парольная фраза",
     "pronounceable": "Произносимый",
     "generate": "Сгенерировать",
@@ -137,8 +136,6 @@
     "historyStored": "Последние {count} записей — хранятся только в браузере",
     "score": "Оценка",
     "entropyBits": "{bits} бит энтропии",
-    "offlineCrack": "Офлайн: {time}",
-    "onlineCrack": "Онлайн: {time}",
     "veryWeak": "Очень слабый",
     "weak": "Слабый",
     "moderate": "Средний",
@@ -156,7 +153,38 @@
     "hex": "Hex",
     "base64": "Base64",
     "username": "Имя пользователя",
-    "password": "Пароль"
+    "password": "Пароль",
+    "strength": {
+      "title": "Стойкость",
+      "bits": "{bits} бит энтропии",
+      "instant": "мгновенно",
+      "centuries": "века",
+      "scenario": {
+        "online": {
+          "label": "Онлайн, с ограничением",
+          "hint": "Форма входа, которая душит перебор — 100/с"
+        },
+        "fastHash": {
+          "label": "Украденная база, быстрый хеш",
+          "hint": "MD5, SHA-1 или NTLM на одной GPU-стойке — 100 млрд/с"
+        },
+        "slowHash": {
+          "label": "Украденная база, медленный хеш",
+          "hint": "bcrypt или argon2id с нормальной ценой — 10 тыс./с"
+        }
+      },
+      "holds": "Выдерживает",
+      "falls": "Не выдерживает",
+      "note": {
+        "common": "Есть в списках утёкших паролей",
+        "tooShort": "Короче 8 символов",
+        "singleCharClass": "Только один класс символов",
+        "resistsOnline": "Онлайн-перебор",
+        "resistsFastHash": "База, захешированная MD5",
+        "resistsSlowHash": "База, захешированная bcrypt",
+        "resistsDictionary": "Словари и списки утечек"
+      }
+    }
   },
   "addressGenerator": {
     "heading": "Генератор адресов",

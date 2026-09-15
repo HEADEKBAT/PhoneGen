@@ -1,86 +1,47 @@
 /**
- * Pronounceable password generator.
- * Builds passwords from CVC (Consonant-Vowel-Consonant) syllables.
- * Creates words that look and sound natural: Raviko, Munalex, Boteri.
- * Appends number and symbol affix for security.
+ * Pronounceable password generator — syllables you can read down a phone line.
+ *
+ * Syllables are drawn from a fixed shape set (CVC, CV, VC) with a fixed
+ * distribution. That distribution is part of the entropy: a generator that
+ * picks CVC seven times in ten and CV one time in ten leaks a little
+ * structure, and `calculatePronounceableEntropy` counts the syllable space per
+ * shape weighted by how often that shape comes up, rather than pretending
+ * every syllable is a CVC.
  */
 
+import { pickChar, randomInt, randomString } from './random';
 import type { PronounceableOptions } from './types';
 
-/* ── Phonotactic sets ─────────────────────────────────────────────────── */
-
-const CONSONANTS = 'bcdfghjklmnpqrstvwxyz';
+/* 'y' is out of the consonant set: it reads as a vowel as often as not, which
+   defeats the point of a password someone has to say out loud. */
+const CONSONANTS = 'bcdfghjklmnpqrstvwxz';
 const VOWELS = 'aeiou';
-const CONSONANTS_FULL = 'bcdfghjklmnpqrstvwxz'; // No 'y' as ambiguous
+const DIGITS = '0123456789';
+const SYMBOLS = '!@#$%&*?+_=';
 
-/* ── Helpers ──────────────────────────────────────────────────────────── */
-
-function randomInt(max: number): number {
-  const buf = new Uint32Array(1);
-  crypto.getRandomValues(buf);
-  return buf[0] % max;
-}
-
-function pick(arr: string): string {
-  return arr[randomInt(arr.length)];
-}
-
-function randomDigit(): string {
-  return String(randomInt(10));
-}
-
-function randomSymbol(): string {
-  const symbols = '!@#$%&*?+_=';
-  return symbols[randomInt(symbols.length)];
-}
-
-/* ── Syllable generation ──────────────────────────────────────────────── */
+/** Syllable shapes and their weights out of ten. Exported for the entropy module. */
+export const SYLLABLE_SHAPES = [
+  { shape: 'CVC', weight: 7, size: CONSONANTS.length * VOWELS.length * CONSONANTS.length },
+  { shape: 'VC', weight: 2, size: VOWELS.length * CONSONANTS.length },
+  { shape: 'CV', weight: 1, size: CONSONANTS.length * VOWELS.length },
+] as const;
 
 function generateSyllable(): string {
-  return pick(CONSONANTS) + pick(VOWELS) + pick(CONSONANTS);
+  const roll = randomInt(10);
+  if (roll < 2) return pickChar(VOWELS) + pickChar(CONSONANTS);
+  if (roll < 3) return pickChar(CONSONANTS) + pickChar(VOWELS);
+  return pickChar(CONSONANTS) + pickChar(VOWELS) + pickChar(CONSONANTS);
 }
-
-function generateSyllableMixed(): string {
-  // Random: CVC (70%) or VC (20%) or CV (10%)
-  const r = randomInt(10);
-  if (r < 2) return pick(VOWELS) + pick(CONSONANTS);
-  if (r < 3) return pick(CONSONANTS) + pick(VOWELS);
-  return pick(CONSONANTS) + pick(VOWELS) + pick(CONSONANTS);
-}
-
-/* ── Generator ────────────────────────────────────────────────────────── */
 
 export function generatePronounceable(opts: PronounceableOptions): string {
-  const {
-    syllableCount,
-    capitalize = true,
-    includeNumber = true,
-    includeSymbol = true,
-  } = opts;
+  const { syllableCount, capitalize = true, includeNumber = true, includeSymbol = true } = opts;
 
-  // Generate base word from syllables
   let word = '';
-  for (let i = 0; i < syllableCount; i++) {
-    word += generateSyllableMixed();
-  }
+  for (let i = 0; i < Math.max(1, syllableCount); i++) word += generateSyllable();
 
-  // Capitalize first letter
-  if (capitalize) {
-    word = word.charAt(0).toUpperCase() + word.slice(1);
-  }
-
-  // Append number
-  if (includeNumber) {
-    const digits = 2 + randomInt(2); // 2-3 digits
-    let num = '';
-    for (let i = 0; i < digits; i++) num += randomDigit();
-    word += num;
-  }
-
-  // Append symbol
-  if (includeSymbol) {
-    word += randomSymbol();
-  }
+  if (capitalize) word = word.charAt(0).toUpperCase() + word.slice(1);
+  if (includeNumber) word += randomString(DIGITS, 2 + randomInt(2));
+  if (includeSymbol) word += pickChar(SYMBOLS);
 
   return word;
 }

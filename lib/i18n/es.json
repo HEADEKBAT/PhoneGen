@@ -108,7 +108,6 @@
     "devPairs": "Pares",
     "history": "Historial",
     "random": "Aleatorio",
-    "humanPassword": "Contraseña legible",
     "passphrase": "Frase de contraseña",
     "pronounceable": "Pronunciable",
     "generate": "Generar",
@@ -137,8 +136,6 @@
     "historyStored": "Últimas {count} entradas — solo en el navegador",
     "score": "Puntuación",
     "entropyBits": "{bits} bits de entropía",
-    "offlineCrack": "Fuera de línea: {time}",
-    "onlineCrack": "En línea: {time}",
     "veryWeak": "Muy débil",
     "weak": "Débil",
     "moderate": "Moderado",
@@ -156,7 +153,38 @@
     "hex": "Hex",
     "base64": "Base64",
     "username": "Usuario",
-    "password": "Contraseña"
+    "password": "Contraseña",
+    "strength": {
+      "title": "Solidez",
+      "bits": "{bits} bits de entropía",
+      "instant": "al instante",
+      "centuries": "siglos",
+      "scenario": {
+        "online": {
+          "label": "En línea, con límite de intentos",
+          "hint": "Un formulario de acceso que frena los intentos — 100/s"
+        },
+        "fastHash": {
+          "label": "Base robada, hash rápido",
+          "hint": "MD5, SHA-1 o NTLM en un equipo con GPU — 100 mil millones/s"
+        },
+        "slowHash": {
+          "label": "Base robada, hash lento",
+          "hint": "bcrypt o argon2id con un coste razonable — 10 mil/s"
+        }
+      },
+      "holds": "Aguanta frente a",
+      "falls": "Cae frente a",
+      "note": {
+        "common": "Aparece en las listas de contraseñas filtradas",
+        "tooShort": "Menos de 8 caracteres",
+        "singleCharClass": "Un solo tipo de carácter",
+        "resistsOnline": "Adivinación en línea",
+        "resistsFastHash": "Una base con hash MD5",
+        "resistsSlowHash": "Una base con hash bcrypt",
+        "resistsDictionary": "Diccionarios y listas de filtraciones"
+      }
+    }
   },
   "addressGenerator": {
     "heading": "Generador de direcciones",

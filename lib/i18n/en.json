@@ -108,7 +108,6 @@
     "devPairs": "Dev Pairs",
     "history": "History",
     "random": "Random",
-    "humanPassword": "Human Password",
     "passphrase": "Passphrase",
     "pronounceable": "Pronounceable",
     "generate": "Generate",
@@ -137,8 +136,6 @@
     "historyStored": "Last {count} entries — stored only in your browser",
     "score": "Score",
     "entropyBits": "{bits} bits entropy",
-    "offlineCrack": "Offline crack: {time}",
-    "onlineCrack": "Online crack: {time}",
     "veryWeak": "Very Weak",
     "weak": "Weak",
     "moderate": "Moderate",
@@ -156,7 +153,38 @@
     "hex": "Hex",
     "base64": "Base64",
     "username": "Username",
-    "password": "Password"
+    "password": "Password",
+    "strength": {
+      "title": "Strength",
+      "bits": "{bits} bits of entropy",
+      "instant": "instantly",
+      "centuries": "centuries",
+      "scenario": {
+        "online": {
+          "label": "Online, rate-limited",
+          "hint": "A login form that throttles guesses — 100/s"
+        },
+        "fastHash": {
+          "label": "Stolen database, fast hash",
+          "hint": "MD5, SHA-1 or NTLM on one GPU rig — 100 billion/s"
+        },
+        "slowHash": {
+          "label": "Stolen database, slow hash",
+          "hint": "bcrypt or argon2id at a sane cost — 10 thousand/s"
+        }
+      },
+      "holds": "Holds up against",
+      "falls": "Falls to",
+      "note": {
+        "common": "In the leaked-password lists",
+        "tooShort": "Under 8 characters",
+        "singleCharClass": "One kind of character only",
+        "resistsOnline": "Online guessing",
+        "resistsFastHash": "A database hashed with MD5",
+        "resistsSlowHash": "A database hashed with bcrypt",
+        "resistsDictionary": "Dictionaries and leak lists"
+      }
+    }
   },
   "addressGenerator": {
     "heading": "Address Generator",

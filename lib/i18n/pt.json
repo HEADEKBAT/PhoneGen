@@ -108,7 +108,6 @@
     "devPairs": "Pares",
     "history": "Histórico",
     "random": "Aleatório",
-    "humanPassword": "Senha legível",
     "passphrase": "Frase secreta",
     "pronounceable": "Pronunciável",
     "generate": "Gerar",
@@ -137,8 +136,6 @@
     "historyStored": "Últimas {count} entradas — armazenadas apenas no navegador",
     "score": "Pontuação",
     "entropyBits": "{bits} bits de entropia",
-    "offlineCrack": "Offline: {time}",
-    "onlineCrack": "Online: {time}",
     "veryWeak": "Muito fraca",
     "weak": "Fraca",
     "moderate": "Moderada",
@@ -156,7 +153,38 @@
     "hex": "Hex",
     "base64": "Base64",
     "username": "Usuário",
-    "password": "Senha"
+    "password": "Senha",
+    "strength": {
+      "title": "Robustez",
+      "bits": "{bits} bits de entropia",
+      "instant": "instantaneamente",
+      "centuries": "séculos",
+      "scenario": {
+        "online": {
+          "label": "Online, com limite de tentativas",
+          "hint": "Um formulário de login que freia as tentativas — 100/s"
+        },
+        "fastHash": {
+          "label": "Base roubada, hash rápido",
+          "hint": "MD5, SHA-1 ou NTLM numa máquina com GPU — 100 mil milhões/s"
+        },
+        "slowHash": {
+          "label": "Base roubada, hash lento",
+          "hint": "bcrypt ou argon2id com um custo razoável — 10 mil/s"
+        }
+      },
+      "holds": "Aguenta contra",
+      "falls": "Cai perante",
+      "note": {
+        "common": "Está nas listas de senhas vazadas",
+        "tooShort": "Menos de 8 caracteres",
+        "singleCharClass": "Um único tipo de caractere",
+        "resistsOnline": "Adivinhação online",
+        "resistsFastHash": "Uma base com hash MD5",
+        "resistsSlowHash": "Uma base com hash bcrypt",
+        "resistsDictionary": "Dicionários e listas de vazamentos"
+      }
+    }
   },
   "addressGenerator": {
     "heading": "Gerador de endereços",

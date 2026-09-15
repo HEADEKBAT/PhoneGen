@@ -2,7 +2,7 @@
  * Credential Deep-Link Factory — pages that open the credential studio in one
  * particular mode.
  *
- * /wifi-password-generator, /human-password-generator and /pin-generator are
+ * /wifi-password-generator and /pin-generator are
  * not landing pages and not separate tools: each one is the credential studio
  * with a tab and a mode pre-selected, given its own URL because that is what
  * people search for.

@@ -1,233 +1,274 @@
 /**
- * Entropy calculation and password strength scoring.
+ * How much a generated credential is actually worth, in bits.
  *
- * Entropy is calculated as:
- *   bits = length × log2(charsetSize)
+ * Entropy here is a property of the *generator*, not of the string it emitted:
+ * it is the log of how many equally likely values the chosen settings could
+ * have produced. "Tr0ub4dor&3" has the same entropy as "correcthorse" if both
+ * came out of the same process. That is why every function below takes the
+ * options rather than the password, and why `scorePassword` takes the bits as
+ * an argument instead of trying to infer them from characters.
  *
- * For random passwords: charsetSize = sum of all enabled character class sizes
- * For passphrases:      bits = wordCount × log2(wordlistSize)
- * For Human Password:   bits ≈ log2(pronouns × verbs × nouns × 10^digits × symbols)
- * For pronounceable:    bits ≈ syllableCount × log2(onsets × nuclei × codas)
+ * ── What was wrong here before ──────────────────────────────────────────────
  *
- * Crack time estimates:
- *   offline: guesses / 1e10 per second (fast hash, e.g. MD5/NTLM)
- *   online:  guesses / 100 per second (network-bound, rate limited)
- *
- * Score (0-100):
- *   < 30 bits   →  0-20  (Very Weak)
- *   30-40 bits  → 20-40  (Weak)
- *   40-50 bits  → 40-60  (Moderate)
- *   50-60 bits  → 60-80  (Strong)
- *   60+ bits    → 80-100 (Very Strong)
+ * The charset table and the generator had drifted apart, and every drift
+ * flattered the result. `getCharsetSize` counted symbols as a 28-character set
+ * while `generatePassword` drew from 32; it ignored the user's exclusion list
+ * entirely, so excluding twenty characters changed nothing in the reported
+ * figure; and the Human Password estimate multiplied by a 28-symbol alphabet
+ * that the generator never used (its symbol set had 11). Entropy is now taken
+ * from `resolveCharsets`, the same function the generator draws from, so the
+ * two cannot disagree again.
  */
 
 import { WORDS } from './wordlist';
-import { PRONOUNS, VERBS, NOUNS } from './humanWordbank';
+import { SYLLABLE_SHAPES } from './generatePronounceable';
+import { resolveCharsets, type RandomPasswordOptions } from './generatePassword';
 import { isCommonPassword } from './commonPasswords';
-import type { PasswordMode } from './types';
 
-const SYMBOL_SET = '!@#$%^&*()_+-=[]{}|;:,.<>?/~';
-const CONSONANTS = 'bcdfghjklmnpqrstvwxyz';
-const VOWELS = 'aeiou';
-
-/* ── Charset size helpers ─────────────────────────────────────────────── */
-
-const CHARSETS: Record<string, number> = {
-  uppercase: 26,
-  uppercaseSafe: 24, // without I, O
-  lowercase: 26,
-  lowercaseSafe: 24, // without l, o
-  digits: 10,
-  digitsSafe: 8,     // without 0, 1
-  symbols: SYMBOL_SET.length,
-};
-
-export function getCharsetSize(opts: {
-  uppercase: boolean;
-  lowercase: boolean;
-  numbers: boolean;
-  symbols: boolean;
-  avoidAmbiguous?: boolean;
-}): number {
-  let size = 0;
-  if (opts.uppercase) size += opts.avoidAmbiguous ? CHARSETS.uppercaseSafe : CHARSETS.uppercase;
-  if (opts.lowercase) size += opts.avoidAmbiguous ? CHARSETS.lowercaseSafe : CHARSETS.lowercase;
-  if (opts.numbers) size += opts.avoidAmbiguous ? CHARSETS.digitsSafe : CHARSETS.digits;
-  if (opts.symbols) size += CHARSETS.symbols;
-  return size || 26; // fallback to lowercase if nothing selected
-}
-
-/* ── Entropy calculation ──────────────────────────────────────────────── */
+/* ── Entropy ──────────────────────────────────────────────────────────── */
 
 /**
- * Calculate entropy bits for a random password.
- * bits = length × log2(charsetSize)
+ * The size of the alphabet a set of options actually draws from.
+ *
+ * Counted over the union of the resolved sets, deduplicated — the sets are
+ * disjoint today, and a duplicated character would otherwise be counted twice.
  */
-export function calculateRandomPasswordEntropy(
-  length: number,
-  charsetSize: number,
-): number {
-  return length * Math.log2(charsetSize);
+export function getCharsetSize(opts: RandomPasswordOptions): number {
+  const union = new Set(resolveCharsets(opts).join(''));
+  return union.size;
+}
+
+/** `length × log2(alphabet)` — the whole of it, for a uniform draw. */
+export function calculateRandomPasswordEntropy(opts: RandomPasswordOptions): number {
+  return Math.max(1, Math.floor(opts.length)) * Math.log2(getCharsetSize(opts));
 }
 
 /**
- * Calculate entropy bits for a passphrase.
- * bits = wordCount × log2(wordlistSize)
+ * Passphrase entropy, for sampling without replacement.
+ *
+ * `log2(n · (n−1) · … · (n−k+1))` rather than `k · log2(n)`: the generator does
+ * not repeat a word, so the later draws come from a slightly smaller pool. At
+ * six words from 4096 the difference is 0.004 bits — reported exactly because
+ * there is no reason to report it any other way.
  */
 export function calculatePassphraseEntropy(wordCount: number): number {
-  return wordCount * Math.log2(WORDS.length);
+  const k = Math.max(1, Math.min(Math.floor(wordCount), WORDS.length));
+  let bits = 0;
+  for (let i = 0; i < k; i++) bits += Math.log2(WORDS.length - i);
+  return bits;
 }
 
 /**
- * Calculate entropy bits for a Human Password.
- * We estimate by counting the number of possible structures and word choices.
- * Minimum: pronouns × verbs × nouns  (then digits and symbols if enabled)
- */
-export function calculateHumanPasswordEntropy(opts: {
-  includeNumber?: boolean;
-  includeSymbol?: boolean;
-}): number {
-  let combinations = PRONOUNS.length * VERBS.length * NOUNS.length;
-  if (opts.includeNumber) combinations *= 1000; // ~3 digits
-  if (opts.includeSymbol) combinations *= SYMBOL_SET.length;
-  return Math.log2(combinations);
-}
-
-/**
- * Calculate entropy bits for pronounceable passwords.
- * Each CVC syllable: consonants.length × vowels.length × consonants.length
+ * Pronounceable entropy, accounting for the shape distribution.
+ *
+ * Each syllable is a weighted choice of shape followed by a uniform draw
+ * inside it, so the per-syllable entropy is the Shannon entropy of that
+ * mixture: −Σ p(shape)·log2(p(shape)/size(shape)).
  */
 export function calculatePronounceableEntropy(syllableCount: number): number {
-  const perSyllable = CONSONANTS.length * VOWELS.length * CONSONANTS.length;
-  return syllableCount * Math.log2(perSyllable);
-}
-
-/* ── Crack time estimation ────────────────────────────────────────────── */
-
-export interface CrackTimeEstimate {
-  offline: string;
-  online: string;
+  const total = SYLLABLE_SHAPES.reduce((sum, s) => sum + s.weight, 0);
+  const perSyllable = SYLLABLE_SHAPES.reduce((bits, s) => {
+    const p = s.weight / total;
+    return bits - p * Math.log2(p / s.size);
+  }, 0);
+  return Math.max(1, syllableCount) * perSyllable;
 }
 
 /**
- * Convert a number of seconds to a human-readable string.
+ * PIN entropy.
+ *
+ * Without constraints it is `length × log2(10)`. With `noRepeat` the space is
+ * the number of digit strings where no two neighbours match and the ends
+ * differ — counted exactly by the standard cycle formula, because a PIN is
+ * short enough that an approximation would be visible.
  */
-function formatDuration(seconds: number): string {
-  const units: [string, number][] = [
-    ['years', 365.25 * 24 * 3600],
-    ['months', 30 * 24 * 3600],
-    ['weeks', 7 * 24 * 3600],
-    ['days', 24 * 3600],
-    ['hours', 3600],
-    ['minutes', 60],
-    ['seconds', 1],
-  ];
+export function calculatePinEntropy(length: number, noRepeat: boolean): number {
+  if (!noRepeat) return length * Math.log2(10);
+  /* Proper colourings of a cycle of `length` vertices with 10 colours:
+     (k−1)^n + (−1)^n (k−1), with k = 10. */
+  const n = Math.max(2, length);
+  const count = Math.pow(9, n) + (n % 2 === 0 ? 9 : -9);
+  return Math.log2(count);
+}
 
-  for (const [unit, secs] of units) {
-    if (seconds >= secs) {
-      const val = seconds / secs;
-      return val >= 100
-        ? `${Math.round(val)} ${unit}`
-        : `${val.toFixed(1)} ${unit}`;
+/** Entropy of a string of `length` characters drawn uniformly from `alphabet`. */
+export function calculateStringEntropy(length: number, alphabetSize: number): number {
+  return length * Math.log2(alphabetSize);
+}
+
+/* ── Crack time ───────────────────────────────────────────────────────── */
+
+/**
+ * The three scenarios the meter reports.
+ *
+ * One number labelled "offline" says nothing without naming the hash: the same
+ * password falls in minutes against unsalted MD5 and holds for centuries
+ * against bcrypt at a sane work factor. Six orders of magnitude separate these
+ * rows, and which one applies is a property of the service storing the
+ * password, not of the password.
+ *
+ * Rates are order-of-magnitude figures for a single well-equipped attacker
+ * (roughly an 8×GPU rig, 2025). They are meant to be read as exponents, not as
+ * measurements.
+ */
+export const ATTACK_SCENARIOS = [
+  /** Rate-limited login form. 100 guesses per second is generous to the attacker. */
+  { id: 'online', guessesPerSecond: 1e2 },
+  /** Stolen database, fast unsalted hash: MD5, SHA-1, NTLM. */
+  { id: 'fastHash', guessesPerSecond: 1e11 },
+  /** Stolen database, deliberately slow hash: bcrypt cost 12, argon2id. */
+  { id: 'slowHash', guessesPerSecond: 1e4 },
+] as const;
+
+export type AttackScenarioId = (typeof ATTACK_SCENARIOS)[number]['id'];
+
+/**
+ * A duration, as a magnitude and a unit key — never a formatted English
+ * string. The site runs in six languages; the caller does the wording.
+ */
+export interface Duration {
+  value: number;
+  unit: 'instant' | 'seconds' | 'minutes' | 'hours' | 'days' | 'months' | 'years' | 'centuries';
+}
+
+const UNITS: [Duration['unit'], number][] = [
+  ['years', 365.25 * 24 * 3600],
+  ['months', 30 * 24 * 3600],
+  ['days', 24 * 3600],
+  ['hours', 3600],
+  ['minutes', 60],
+  ['seconds', 1],
+];
+
+export function describeDuration(seconds: number): Duration {
+  if (!isFinite(seconds) || seconds >= 100 * 365.25 * 24 * 3600) {
+    return { value: 0, unit: 'centuries' };
+  }
+  if (seconds < 1) return { value: 0, unit: 'instant' };
+
+  for (const [unit, size] of UNITS) {
+    if (seconds >= size) {
+      const value = seconds / size;
+      return { value: value >= 10 ? Math.round(value) : Math.round(value * 10) / 10, unit };
     }
   }
-  return `${seconds.toFixed(1)} seconds`;
+  return { value: 0, unit: 'instant' };
 }
 
 /**
- * Estimate crack time given entropy bits.
- * @param bits Entropy in bits
- * @param guessesPerSecond Guesses per second (1e10 offline, 100 online)
+ * Time to find the password, given entropy and a guess rate.
+ *
+ * Half the keyspace, not all of it: an exhaustive search finds a uniformly
+ * random secret after half the candidates on average, and the average is the
+ * number worth quoting.
  */
-export function estimateCrackTime(bits: number, guessesPerSecond: number): string {
-  const guesses = Math.pow(2, bits);
-  const seconds = guesses / guessesPerSecond;
-
-  // Handle overflow / infinity
-  if (!isFinite(seconds) || seconds > 1e15) {
-    return 'centuries';
-  }
-
-  return formatDuration(seconds);
+export function estimateCrackSeconds(bits: number, guessesPerSecond: number): number {
+  const guesses = Math.pow(2, bits - 1);
+  return guesses / guessesPerSecond;
 }
 
-export function getCrackTimeEstimates(bits: number): CrackTimeEstimate {
-  return {
-    offline: estimateCrackTime(bits, 1e10),
-    online: estimateCrackTime(bits, 100),
-  };
+export interface CrackEstimate {
+  scenario: AttackScenarioId;
+  seconds: number;
+  duration: Duration;
+}
+
+export function getCrackEstimates(bits: number): CrackEstimate[] {
+  return ATTACK_SCENARIOS.map((scenario) => {
+    const seconds = estimateCrackSeconds(bits, scenario.guessesPerSecond);
+    return { scenario: scenario.id, seconds, duration: describeDuration(seconds) };
+  });
 }
 
 /* ── Scoring ──────────────────────────────────────────────────────────── */
 
+/**
+ * Where the five bands sit.
+ *
+ * The old scale ran `bits / 60 × 100`, so 60 bits scored a full 100 and was
+ * labelled "Very Strong". 60 bits is about a day against a fast hash on one
+ * rig — respectable for a forum login, nowhere near what the top of a scale
+ * should mean. The bands below are anchored to what the bits survive:
+ *
+ *   < 40   nothing; minutes even online
+ *    40    survives an online attack, falls to a fast hash in minutes
+ *    60    a day against a fast hash
+ *    80    the point where a fast hash stops being the weak link
+ *   100+   not brute-forceable by anyone, on any hash, this century
+ */
+export const STRENGTH_BANDS = [
+  { id: 'veryWeak', minBits: 0 },
+  { id: 'weak', minBits: 40 },
+  { id: 'moderate', minBits: 60 },
+  { id: 'strong', minBits: 80 },
+  { id: 'veryStrong', minBits: 100 },
+] as const;
+
+export type StrengthBandId = (typeof STRENGTH_BANDS)[number]['id'];
+
+export function bandForBits(bits: number): StrengthBandId {
+  let band: StrengthBandId = 'veryWeak';
+  for (const candidate of STRENGTH_BANDS) {
+    if (bits >= candidate.minBits) band = candidate.id;
+  }
+  return band;
+}
+
+/** Things the meter can say about a credential, as keys rather than sentences. */
+export type StrengthNote =
+  | 'common'
+  | 'tooShort'
+  | 'singleCharClass'
+  | 'resistsOnline'
+  | 'resistsFastHash'
+  | 'resistsSlowHash'
+  | 'resistsDictionary';
+
 export interface PasswordScore {
-  score: number;       // 0-100
+  /** 0-100, for the bar. 100 means 120 bits or more, not "as good as it gets". */
+  score: number;
   bits: number;
-  crackTime: CrackTimeEstimate;
+  band: StrengthBandId;
+  estimates: CrackEstimate[];
   isCommon: boolean;
-  resistant: string[];
-  weak: string[];
+  /** Reasons it holds up. */
+  resistant: StrengthNote[];
+  /** Reasons it does not. */
+  weak: StrengthNote[];
 }
 
 /**
- * Calculate a comprehensive password score (0-100).
+ * Turns entropy into the numbers and flags the meter renders.
  *
- * Score formula:
- *   base = clamp(bits / 60 * 100, 0, 100)  // 60+ bits = 100
- *   If isCommon: score *= 0.1 (severe penalty)
- *   If length < 8: score *= 0.5
+ * The bar is linear in bits up to 120 rather than in "score points", so moving
+ * from 40 to 60 bits looks like the same distance as 60 to 80 — which it is.
  */
-export function scorePassword(
-  value: string,
-  bits: number,
-  mode?: PasswordMode,
-): PasswordScore {
+export function scorePassword(value: string, bits: number): PasswordScore {
   const common = isCommonPassword(value);
-  let base = Math.min(100, (bits / 60) * 100);
 
-  // Penalties
-  if (common) base *= 0.1;
-  if (value.length < 8) base *= 0.5;
+  /* A password on a leak list has no entropy left regardless of how it was
+     built: the attacker's first few thousand guesses include it. */
+  const effectiveBits = common ? Math.min(bits, 12) : bits;
 
-  const score = Math.round(Math.max(0, Math.min(100, base)));
-  const crackTime = getCrackTimeEstimates(bits);
+  const resistant: StrengthNote[] = [];
+  const weak: StrengthNote[] = [];
 
-  // Build resistant/weak lists
-  const resistant: string[] = [];
-  const weak: string[] = [];
+  if (common) weak.push('common');
+  if (value.length < 8) weak.push('tooShort');
 
-  if (bits >= 40) resistant.push('Brute Force (offline)');
-  else if (bits < 40) weak.push('Brute Force (offline)');
+  const classes = [/[a-z]/, /[A-Z]/, /[0-9]/, /[^A-Za-z0-9]/].filter((re) => re.test(value)).length;
+  if (classes < 2 && !/^\d+$/.test(value)) weak.push('singleCharClass');
 
-  if (bits >= 30) resistant.push('Brute Force (online)');
-  else weak.push('Brute Force (online)');
-
-  if (bits >= 50) resistant.push('Dictionary Attack');
-  else weak.push('Dictionary Attack');
-
-  if (value.length >= 12) resistant.push('Length (12+ chars)');
-  else if (value.length < 8) weak.push('Length (too short)');
-
-  if (common) {
-    weak.push('Common password — easily guessable');
-  } else {
-    resistant.push('Not in common password lists');
-  }
-
-  // Mixed charset detection for random passwords
-  const hasUpper = /[A-Z]/.test(value);
-  const hasLower = /[a-z]/.test(value);
-  const hasDigit = /[0-9]/.test(value);
-  const hasSymbol = /[^A-Za-z0-9]/.test(value);
-  const charsetCount = [hasUpper, hasLower, hasDigit, hasSymbol].filter(Boolean).length;
-
-  if (charsetCount >= 3) resistant.push('Mixed character types');
-  else if (charsetCount < 2) weak.push('Limited character variety');
+  (effectiveBits >= 30 ? resistant : weak).push('resistsOnline');
+  (effectiveBits >= 80 ? resistant : weak).push('resistsFastHash');
+  (effectiveBits >= 50 ? resistant : weak).push('resistsSlowHash');
+  (common ? weak : resistant).push('resistsDictionary');
 
   return {
-    score,
-    bits: Math.round(bits * 10) / 10,
-    crackTime,
+    score: Math.round(Math.max(0, Math.min(100, (effectiveBits / 120) * 100))),
+    bits: Math.round(effectiveBits * 10) / 10,
+    band: bandForBits(effectiveBits),
+    estimates: getCrackEstimates(effectiveBits),
     isCommon: common,
     resistant,
     weak,

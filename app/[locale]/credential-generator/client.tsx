@@ -3,15 +3,15 @@
 import { Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getPreset } from '@/lib/config/credentialPresets';
-import type { SecretMode } from '@/lib/credentialGenerator/types';
+import type { PasswordMode, SecretMode } from '@/lib/credentialGenerator/types';
 import CredentialTabs from '@/components/credential/CredentialTabs';
 import { useCredentialGeneratorStore } from '@/lib/store';
 
 export interface CredentialClientProps {
   initialMode?: {
     activeTab?: 'passwords' | 'pins-secrets' | 'dev-pairs' | 'history';
-    passwordMode?: 'random' | 'human' | 'passphrase' | 'pronounceable';
-    secretMode?: 'uuid' | 'uuid-v7' | 'jwt' | 'api-key' | 'webhook' | 'token' | 'session' | 'oauth' | 'hex' | 'base64';
+    passwordMode?: 'random' | 'passphrase' | 'pronounceable';
+    secretMode?: SecretMode;
     pinLength?: 4 | 6 | 8;
   };
   /** When false, renders only CredentialTabs (no page chrome — for ToolShell embedding). */
@@ -57,8 +57,11 @@ function CredentialContent({ initialMode, standalone = true }: CredentialClientP
           store.setPasswordMode('random');
           break;
         case 'human':
+          /* The Human Password mode is gone — 15.9 bits of structure, which no
+             word bank fixes. `?mode=human` is still in bookmarks and in the
+             wild, so it opens the mode that answers the same ask honestly. */
           store.setActiveTab('passwords');
-          store.setPasswordMode('human');
+          store.setPasswordMode('passphrase');
           break;
         case 'passphrase':
           store.setActiveTab('passwords');
@@ -70,6 +73,7 @@ function CredentialContent({ initialMode, standalone = true }: CredentialClientP
           break;
         case 'pin':
           store.setActiveTab('pins-secrets');
+          store.setSecretMode('pin');
           store.setPinLength(6);
           break;
         case 'uuid':
@@ -107,7 +111,10 @@ function CredentialContent({ initialMode, standalone = true }: CredentialClientP
     // Fallback to initialMode prop
     if (!initialMode) return;
     if (initialMode.activeTab) store.setActiveTab(initialMode.activeTab);
-    if (initialMode.passwordMode) store.setPasswordMode(initialMode.passwordMode);
+    if (initialMode.passwordMode) {
+      const mode = initialMode.passwordMode as PasswordMode | 'human';
+      store.setPasswordMode(mode === 'human' ? 'passphrase' : mode);
+    }
     if (initialMode.secretMode) {
       /*
        * The store accepts every secret mode this prop can carry, so the map
