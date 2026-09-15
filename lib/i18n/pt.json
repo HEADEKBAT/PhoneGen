@@ -949,8 +949,8 @@
     },
     "media": {
       "heroTitle": "Media Studio — conversor de vídeo online gratuito",
-      "heroDesc": "Converta, comprima, redimensione e edite vídeos online. Conversor gratuito baseado em FFmpeg.wasm — 100 % no navegador, sem uploads e sem limites.",
-      "ctaLabel": "Abrir Media Studio",
+      "heroDesc": "Converta, comprima e reempacote vídeo no navegador. Arquivos e links m3u8, sem upload e sem cadastro.",
+      "ctaLabel": "Abrir o Media Studio",
       "feature1Title": "Suporte universal de formatos",
       "feature1Desc": "Converta entre MP4, MOV, AVI, MKV, WEBM, GIF e formatos de áudio. Mais de 12 formatos de entrada e saída.",
       "feature2Title": "Compressão inteligente",
@@ -967,9 +967,9 @@
       "faq_q1": "Este conversor de vídeo é gratuito?",
       "faq_a1": "Sim, totalmente. Toda a conversão acontece no seu navegador com FFmpeg.wasm. Sem limites, sem marca d'água e sem cobranças ocultas.",
       "faq_q2": "Meus vídeos são enviados para um servidor?",
-      "faq_a2": "Não. Todo o processamento acontece inteiramente no seu navegador e seus arquivos nunca saem do dispositivo, o que garante privacidade e segurança.",
+      "faq_a2": "Os arquivos do seu dispositivo não: são decodificados e codificados nesta aba e não vão para lugar nenhum. A única exceção são os links: se o host de um stream não deixa o navegador ler os seus arquivos, os segmentos passam pelo nosso proxy e seguem direto para o seu navegador. Nada fica guardado lá.",
       "faq_q3": "Qual é o tamanho máximo de arquivo?",
-      "faq_a3": "500 MB. O limite vem da memória do navegador e das restrições do FFmpeg.wasm.",
+      "faq_a3": "Cerca de 500 MB para um arquivo do seu dispositivo e uns 2 GB para um stream montado a partir de um link. Os dois são limites da memória do navegador, não regras. Trocar apenas o contêiner copia os fluxos em vez de recodificá-los, o que custa bem menos memória e tempo.",
       "faq_q4": "Quais formatos são suportados?",
       "faq_a4": "Vídeo: MP4, MOV, AVI, MKV, WEBM, GIF. Áudio: MP3, WAV, OGG, AAC, M4A, FLAC.",
       "faq_q5": "Quanto dá para comprimir um vídeo?",
@@ -979,7 +979,93 @@
       "faq_q7": "O WEBM suporta transparência?",
       "faq_a7": "Sim, o WEBM suporta canal alfa, o que o torna ideal para sobreposições e gráficos com fundo transparente.",
       "faq_q8": "Posso extrair o áudio de um vídeo?",
-      "faq_a8": "Sim. Envie um vídeo, escolha «Extrair áudio» e selecione o formato desejado: MP3, AAC, WAV, FLAC ou OGG."
+      "faq_a8": "Sim. Envie um vídeo, escolha «Extrair áudio» e selecione o formato desejado: MP3, AAC, WAV, FLAC ou OGG.",
+      "eyebrow": {
+        "formats": "12 formatos",
+        "hls": "m3u8 e HLS",
+        "inBrowser": "roda no seu navegador",
+        "noAccount": "sem cadastro"
+      },
+      "title": "Converta vídeo sem enviá-lo.",
+      "lede": "Solte um arquivo ou cole um link m3u8. O FFmpeg roda nesta aba — e quando só o contêiner muda, os fluxos são copiados em vez de recodificados: segundos em vez de minutos, e nenhuma geração de qualidade perdida.",
+      "cta": {
+        "primary": "Abrir o conversor",
+        "secondary": "O que ele faz"
+      },
+      "showcase": {
+        "label": "exemplo",
+        "note": "O que o estúdio faz com isso.",
+        "kinds": {
+          "hls": "Uma gravação HLS, reempacotada",
+          "mov": "Um clipe QuickTime para MP4",
+          "audio": "Só a faixa de áudio",
+          "webm": "Pronto para a web"
+        }
+      },
+      "groups": {
+        "convert": {
+          "title": "Trocar de formato",
+          "note": "A mesma imagem em outro contêiner — ou outro codec, se precisar."
+        },
+        "shrink": {
+          "title": "Deixar menor",
+          "note": "Caber num limite sem a qualidade despencar."
+        },
+        "extract": {
+          "title": "Tirar alguma coisa",
+          "note": "O áudio, um loop curto, uma cena isolada."
+        }
+      },
+      "can": {
+        "hls": {
+          "title": "Gravação HLS → MP4",
+          "note": "A playlist é lida, as qualidades listadas, os segmentos unidos aqui."
+        },
+        "container": {
+          "title": "Qualquer coisa → MP4",
+          "note": "Já é H.264 e AAC? Então nada é recodificado."
+        },
+        "webm": {
+          "title": "MP4 → WEBM",
+          "note": "VP9 e Opus, para a web e para transparência."
+        },
+        "compress": {
+          "title": "Comprimir",
+          "note": "CRF em vez de tamanho alvo: a qualidade quem escolhe é você."
+        },
+        "platform": {
+          "title": "Para a plataforma",
+          "note": "Predefinições para YouTube, TikTok, Reels e o resto."
+        },
+        "audio": {
+          "title": "Extrair o áudio",
+          "note": "MP3, AAC, Opus — ou FLAC, sem perdas."
+        },
+        "gif": {
+          "title": "Fazer um GIF",
+          "note": "Duas passagens, para o loop ganhar a própria paleta."
+        }
+      },
+      "howTitle": "Como funciona",
+      "how": {
+        "s1": {
+          "title": "Escolha a origem",
+          "body": "Um arquivo do seu dispositivo, ou um link. Uma playlist m3u8 é lida, as qualidades são listadas, e os segmentos são baixados e unidos aqui."
+        },
+        "s2": {
+          "title": "Escolha a saída",
+          "body": "Um formato, ou uma predefinição para onde ele vai. O estúdio só oferece os codecs que o motor no seu navegador realmente consegue produzir."
+        },
+        "s3": {
+          "title": "Converta",
+          "body": "O FFmpeg roda nesta aba. O progresso é real e dá para parar. Nada entra numa fila em servidor, então nada espera atrás do trabalho de outra pessoa."
+        }
+      },
+      "closing": {
+        "title": "Quando quiser",
+        "body": "Sem cadastro, sem upload e sem marca d’água na saída.",
+        "cta": "Abrir o Media Studio"
+      }
     },
     "cryptoWallet": {
       "heroTitle": "Crypto Wallet Playground",

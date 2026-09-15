@@ -948,8 +948,8 @@
       "faq_a5": "L (7 % Wiederherstellung) für maximale Datenkapazität, M (15 %) für den Normalfall, Q (25 %) als Kompromiss, H (30 %) bei Logo oder Druck auf gewölbten Oberflächen. Eine höhere Stufe macht den Code größer, aber widerstandsfähiger gegen Beschädigung."
     },
     "media": {
-      "heroTitle": "Media Studio — kostenloser Online-Videokonverter",
-      "heroDesc": "Videos online konvertieren, komprimieren, skalieren und bearbeiten. Kostenloser Konverter auf Basis von FFmpeg.wasm — komplett im Browser, ohne Uploads, ohne Limits.",
+      "heroTitle": "Media Studio — kostenloser Online-Video-Konverter",
+      "heroDesc": "Video im Browser umwandeln, komprimieren und umpacken. Dateien und m3u8-Links, ohne Upload, ohne Konto.",
       "ctaLabel": "Media Studio öffnen",
       "feature1Title": "Alle gängigen Formate",
       "feature1Desc": "Konvertierung zwischen MP4, MOV, AVI, MKV, WEBM, GIF und Audioformaten. Über 12 Ein- und Ausgabeformate.",
@@ -967,9 +967,9 @@
       "faq_q1": "Ist der Videokonverter kostenlos?",
       "faq_a1": "Ja, vollständig. Die gesamte Konvertierung läuft über FFmpeg.wasm in Ihrem Browser. Keine Limits, keine Wasserzeichen, keine versteckten Kosten.",
       "faq_q2": "Werden meine Videos auf einen Server hochgeladen?",
-      "faq_a2": "Nein. Die Verarbeitung findet vollständig in Ihrem Browser statt, Ihre Dateien verlassen Ihr Gerät nicht. Das garantiert Privatsphäre und Sicherheit.",
+      "faq_a2": "Dateien von Ihrem Gerät nicht: Sie werden in diesem Tab dekodiert und kodiert und nirgendwohin gesendet. Die eine Ausnahme betrifft Links — lässt der Host eines Streams den Browser seine Dateien nicht lesen, laufen die Segmente über unseren Proxy und gehen direkt an Ihren Browser. Dort wird nichts gespeichert.",
       "faq_q3": "Wie groß darf eine Datei sein?",
-      "faq_a3": "Maximal 500 MB. Die Grenze ergibt sich aus dem Browser-Speicher und den Beschränkungen von FFmpeg.wasm.",
+      "faq_a3": "Etwa 500 MB für eine Datei von Ihrem Gerät und rund 2 GB für einen über einen Link zusammengesetzten Stream. Beides sind Grenzen des Browser-Speichers, keine Regeln. Nur den Container zu wechseln kopiert die Streams, statt sie neu zu kodieren, und kostet deutlich weniger Speicher und Zeit.",
       "faq_q4": "Welche Formate werden unterstützt?",
       "faq_a4": "Video: MP4, MOV, AVI, MKV, WEBM, GIF. Audio: MP3, WAV, OGG, AAC, M4A, FLAC.",
       "faq_q5": "Wie stark lässt sich ein Video komprimieren?",
@@ -979,7 +979,93 @@
       "faq_q7": "Unterstützt WEBM Transparenz?",
       "faq_a7": "Ja, WEBM unterstützt einen Alphakanal und eignet sich damit gut für Overlays und Grafiken mit transparentem Hintergrund.",
       "faq_q8": "Kann ich Audio aus einem Video extrahieren?",
-      "faq_a8": "Ja. Laden Sie ein Video hoch, wählen Sie „Audio extrahieren“ und danach das gewünschte Format — MP3, AAC, WAV, FLAC oder OGG."
+      "faq_a8": "Ja. Laden Sie ein Video hoch, wählen Sie „Audio extrahieren“ und danach das gewünschte Format — MP3, AAC, WAV, FLAC oder OGG.",
+      "eyebrow": {
+        "formats": "12 Formate",
+        "hls": "m3u8 und HLS",
+        "inBrowser": "läuft im Browser",
+        "noAccount": "ohne Konto"
+      },
+      "title": "Video umwandeln, ohne es hochzuladen.",
+      "lede": "Datei ablegen oder m3u8-Link einfügen. FFmpeg läuft in diesem Tab — und wenn sich nur der Container ändert, werden die Streams kopiert statt neu kodiert: Sekunden statt Minuten, und keine verlorene Qualitätsgeneration.",
+      "cta": {
+        "primary": "Konverter öffnen",
+        "secondary": "Was er kann"
+      },
+      "showcase": {
+        "label": "Beispiel",
+        "note": "Was das Studio damit macht.",
+        "kinds": {
+          "hls": "Eine HLS-Aufnahme, umgepackt",
+          "mov": "Ein QuickTime-Clip nach MP4",
+          "audio": "Nur die Tonspur",
+          "webm": "Fürs Web fertig gemacht"
+        }
+      },
+      "groups": {
+        "convert": {
+          "title": "Format wechseln",
+          "note": "Dasselbe Bild in einem anderen Container — oder ein anderer Codec, wenn Sie einen brauchen."
+        },
+        "shrink": {
+          "title": "Kleiner machen",
+          "note": "Ein Limit einhalten, ohne dass die Qualität einbricht."
+        },
+        "extract": {
+          "title": "Etwas herausholen",
+          "note": "Den Ton, eine kurze Schleife, eine einzelne Szene."
+        }
+      },
+      "can": {
+        "hls": {
+          "title": "HLS-Aufnahme → MP4",
+          "note": "Die Playlist wird gelesen, ihre Qualitäten gezeigt, ihre Segmente hier zusammengefügt."
+        },
+        "container": {
+          "title": "Alles → MP4",
+          "note": "Schon H.264 und AAC? Dann wird gar nichts neu kodiert."
+        },
+        "webm": {
+          "title": "MP4 → WEBM",
+          "note": "VP9 und Opus — fürs Web und für Transparenz."
+        },
+        "compress": {
+          "title": "Komprimieren",
+          "note": "CRF statt Zielgröße: Über die Qualität entscheiden Sie."
+        },
+        "platform": {
+          "title": "Auf die Plattform",
+          "note": "Vorgaben für YouTube, TikTok, Reels und den Rest."
+        },
+        "audio": {
+          "title": "Ton extrahieren",
+          "note": "MP3, AAC, Opus — oder FLAC, ohne Verlust."
+        },
+        "gif": {
+          "title": "GIF erzeugen",
+          "note": "Zwei Durchgänge, damit die Schleife ihre eigene Palette bekommt."
+        }
+      },
+      "howTitle": "So läuft es ab",
+      "how": {
+        "s1": {
+          "title": "Quelle wählen",
+          "body": "Eine Datei von Ihrem Gerät oder einen Link. Eine m3u8-Playlist wird gelesen, ihre Qualitäten werden aufgelistet, ihre Segmente hier geladen und zusammengefügt."
+        },
+        "s2": {
+          "title": "Ergebnis wählen",
+          "body": "Ein Format oder eine Vorgabe für das Ziel. Das Studio bietet nur Codecs an, die die Engine in Ihrem Browser wirklich erzeugen kann."
+        },
+        "s3": {
+          "title": "Umwandeln",
+          "body": "FFmpeg läuft in diesem Tab. Der Fortschritt ist echt und lässt sich abbrechen. Nichts steht auf einem Server in der Schlange, also wartet nichts hinter dem Auftrag eines anderen."
+        }
+      },
+      "closing": {
+        "title": "Es kann losgehen",
+        "body": "Kein Konto, kein Upload, kein Wasserzeichen am Ende.",
+        "cta": "Media Studio öffnen"
+      }
     },
     "cryptoWallet": {
       "heroTitle": "Crypto Wallet Playground",

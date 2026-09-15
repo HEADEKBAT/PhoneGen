@@ -2,7 +2,13 @@ import { type Metadata } from 'next';
 import { getProduct, getProductLandingConfig, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
 import { getT } from '@/lib/i18n/server';
 import Breadcrumb from '@/components/Breadcrumb';
-import { ProductHero, FeatureGrid, FAQSection, CTASection } from '@/components/product-landing';
+import {
+  MediaHero,
+  MediaCapabilities,
+  MediaHow,
+  MediaFaq,
+  MediaClosing,
+} from '@/components/media-landing';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -17,13 +23,15 @@ const TITLES: Record<string, string> = {
   ru: 'Онлайн-инструменты для видео — Media Studio',
 };
 
+/* The old ones listed "resize and edit", which the studio does not do, and
+   read as a feature list rather than a sentence someone would click. */
 const DESCRIPTIONS: Record<string, string> = {
-  en: 'Professional video processing toolkit — convert, compress, resize, and edit video files. Free online media studio powered by FFmpeg.wasm — all in your browser.',
-  fr: 'Boîte à outils professionnelle de traitement vidéo — convertir, compresser, redimensionner et éditer des vidéos. Studio gratuit en ligne avec FFmpeg.wasm.',
-  es: 'Kit de herramientas profesional de procesamiento de vídeo — convertir, comprimir, redimensionar y editar vídeos. Estudio gratuito en línea.',
-  de: 'Professionelles Videobearbeitungs-Toolkit — konvertieren, komprimieren, skalieren und bearbeiten Sie Videos. Kostenloses Online-Studio.',
-  pt: 'Kit de ferramentas profissional de processamento de vídeo — converter, comprimir, redimensionar e editar vídeos. Estúdio gratuito online.',
-  ru: 'Профессиональный набор инструментов для обработки видео — конвертация, сжатие, изменение размера и редактирование. Бесплатная онлайн-студия.',
+  en: 'Convert, compress and repackage video in your browser. Files and m3u8 links, no upload, no account, no watermark.',
+  fr: 'Convertissez, compressez et réencapsulez vos vidéos dans le navigateur. Fichiers et liens m3u8, sans téléversement ni compte.',
+  es: 'Convierta, comprima y reempaquete vídeo en el navegador. Archivos y enlaces m3u8, sin subidas y sin cuenta.',
+  pt: 'Converta, comprima e reempacote vídeo no navegador. Arquivos e links m3u8, sem upload e sem cadastro.',
+  de: 'Video im Browser umwandeln, komprimieren und umpacken. Dateien und m3u8-Links, ohne Upload, ohne Konto.',
+  ru: 'Конвертируйте, сжимайте и перепаковывайте видео в браузере. Файлы и ссылки m3u8, без загрузки и без регистрации.',
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -54,25 +62,11 @@ export default async function MediaStudioLanding({ params }: Props) {
       />
 
       <main className="flex-1">
-        {/* 1. Hero */}
-        <ProductHero
-          titleKey={config.heroTitleKey}
-          descKey={config.heroDescKey}
-          ctaLabelKey={config.ctaLabelKey}
-          ctaHref={`/${locale}/media-studio/tool`}
-        />
-
-        {/* 2. Features */}
-        <FeatureGrid features={config.features} />
-
-        {/* 3. FAQ */}
-        <FAQSection faqs={config.faqs} />
-
-        {/* 4. CTA */}
-        <CTASection
-          labelKey={config.ctaLabelKey}
-          href={`/${locale}/media-studio/tool`}
-        />
+        <MediaHero />
+        <MediaCapabilities />
+        <MediaHow />
+        <MediaFaq faqs={config.faqs} />
+        <MediaClosing />
       </main>
     </div>
   );
