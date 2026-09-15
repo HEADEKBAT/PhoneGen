@@ -703,7 +703,54 @@
       "faq_a2": "Très réalistes. Les numéros suivent le plan de numérotation réel de chaque pays, avec des indicatifs régionaux et préfixes opérateur valides.",
       "faq_q3": "Y a-t-il une limite sur le nombre de numéros que je peux générer ?",
       "faq_a3": "Aucune limite. Générez autant de numéros que nécessaire, dans n'importe quel format, pour n'importe quel pays pris en charge.",
-      "popularCountriesDesc": "Commencez avec l'un des pays les plus populaires"
+      "popularCountriesDesc": "Commencez avec l'un des pays les plus populaires",
+      "eyebrow": {
+        "countries": "245 pays",
+        "library": "libphonenumber",
+        "inBrowser": "dans votre navigateur",
+        "noAccount": "sans compte"
+      },
+      "title": "Des numéros qui passent la validation.",
+      "lede": "Choisissez un pays et prenez-en autant qu’il vous en faut. Chaque numéro suit le vrai plan de numérotation du pays, donc libphonenumber l’accepte — et c’est toute la différence entre des données de test et une suite de chiffres inventés.",
+      "cta": {
+        "primary": "Générer des numéros",
+        "secondary": "Choisir un pays"
+      },
+      "showcase": {
+        "label": "exemple",
+        "note": "Directement issu du plan de numérotation de Google pour ce pays."
+      },
+      "formats": {
+        "title": "Trois formats de sortie",
+        "note": "Le même numéro, écrit comme l’attend ce que vous testez.",
+        "international": {
+          "label": "International",
+          "note": "Ce que lit un humain. Les espaces là où le pays les place."
+        },
+        "national": {
+          "label": "National",
+          "note": "Tel qu’il apparaît composé depuis le pays."
+        },
+        "e164": {
+          "label": "E.164",
+          "note": "Ce que veulent une colonne de base et une API : le plus, les chiffres, rien d’autre."
+        }
+      },
+      "countries": {
+        "title": "Commencez par un pays",
+        "note": "Chacun a sa page, son plan de numérotation et ses exemples.",
+        "all": "245 pays et territoires au total"
+      },
+      "closing": {
+        "title": "Choisissez un pays et lancez-vous",
+        "body": "Sans compte, sans limite, rien n’est conservé."
+      },
+      "faq_q4": "Que puis-je exporter ?",
+      "faq_a4": "Copiez toute la liste, ou téléchargez-la en TXT, CSV ou JSON. Le JSON conserve chaque numéro dans tous les formats à la fois, ce que demande en général un fichier de fixtures.",
+      "faq_q5": "Puis-je retrouver les mêmes numéros ?",
+      "faq_a5": "Oui : fixez une graine, et la même graine redonne la même liste à chaque fois. C’est ce qui rend une fixture générée reproductible au lieu d’être une surprise à chaque exécution.",
+      "faq_q6": "Passeront-ils la validation dans mon propre code ?",
+      "faq_a6": "C’est tout l’objet du mode par défaut : chaque numéro est vérifié avec libphonenumber avant que vous le voyiez. Il existe aussi un mode qui produit volontairement des numéros invalides, pour la branche où la validation échoue."
     },
     "user": {
       "heroTitle": "Générateur d'utilisateurs",

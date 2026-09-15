@@ -5,4 +5,5 @@ export { default as FeatureGrid } from './FeatureGrid';
 export { default as ExampleSection } from './ExampleSection';
 export { default as FAQSection } from './FAQSection';
 export { default as CTASection } from './CTASection';
-export { default as LandingGenerator } from './LandingGenerator';
+export { default as LandingFaq } from './LandingFaq';
+export { default as LandingClosing } from './LandingClosing';

@@ -473,7 +473,54 @@
       "faq_a2": "Very realistic. Numbers follow each country's actual numbering plan, including valid area codes, carrier prefixes, and correct digit lengths.",
       "faq_q3": "Is there a limit on how many numbers I can generate?",
       "faq_a3": "No limits. Generate as many numbers as you need, in any format, for any supported country.",
-      "popularCountriesDesc": "Start with one of the most popular countries"
+      "popularCountriesDesc": "Start with one of the most popular countries",
+      "eyebrow": {
+        "countries": "245 countries",
+        "library": "libphonenumber",
+        "inBrowser": "runs in your browser",
+        "noAccount": "no account"
+      },
+      "title": "Numbers that pass the check.",
+      "lede": "Pick a country and take as many as you need. Every number follows that country's real numbering plan, so libphonenumber accepts it — which is the whole difference between test data and a row of made-up digits.",
+      "cta": {
+        "primary": "Generate numbers",
+        "secondary": "Pick a country"
+      },
+      "showcase": {
+        "label": "example",
+        "note": "Straight from Google's numbering plan for this country."
+      },
+      "formats": {
+        "title": "Three ways out",
+        "note": "The same number, written the way whatever you are testing expects it.",
+        "international": {
+          "label": "International",
+          "note": "What a person reads. Spaces where the country puts them."
+        },
+        "national": {
+          "label": "National",
+          "note": "How it looks dialled from inside the country."
+        },
+        "e164": {
+          "label": "E.164",
+          "note": "What a database column and an API want: plus, digits, nothing else."
+        }
+      },
+      "countries": {
+        "title": "Start with a country",
+        "note": "Each one has its own page, its own numbering plan and its own examples.",
+        "all": "245 countries and regions in total"
+      },
+      "closing": {
+        "title": "Pick a country and go",
+        "body": "No account, no limit, nothing stored."
+      },
+      "faq_q4": "What can I export?",
+      "faq_a4": "Copy the whole list, or download it as TXT, CSV or JSON. The JSON keeps each number in all the formats at once, which is usually what a fixture file wants.",
+      "faq_q5": "Can I get the same numbers twice?",
+      "faq_a5": "Yes — set a seed and the same seed gives the same list every time. That is what makes a generated fixture reproducible instead of a new surprise on every test run.",
+      "faq_q6": "Will they pass validation in my own code?",
+      "faq_a6": "That is the point of the default mode: every number is checked against libphonenumber before you see it. There is also a mode that deliberately produces invalid numbers, for testing the path where validation fails."
     },
     "user": {
       "heroTitle": "User Generator",

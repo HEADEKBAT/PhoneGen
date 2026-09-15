@@ -6,26 +6,24 @@ import type { FAQ } from '@/lib/config/productLanding';
 import { useTranslations } from '@/lib/i18n';
 import { REVEAL_VIEWPORT, revealCard, revealUp, stagger } from '@/components/home/motion';
 
-interface MediaFaqProps {
+interface LandingFaqProps {
   faqs: FAQ[];
 }
 
 /**
- * The landing's FAQ.
+ * The FAQ used by the redesigned product landings.
  *
- * A near-copy of the shared `FAQSection`, kept separate for two reasons and no
- * others. The shared one centres a 3xl heading, which on this page interrupts
- * a rhythm of left-aligned section headings at `text-lg`; and it opens its
- * answers from React state, so an answer is absent from the document until
- * someone clicks. `<details>` is open-able without JavaScript and its content
- * is in the DOM either way — which matters on a page whose whole point is the
- * questions it answers.
+ * It differs from the older `FAQSection` in two ways that matter. That one
+ * centres a 3xl heading, which interrupts a page whose other section headings
+ * are left-aligned at `text-lg`; and it opens its answers from React state, so
+ * an answer is absent from the document until someone clicks. `<details>` is
+ * open-able without JavaScript and its content is in the DOM either way —
+ * which matters on a section whose whole point is the questions it answers.
  *
  * The FAQPage JSON-LD comes along unchanged: it is what puts these questions
- * in the search result, and dropping it to restyle a heading would be a poor
- * trade.
+ * in the search result.
  */
-export default function MediaFaq({ faqs }: MediaFaqProps) {
+export default function LandingFaq({ faqs }: LandingFaqProps) {
   const { t } = useTranslations();
   const reduced = useReducedMotion();
 

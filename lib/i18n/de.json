@@ -703,7 +703,54 @@
       "faq_a2": "Sehr realistisch. Die Nummern folgen dem tatsächlichen Nummernplan jedes Landes, einschließlich gültiger Vorwahlen, Anbieterpräfixe und korrekter Ziffernlängen.",
       "faq_q3": "Gibt es ein Limit für die Anzahl der generierten Nummern?",
       "faq_a3": "Keine Grenzen. Generieren Sie so viele Nummern wie Sie benötigen, in jedem Format, für jedes unterstützte Land.",
-      "popularCountriesDesc": "Beginnen Sie mit einem der beliebtesten Länder"
+      "popularCountriesDesc": "Beginnen Sie mit einem der beliebtesten Länder",
+      "eyebrow": {
+        "countries": "245 Länder",
+        "library": "libphonenumber",
+        "inBrowser": "läuft im Browser",
+        "noAccount": "ohne Konto"
+      },
+      "title": "Nummern, die die Prüfung bestehen.",
+      "lede": "Land wählen und so viele Nummern mitnehmen, wie Sie brauchen. Jede folgt dem echten Nummernplan dieses Landes, also akzeptiert libphonenumber sie — und genau darin liegt der Unterschied zwischen Testdaten und einer Reihe ausgedachter Ziffern.",
+      "cta": {
+        "primary": "Nummern erzeugen",
+        "secondary": "Land wählen"
+      },
+      "showcase": {
+        "label": "Beispiel",
+        "note": "Direkt aus Googles Nummernplan für dieses Land."
+      },
+      "formats": {
+        "title": "Drei Ausgabeformate",
+        "note": "Dieselbe Nummer, geschrieben so, wie es das erwartet, was Sie testen.",
+        "international": {
+          "label": "International",
+          "note": "Was ein Mensch liest. Leerzeichen dort, wo das Land sie setzt."
+        },
+        "national": {
+          "label": "National",
+          "note": "Wie sie aussieht, wenn man sie im Land selbst wählt."
+        },
+        "e164": {
+          "label": "E.164",
+          "note": "Was eine Datenbankspalte und eine API wollen: Plus, Ziffern, sonst nichts."
+        }
+      },
+      "countries": {
+        "title": "Fangen Sie mit einem Land an",
+        "note": "Jedes hat seine eigene Seite, seinen eigenen Nummernplan und seine eigenen Beispiele.",
+        "all": "Insgesamt 245 Länder und Regionen"
+      },
+      "closing": {
+        "title": "Land wählen und loslegen",
+        "body": "Kein Konto, kein Limit, nichts wird gespeichert."
+      },
+      "faq_q4": "Was kann ich exportieren?",
+      "faq_a4": "Die ganze Liste kopieren oder als TXT, CSV oder JSON herunterladen. Im JSON steht jede Nummer gleich in allen Formaten — meist genau das, was eine Fixture-Datei braucht.",
+      "faq_q5": "Bekomme ich dieselben Nummern ein zweites Mal?",
+      "faq_a5": "Ja — setzen Sie einen Seed, und derselbe Seed liefert jedes Mal dieselbe Liste. Das macht eine erzeugte Fixture reproduzierbar statt zu einer neuen Überraschung bei jedem Testlauf.",
+      "faq_q6": "Bestehen sie die Prüfung in meinem eigenen Code?",
+      "faq_a6": "Das ist der Sinn des Standardmodus: Jede Nummer wird gegen libphonenumber geprüft, bevor Sie sie sehen. Es gibt auch einen Modus, der absichtlich ungültige Nummern erzeugt — für den Pfad, auf dem die Validierung fehlschlägt."
     },
     "user": {
       "heroTitle": "Benutzer-Generator",

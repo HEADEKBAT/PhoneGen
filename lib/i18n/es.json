@@ -703,7 +703,54 @@
       "faq_a2": "Muy realistas. Los números siguen el plan de numeración real de cada país, incluidos códigos de área y prefijos de operador válidos.",
       "faq_q3": "¿Hay un límite en la cantidad de números que puedo generar?",
       "faq_a3": "Sin límites. Genere tantos números como necesite, en cualquier formato, para cualquier país compatible.",
-      "popularCountriesDesc": "Comience con uno de los países más populares"
+      "popularCountriesDesc": "Comience con uno de los países más populares",
+      "eyebrow": {
+        "countries": "245 países",
+        "library": "libphonenumber",
+        "inBrowser": "en su navegador",
+        "noAccount": "sin cuenta"
+      },
+      "title": "Números que pasan la validación.",
+      "lede": "Elija un país y llévese tantos como necesite. Cada número sigue el plan de numeración real de ese país, así que libphonenumber lo acepta — y en eso consiste la diferencia entre datos de prueba y una fila de cifras inventadas.",
+      "cta": {
+        "primary": "Generar números",
+        "secondary": "Elegir un país"
+      },
+      "showcase": {
+        "label": "ejemplo",
+        "note": "Directo del plan de numeración de Google para este país."
+      },
+      "formats": {
+        "title": "Tres formatos de salida",
+        "note": "El mismo número, escrito como lo espera aquello que está probando.",
+        "international": {
+          "label": "Internacional",
+          "note": "Lo que lee una persona. Los espacios donde los pone el país."
+        },
+        "national": {
+          "label": "Nacional",
+          "note": "Cómo se ve marcado desde dentro del país."
+        },
+        "e164": {
+          "label": "E.164",
+          "note": "Lo que quieren una columna de base de datos y una API: el más, los dígitos y nada más."
+        }
+      },
+      "countries": {
+        "title": "Empiece por un país",
+        "note": "Cada uno tiene su página, su plan de numeración y sus ejemplos.",
+        "all": "245 países y regiones en total"
+      },
+      "closing": {
+        "title": "Elija un país y adelante",
+        "body": "Sin cuenta, sin límite y sin nada guardado."
+      },
+      "faq_q4": "¿Qué puedo exportar?",
+      "faq_a4": "Copie la lista entera o descárguela en TXT, CSV o JSON. El JSON guarda cada número en todos los formatos a la vez, que suele ser lo que quiere un archivo de fixtures.",
+      "faq_q5": "¿Puedo obtener los mismos números otra vez?",
+      "faq_a5": "Sí: fije una semilla y la misma semilla da la misma lista cada vez. Eso convierte una fixture generada en algo reproducible en lugar de una sorpresa nueva en cada ejecución.",
+      "faq_q6": "¿Pasarán la validación en mi propio código?",
+      "faq_a6": "Ese es el sentido del modo por defecto: cada número se comprueba con libphonenumber antes de que usted lo vea. También hay un modo que produce números inválidos a propósito, para probar la rama donde la validación falla."
     },
     "user": {
       "heroTitle": "Generador de usuarios",

@@ -2,13 +2,8 @@ import { type Metadata } from 'next';
 import { getProduct, getProductLandingConfig, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
 import { getT } from '@/lib/i18n/server';
 import Breadcrumb from '@/components/Breadcrumb';
-import {
-  MediaHero,
-  MediaCapabilities,
-  MediaHow,
-  MediaFaq,
-  MediaClosing,
-} from '@/components/media-landing';
+import { MediaHero, MediaCapabilities, MediaHow } from '@/components/media-landing';
+import { LandingFaq, LandingClosing } from '@/components/product-landing';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -65,8 +60,13 @@ export default async function MediaStudioLanding({ params }: Props) {
         <MediaHero />
         <MediaCapabilities />
         <MediaHow />
-        <MediaFaq faqs={config.faqs} />
-        <MediaClosing />
+        <LandingFaq faqs={config.faqs} />
+        <LandingClosing
+          titleKey="productLanding.media.closing.title"
+          bodyKey="productLanding.media.closing.body"
+          ctaKey="productLanding.media.closing.cta"
+          href={`/${locale}/media-studio/tool`}
+        />
       </main>
     </div>
   );

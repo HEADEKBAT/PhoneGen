@@ -114,6 +114,9 @@ const PHONE_FAQS: FAQ[] = [
   { qKey: 'productLanding.phone.faq_q1', aKey: 'productLanding.phone.faq_a1' },
   { qKey: 'productLanding.phone.faq_q2', aKey: 'productLanding.phone.faq_a2' },
   { qKey: 'productLanding.phone.faq_q3', aKey: 'productLanding.phone.faq_a3' },
+  { qKey: 'productLanding.phone.faq_q4', aKey: 'productLanding.phone.faq_a4' },
+  { qKey: 'productLanding.phone.faq_q5', aKey: 'productLanding.phone.faq_a5' },
+  { qKey: 'productLanding.phone.faq_q6', aKey: 'productLanding.phone.faq_a6' },
 ];
 
 const USER_FAQS: FAQ[] = [
@@ -296,7 +299,14 @@ const PAYMENT_FAQS: FAQ[] = [
 
 /* ── Popular countries ──────────────────────────────────────────────────────── */
 
-const POPULAR_PHONE_COUNTRIES = ['US', 'GB', 'DE', 'FR', 'RU', 'CN', 'IN', 'BR', 'JP', 'KR', 'IT', 'ES'];
+/**
+ * The countries the landing links to directly.
+ *
+ * Twelve, because the grid is three across and four rows is as far as a
+ * visitor will read before the dropdown below it is the faster route. They are
+ * also the twelve the search traffic actually asks for.
+ */
+export const POPULAR_PHONE_COUNTRIES = ['US', 'GB', 'DE', 'FR', 'RU', 'CN', 'IN', 'BR', 'JP', 'KR', 'IT', 'ES'];
 const POPULAR_USER_COUNTRIES = ['US', 'GB', 'DE', 'FR', 'RU', 'CN', 'IN', 'BR'];
 const POPULAR_ADDRESS_COUNTRIES = ['US', 'GB', 'DE', 'FR', 'RU', 'CN', 'IN', 'BR'];
 
