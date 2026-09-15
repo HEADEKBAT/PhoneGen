@@ -7,6 +7,7 @@ import {
 } from '@/lib/config';
 import { POPULAR_PHONE_COUNTRIES } from '@/lib/config/productLanding';
 import { getPhoneCountryExamples } from '@/lib/phone/examples';
+import { getAllCountries } from '@/lib/phone/related';
 import { getT } from '@/lib/i18n/server';
 import Breadcrumb from '@/components/Breadcrumb';
 import { PhoneHero, PhoneCountries, PhoneFormats } from '@/components/phone-landing';
@@ -60,6 +61,7 @@ export default async function PhoneGeneratorLanding({ params }: Props) {
      a dozen numbers has no reason to ship a parser to do it. The country pages
      load the real generator, where it is earned. */
   const examples = getPhoneCountryExamples(locale, POPULAR_PHONE_COUNTRIES);
+  const all = getAllCountries(locale);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -72,7 +74,7 @@ export default async function PhoneGeneratorLanding({ params }: Props) {
 
       <main className="flex-1">
         <PhoneHero examples={examples.slice(0, SHOWCASE_COUNT)} />
-        <PhoneCountries locale={locale} examples={examples} />
+        <PhoneCountries locale={locale} examples={examples} all={all} />
         {examples.length > 0 && <PhoneFormats example={examples[0]} />}
         <LandingFaq faqs={config.faqs} />
         <LandingClosing

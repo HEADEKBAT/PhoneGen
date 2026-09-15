@@ -4,29 +4,34 @@ import { motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
-import { ArrowRight, Phone } from 'lucide-react';
+import { ArrowRight, ChevronDown, Phone } from 'lucide-react';
 import Flag from 'react-world-flags';
 import CountrySelect from '@/components/CountrySelect';
 import type { PhoneCountryExample } from '@/lib/phone/examples';
+import type { RelatedCountry } from '@/lib/phone/related';
 import { useTranslations } from '@/lib/i18n';
 import { REVEAL_VIEWPORT, revealCard, revealUp, stagger } from '@/components/home/motion';
 
 interface PhoneCountriesProps {
   locale: string;
   examples: PhoneCountryExample[];
+  /** Every supported region, named on the server, for the full index. */
+  all: RelatedCountry[];
 }
 
 /**
  * The way into the 245 country pages.
  *
- * Two of them, on purpose. The dropdown was the old landing's only route and
- * it is still the right one when you know which country you want — but a
+ * Three of them, on purpose. The dropdown was the old landing's only route
+ * and it is still the right one when you know which country you want — but a
  * `<select>` is invisible to a crawler, so those 245 pages had no internal
  * link pointing at them from anywhere on the site. The grid above it links to
  * the twelve most asked-for directly, with that country's real example number
- * on the card, so the section is navigation and demonstration at once.
+ * on the card, so the section is navigation and demonstration at once; and the
+ * `<details>` below holds all 245 as ordinary links, closed by default but in
+ * the document either way, which is the point.
  */
-export default function PhoneCountries({ locale, examples }: PhoneCountriesProps) {
+export default function PhoneCountries({ locale, examples, all }: PhoneCountriesProps) {
   const { t } = useTranslations();
   const router = useRouter();
   const reduced = useReducedMotion();
@@ -125,9 +130,31 @@ export default function PhoneCountries({ locale, examples }: PhoneCountriesProps
           </button>
         </div>
 
-        <p className="mt-3 text-[0.8125rem] text-muted-foreground">
-          {t('productLanding.phone.countries.all')}
-        </p>
+        <details className="group mt-3">
+          <summary className="flex cursor-pointer list-none items-center gap-1.5 text-[0.8125rem] text-muted-foreground transition-colors hover:text-foreground">
+            {t('productLanding.phone.countries.all')}
+            <ChevronDown
+              size={14}
+              aria-hidden="true"
+              className="transition-transform duration-200 group-open:rotate-180"
+            />
+          </summary>
+          <ul className="mt-3 grid list-none grid-cols-2 gap-x-4 gap-y-1 p-0 sm:grid-cols-3 lg:grid-cols-4">
+            {all.map((country) => (
+              <li key={country.iso} className="list-none">
+                <Link
+                  href={`/${locale}/phone-generator/${country.iso}`}
+                  className="flex items-baseline gap-1.5 py-0.5 text-[0.8125rem] text-muted-foreground transition-colors hover:text-action"
+                >
+                  <span className="truncate">{country.name}</span>
+                  <span className="ml-auto shrink-0 font-mono text-[0.6875rem] opacity-70">
+                    {country.callingCode}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </details>
       </motion.div>
     </section>
   );

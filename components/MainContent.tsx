@@ -4,7 +4,6 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useState, useEffect, useCallback, useTransition } from 'react';
 import GeneratorControls from './GeneratorControls';
 import PhoneList from './PhoneList';
-import InfoCard from './InfoCard';
 import { generatePhoneNumbers, PhoneFormat, GenerationMode } from '@/lib/phoneGenerator';
 import { useTranslations } from '@/lib/i18n';
 import { useCountryStore, useRecentlyUsedStore } from '@/lib/store';
@@ -113,9 +112,11 @@ export default function MainContent({
     setStoredCountry(code);
   }, [onSelectCountry, setStoredCountry]);
 
+  /* A <div>, not a <main>: the country page owns the landmark now, so that
+     the server-rendered heading, facts and country links sit inside it too
+     rather than orbiting a <main> that holds only the tool. */
   return (
-    <main className="flex-1">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 py-8 space-y-6">
+    <div className="mx-auto max-w-4xl space-y-6 px-4 py-8 sm:px-6">
         {/* The heading lives in app/[locale]/phone-generator/[country]/header.tsx.
             It used to be here, inside a component loaded with `ssr: false`, so
             every country URL served HTML with no <h1> and no text — see that
@@ -174,9 +175,9 @@ export default function MainContent({
           </div>
         </div>
 
-        {/* Info Card */}
-        <InfoCard countryCode={selectedCountry} />
-      </div>
-    </main>
+      {/* What InfoCard drew here — calling code, digit count, an example —
+          is now `facts.tsx` on the server. It was the answer these pages
+          exist to give, and inside an `ssr: false` tree no crawler saw it. */}
+    </div>
   );
 }

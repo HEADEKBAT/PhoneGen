@@ -3,8 +3,12 @@ import { type Metadata } from 'next';
 import { isSupportedRegion } from '@/lib/countryRegistry';
 import { LOCALES } from '@/lib/config';
 import { generatePhonePageMetadata } from '@/lib/generatePhoneMetadata';
+import { getCountryDisplayName, getT } from '@/lib/i18n/server';
 import { PhoneGeneratorLoader } from '@/components/dynamic';
+import Breadcrumb from '@/components/Breadcrumb';
 import CountryPageHeader from './header';
+import CountryFacts from './facts';
+import CountryRelated from './related';
 
 type Props = {
   params: Promise<{ locale: string; country: string }>;
@@ -60,6 +64,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  *
  * The country is passed as a prop to the client component — no searchParams,
  * no redirects. The URL is the single source of truth.
+ *
+ * Everything around the tool is server-rendered. The tool itself is deferred
+ * (`ssr: false`) because it pulls in the whole generator, and for a long time
+ * that meant the entire page was: 1470 URLs whose HTML held a skeleton and
+ * nothing else. The heading, the numbering-plan facts and the links to other
+ * countries are all rendered here instead, so the page answers its own search
+ * query before a line of JavaScript runs.
  */
 export default async function CountryPhonePage({ params }: Props) {
   const { locale, country } = await params;
@@ -69,10 +80,25 @@ export default async function CountryPhonePage({ params }: Props) {
     notFound();
   }
 
+  const t = getT(locale);
+  const name = getCountryDisplayName(locale, upper);
+
   return (
-    <>
-      <CountryPageHeader locale={locale} country={upper} />
-      <PhoneGeneratorLoader country={upper} locale={locale} />
-    </>
+    <div className="flex min-h-screen flex-col">
+      <Breadcrumb
+        items={[
+          { label: t('nav.home'), href: `/${locale}` },
+          { label: t('phoneGenerator.pageTitle'), href: `/${locale}/phone-generator` },
+          { label: name, href: `/${locale}/phone-generator/${upper}` },
+        ]}
+      />
+
+      <main className="flex-1">
+        <CountryPageHeader locale={locale} country={upper} />
+        <PhoneGeneratorLoader country={upper} locale={locale} />
+        <CountryFacts locale={locale} country={upper} />
+        <CountryRelated locale={locale} country={upper} />
+      </main>
+    </div>
   );
 }

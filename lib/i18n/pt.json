@@ -1498,5 +1498,18 @@
     "open": "Abrir {studio}",
     "about": "Sobre esta ferramenta",
     "faq": "{topic} — perguntas frequentes"
+  },
+  "phoneCountry": {
+    "facts": {
+      "title": "Como um número é formado — {country}",
+      "note": "Dos metadados libphonenumber do Google — os mesmos com que cada número acima é validado.",
+      "possibleLengths": "Comprimentos possíveis"
+    },
+    "related": {
+      "title": "Outros países",
+      "sameCode": "Também em {code}",
+      "popular": "Populares",
+      "all": "Todos os 245 países e territórios"
+    }
   }
 }

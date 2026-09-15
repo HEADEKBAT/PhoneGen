@@ -1498,5 +1498,18 @@
     "open": "Открыть {studio}",
     "about": "Об инструменте",
     "faq": "{topic} — частые вопросы"
+  },
+  "phoneCountry": {
+    "facts": {
+      "title": "Как устроен номер — {country}",
+      "note": "Из метаданных libphonenumber от Google — тех самых, по которым проверен каждый номер выше.",
+      "possibleLengths": "Возможная длина"
+    },
+    "related": {
+      "title": "Другие страны",
+      "sameCode": "Тоже на {code}",
+      "popular": "Популярные",
+      "all": "Все 245 стран и территорий"
+    }
   }
 }
