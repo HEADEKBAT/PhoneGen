@@ -4,11 +4,13 @@ import AnimatedBackground from '@/components/background/AnimatedBackground';
 import type { CredentialLandingConfig } from '@/lib/config/credentialLanding';
 
 interface CredentialHeroProps {
+  /** The pill above the headline. */
+  badge?: string;
   hero: CredentialLandingConfig['hero'];
   locale: string;
 }
 
-export default function CredentialHero({ hero, locale }: CredentialHeroProps) {
+export default function CredentialHero({ hero, locale, badge }: CredentialHeroProps) {
   return (
     <section className="relative overflow-hidden bg-linear-to-b from-primary/5 via-primary/[0.02] to-background">
       <AnimatedBackground />
@@ -26,7 +28,7 @@ export default function CredentialHero({ hero, locale }: CredentialHeroProps) {
       <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 pt-20 sm:pt-28 pb-28 sm:pb-36 text-center">
         <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/5 px-3.5 py-1 text-xs font-medium text-primary mb-6">
           <Sparkles size={12} />
-          Credential Generator
+          {badge || hero.title}
         </div>
         <div className="relative inline-flex items-center justify-center">
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">

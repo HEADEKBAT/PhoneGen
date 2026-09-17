@@ -45,14 +45,14 @@ export const LEGACY_CREDENTIAL_SLUGS = [
   'jwt-secret-generator',
   'random-token-generator',
   /*
-   * 'uuid-generator' is deliberately NOT in this list. It is also the product
-   * slug of the UUID product (see products.ts), so redirecting it made the
-   * product's landing page unreachable — every visit 308'd to the credential
-   * tool. app/sitemap.ts already resolves the collision the other way, by
-   * skipping credential SEO pages whose slug matches a product slug, so the
-   * product page wins here too. The credential tool keeps its real URL at
-   * /credential-generator/uuid-generator.
+   * 'uuid-generator' is in this list now. It used to be the one exception:
+   * it is also the UUID product's slug, and redirecting it would have made
+   * that product's landing unreachable. What the landing actually served was
+   * an English-only SEO page duplicating the real tool page one path segment
+   * away — so the product's slug moved to 'credential-generator/uuid-generator'
+   * (see products.ts) and the bare URL joins the other ten.
    */
+  'uuid-generator',
   'uuid-v7-generator',
   'webhook-secret-generator',
   'session-secret-generator',

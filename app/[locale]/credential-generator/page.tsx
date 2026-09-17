@@ -1,6 +1,6 @@
 import { type Metadata } from 'next';
 import { getProduct, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
-import { CREDENTIAL_LANDING, getLocalizedCredentialLanding, getLocalizedFAQs } from '@/lib/config/credentialLanding';
+import { getLocalizedCredentialLanding, getLocalizedFAQs } from '@/lib/config/credentialLanding';
 import { ALL_PRESETS } from '@/lib/config/credentialPresets';
 import { getT } from '@/lib/i18n/server';
 import Breadcrumb from '@/components/Breadcrumb';
@@ -12,7 +12,6 @@ import {
   SecuritySection,
   SupportedFormats,
   UseCases,
-  LearnSection,
   TrustSection,
   EcosystemSection,
   CredentialFAQ,
@@ -56,7 +55,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CredentialGeneratorLanding({ params }: Props) {
   const { locale } = await params;
-  const { hero, audience, tools, security, formats, useCases, learnArticles, trust, ecosystem } = getLocalizedCredentialLanding(locale);
+  const { hero, audience, tools, security, formats, useCases, trust, ecosystem } =
+    getLocalizedCredentialLanding(locale);
   const faqs = getLocalizedFAQs(locale);
   const t = getT(locale);
   const st = (key: string) => t(`credentialLanding.sections.${key}`);
@@ -72,7 +72,7 @@ export default async function CredentialGeneratorLanding({ params }: Props) {
 
       <main className="flex-1">
         {/* 1. Hero */}
-        <CredentialHero hero={hero} locale={locale} />
+        <CredentialHero hero={hero} locale={locale} badge={t('products.credential.title')} />
 
         {/* 2. Who Is It For */}
         <AudienceSection audience={audience} title={st('audience_title')} subtitle={st('audience_subtitle')} />
@@ -81,7 +81,13 @@ export default async function CredentialGeneratorLanding({ params }: Props) {
         <ToolGrid tools={tools} locale={locale} title={st('tools_title')} subtitle={st('tools_subtitle')} />
 
         {/* 4. Quick Presets */}
-        <PresetSection presets={ALL_PRESETS} locale={locale} title={st('presets_title')} subtitle={st('presets_subtitle')} />
+        <PresetSection
+          presets={ALL_PRESETS}
+          locale={locale}
+          title={st('presets_title')}
+          subtitle={st('presets_subtitle')}
+          ctaLabel={st('view_all')}
+        />
 
         {/* 5. Security */}
         <SecuritySection items={security} title={st('security_title')} subtitle={st('security_subtitle')} />
@@ -90,16 +96,35 @@ export default async function CredentialGeneratorLanding({ params }: Props) {
         <SupportedFormats formats={formats} title={st('formats_title')} subtitle={st('formats_subtitle')} />
 
         {/* 7. Use Cases */}
-        <UseCases useCases={useCases} locale={locale} title={st('use_cases_title')} subtitle={st('use_cases_subtitle')} />
+        <UseCases
+          useCases={useCases}
+          locale={locale}
+          title={st('use_cases_title')}
+          subtitle={st('use_cases_subtitle')}
+          ctaLabel={st('generate_cta')}
+        />
 
-        {/* 8. Learn */}
-        <LearnSection articles={learnArticles} title={st('learn_title')} subtitle={st('learn_subtitle')} />
-
+        {/*
+          Between "Use cases" and "Trust" there used to be a "Learn about
+          credential security" grid: ten cards, every one of them
+          `href="#"`. Ten links that go nowhere are not content, and the
+          questions they asked ("What makes a strong password?", "UUID v4
+          vs v7?") are the questions the FAQ below already answers. The
+          translated copy stays in the dictionary for when the articles
+          exist; the section comes back with them.
+        */}
         {/* 9. Trust */}
         <TrustSection items={trust} title={st('trust_title')} />
 
         {/* 10. Ecosystem */}
-        <EcosystemSection links={ecosystem} locale={locale} title={st('ecosystem_title')} subtitle={st('ecosystem_subtitle')} flowTitle={st('flow_title')} />
+        <EcosystemSection
+          links={ecosystem}
+          locale={locale}
+          title={st('ecosystem_title')}
+          subtitle={st('ecosystem_subtitle')}
+          flowTitle={st('flow_title')}
+          flowSteps={[st('flow_user'), st('flow_email'), st('flow_phone'), st('flow_credential'), st('flow_export')]}
+        />
 
         {/* 11. FAQ */}
         <CredentialFAQ faqs={faqs} />

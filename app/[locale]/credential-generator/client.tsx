@@ -6,6 +6,7 @@ import { getPreset } from '@/lib/config/credentialPresets';
 import type { PasswordMode, SecretMode } from '@/lib/credentialGenerator/types';
 import CredentialTabs from '@/components/credential/CredentialTabs';
 import { useCredentialGeneratorStore } from '@/lib/store';
+import { useTranslations } from '@/lib/i18n';
 
 export interface CredentialClientProps {
   initialMode?: {
@@ -19,6 +20,7 @@ export interface CredentialClientProps {
 }
 
 function CredentialContent({ initialMode, standalone = true }: CredentialClientProps) {
+  const { t } = useTranslations();
   const store = useCredentialGeneratorStore();
   const searchParams = useSearchParams();
 
@@ -138,11 +140,9 @@ function CredentialContent({ initialMode, standalone = true }: CredentialClientP
       <div className="mx-auto max-w-3xl px-4 sm:px-6 py-8 sm:py-12">
         <div className="text-center mb-8">
           <h1 className="text-2xl sm:text-3xl font-heading font-bold text-foreground">
-            Credential Generator
+            {t('credential.heading')}
           </h1>
-          <p className="text-sm text-muted-foreground mt-2">
-            Generate passwords, PINs, secrets, and developer credentials
-          </p>
+          <p className="text-sm text-muted-foreground mt-2">{t('credential.subtitle')}</p>
         </div>
         <CredentialTabs />
       </div>

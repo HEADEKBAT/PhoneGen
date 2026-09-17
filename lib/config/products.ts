@@ -142,7 +142,14 @@ export const PRODUCTS: Record<string, Product> = {
 
   uuid: {
     id: 'uuid',
-    slug: 'uuid-generator',
+    /*
+     * The one product whose landing IS a tool page. `/uuid-generator` used to
+     * serve a thin English SEO page while `/credential-generator/uuid-generator`
+     * served the real, localized one — the same topic on two URLs, which is a
+     * duplicate the site was competing with itself over. The bare slug now
+     * 308s here (lib/config/legacyRedirects.ts) and this is the one address.
+     */
+    slug: 'credential-generator/uuid-generator',
     title: 'UUID Generator',
     description: 'Generate UUID v4, v7, and custom identifiers for database primary keys, API IDs, and distributed system identification.',
     icon: 'Hash',

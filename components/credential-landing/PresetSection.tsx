@@ -6,6 +6,8 @@ interface PresetSectionProps {
   presets: Preset[];
   locale: string;
   title?: string;
+  /** The link under the grid. Passed in, like every other word here. */
+  ctaLabel?: string;
   subtitle?: string;
 }
 
@@ -13,7 +15,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Wifi, Code, Database, Container, Lock, Key, ShieldCheck,
 };
 
-export default function PresetSection({ presets, locale, title, subtitle }: PresetSectionProps) {
+export default function PresetSection({ presets, locale, title, subtitle, ctaLabel }: PresetSectionProps) {
   const featured = presets.slice(0, 7);
 
   return (
@@ -56,7 +58,7 @@ export default function PresetSection({ presets, locale, title, subtitle }: Pres
             href={`/${locale}/credential-generator/tool`}
             className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:text-primary/80 transition-colors"
           >
-            View all presets &rarr;
+            {ctaLabel || 'View all presets'} &rarr;
           </Link>
         </div>
       </div>

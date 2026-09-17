@@ -120,15 +120,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  /* ── Credential SEO landing pages per locale ─────────────────────── */
-  const productSlugs = new Set(ALL_PRODUCTS.map((p) => p.slug));
-  for (const locale of SEO_LOCALES) {
-    for (const page of ALL_SEO_PAGES) {
-      if (productSlugs.has(page.slug)) continue; // skip SEO pages that share a slug with a product page
-      if (isRedirectedSlug(page.slug)) continue; // 308 → /credential-generator/{slug}
-      add(`/${locale}/${page.slug}`, 'credential', locale);
-    }
-  }
+  /*
+   * The bare /{locale}/{slug} form of the eleven credential pages is not listed
+   * at all any more: every one of those slugs answers with a 308 to
+   * /credential-generator/{slug} (lib/config/legacyRedirects.ts), and the loop
+   * that used to emit them skipped all eleven for that reason. It went with
+   * the pages behind it.
+   */
 
   /* ── Credential tool pages under /credential-generator/{slug} ────── */
   for (const locale of SEO_LOCALES) {

@@ -184,7 +184,17 @@
         "resistsSlowHash": "База, захешированная bcrypt",
         "resistsDictionary": "Словари и списки утечек"
       }
-    }
+    },
+    "modeDesc": {
+      "random": "Полный контроль",
+      "passphrase": "Слова, которые запоминаются",
+      "pronounceable": "Продиктовать по телефону"
+    },
+    "uuidV7": "UUID v7",
+    "token": "Случайный токен",
+    "session": "Секрет сессии",
+    "oauth": "Секрет OAuth",
+    "type": "Тип"
   },
   "addressGenerator": {
     "heading": "Генератор адресов",
@@ -997,6 +1007,8 @@
     "tools_api_key_desc": "API-ключи с префиксами в стиле Stripe",
     "tools_token": "Генератор случайных токенов",
     "tools_token_desc": "Токены Hex, Base64 или Base64URL",
+    "tools_session": "Генератор секретов сессии",
+    "tools_session_desc": "Ключи подписи для кук и сессий",
     "tools_hash": "Генератор хешей",
     "tools_hash_desc": "MD5, SHA-1, SHA-256, SHA-512 хеши",
     "tools_analyzer": "Анализатор паролей",
@@ -1139,7 +1151,24 @@
       "read_more": "Подробнее",
       "generate_cta": "Создать",
       "copy_title": "Копировать",
-      "regenerate_title": "Обновить"
+      "regenerate_title": "Обновить",
+      "audience_tools_developers_0": "UUID",
+      "audience_tools_developers_1": "JWT",
+      "audience_tools_developers_2": "Ключи API",
+      "audience_tools_developers_3": "Секреты вебхуков",
+      "audience_tools_developers_4": "Токены сессий",
+      "audience_tools_qa_0": "Пароли пачкой",
+      "audience_tools_qa_1": "Тестовые учётки",
+      "audience_tools_qa_2": "Выгрузка в CSV",
+      "audience_tools_qa_3": "Уникальные аккаунты",
+      "audience_tools_devops_0": "Секреты подписи",
+      "audience_tools_devops_1": "Случайные токены",
+      "audience_tools_devops_2": "Секреты Docker",
+      "audience_tools_devops_3": "Пароли к базам",
+      "audience_tools_everyone_0": "Надёжные пароли",
+      "audience_tools_everyone_1": "Запоминающиеся фразы",
+      "audience_tools_everyone_2": "PIN-коды",
+      "audience_tools_everyone_3": "Пароли Wi-Fi"
     }
   },
   "barcodeLanding": {

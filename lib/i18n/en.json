@@ -184,7 +184,17 @@
         "resistsSlowHash": "A database hashed with bcrypt",
         "resistsDictionary": "Dictionaries and leak lists"
       }
-    }
+    },
+    "modeDesc": {
+      "random": "Full control",
+      "passphrase": "Words you can remember",
+      "pronounceable": "Say it down a phone line"
+    },
+    "uuidV7": "UUID v7",
+    "token": "Random Token",
+    "session": "Session Secret",
+    "oauth": "OAuth Secret",
+    "type": "Type"
   },
   "addressGenerator": {
     "heading": "Address Generator",
@@ -997,6 +1007,8 @@
     "tools_api_key_desc": "Stripe-style prefixed API keys",
     "tools_token": "Random Token Generator",
     "tools_token_desc": "Hex, Base64, or Base64URL tokens",
+    "tools_session": "Session Secret Generator",
+    "tools_session_desc": "Signing keys for cookies and sessions",
     "tools_hash": "Hash Generator",
     "tools_hash_desc": "MD5, SHA-1, SHA-256, SHA-512 hashes",
     "tools_analyzer": "Password Analyzer",
@@ -1139,7 +1151,24 @@
       "read_more": "Read more",
       "generate_cta": "Generate",
       "copy_title": "Copy",
-      "regenerate_title": "Regenerate"
+      "regenerate_title": "Regenerate",
+      "audience_tools_developers_0": "UUID",
+      "audience_tools_developers_1": "JWT",
+      "audience_tools_developers_2": "API keys",
+      "audience_tools_developers_3": "Webhook secrets",
+      "audience_tools_developers_4": "Session tokens",
+      "audience_tools_qa_0": "Passwords in bulk",
+      "audience_tools_qa_1": "Test credentials",
+      "audience_tools_qa_2": "CSV export",
+      "audience_tools_qa_3": "Unique accounts",
+      "audience_tools_devops_0": "Signing secrets",
+      "audience_tools_devops_1": "Random tokens",
+      "audience_tools_devops_2": "Docker secrets",
+      "audience_tools_devops_3": "Database passwords",
+      "audience_tools_everyone_0": "Strong passwords",
+      "audience_tools_everyone_1": "Memorable passphrases",
+      "audience_tools_everyone_2": "PIN codes",
+      "audience_tools_everyone_3": "Wi-Fi passwords"
     }
   },
   "barcodeLanding": {

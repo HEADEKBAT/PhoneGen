@@ -6,6 +6,8 @@ interface UseCasesProps {
   useCases: UseCase[];
   locale: string;
   title?: string;
+  /** The call to action on each card. */
+  ctaLabel?: string;
   subtitle?: string;
 }
 
@@ -13,7 +15,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Wifi, Database, Container, Lock, Key, ShieldCheck,
 };
 
-export default function UseCases({ useCases, locale, title, subtitle }: UseCasesProps) {
+export default function UseCases({ useCases, locale, title, subtitle, ctaLabel }: UseCasesProps) {
   return (
     <section className="border-t border-border">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
@@ -44,7 +46,7 @@ export default function UseCases({ useCases, locale, title, subtitle }: UseCases
                   </h3>
                   <p className="text-xs text-muted-foreground mt-0.5">{uc.desc}</p>
                   <span className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-primary">
-                    Generate &rarr;
+                    {ctaLabel || 'Generate'} &rarr;
                   </span>
                 </div>
               </Link>

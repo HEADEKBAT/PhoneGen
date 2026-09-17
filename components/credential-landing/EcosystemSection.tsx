@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import Link from 'next/link';
 import { Users, Mail, Phone, Building, Scan, ArrowRight, type LucideIcon } from 'lucide-react';
 import type { EcosystemLink } from '@/lib/config/credentialLanding';
@@ -8,13 +9,15 @@ interface EcosystemSectionProps {
   title?: string;
   subtitle?: string;
   flowTitle?: string;
+  /** The five steps of the flow diagram, in order. */
+  flowSteps?: string[];
 }
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Users, Mail, Phone, Building, Scan,
 };
 
-export default function EcosystemSection({ links, locale, title, subtitle, flowTitle }: EcosystemSectionProps) {
+export default function EcosystemSection({ links, locale, title, subtitle, flowTitle, flowSteps }: EcosystemSectionProps) {
   return (
     <section className="border-t border-border bg-muted/30">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20">
@@ -56,16 +59,13 @@ export default function EcosystemSection({ links, locale, title, subtitle, flowT
             <h3 className="font-heading font-semibold text-sm text-foreground mb-4 text-center">
               {flowTitle || "Generate a Full Test Account"}
             </h3>
-            <div className="flex flex-wrap items-center justify-center gap-2 text-xs">
-              <FlowStep label="User Generator" />
-              <ArrowRight size={14} className="text-muted-foreground" />
-              <FlowStep label="Email Generator" />
-              <ArrowRight size={14} className="text-muted-foreground" />
-              <FlowStep label="Phone Generator" />
-              <ArrowRight size={14} className="text-muted-foreground" />
-              <FlowStep label="Credential Generator" />
-              <ArrowRight size={14} className="text-muted-foreground" />
-              <FlowStep label="Export Profile" />
+<div className="flex flex-wrap items-center justify-center gap-2 text-xs">
+              {(flowSteps ?? []).map((step, i) => (
+                <Fragment key={step}>
+                  {i > 0 && <ArrowRight size={14} className="text-muted-foreground" />}
+                  <FlowStep label={step} />
+                </Fragment>
+              ))}
             </div>
           </div>
         </div>

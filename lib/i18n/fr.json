@@ -184,7 +184,17 @@
         "resistsSlowHash": "Une base hachée en bcrypt",
         "resistsDictionary": "Dictionnaires et listes de fuites"
       }
-    }
+    },
+    "modeDesc": {
+      "random": "Contrôle total",
+      "passphrase": "Des mots qui se retiennent",
+      "pronounceable": "Dictable au téléphone"
+    },
+    "uuidV7": "UUID v7",
+    "token": "Jeton aléatoire",
+    "session": "Secret de session",
+    "oauth": "Secret OAuth",
+    "type": "Type"
   },
   "addressGenerator": {
     "heading": "Générateur d'adresses",
@@ -498,6 +508,8 @@
     "tools_api_key_desc": "Clés avec préfixe style Stripe",
     "tools_token": "Générateur de jeton",
     "tools_token_desc": "Jetons Hex, Base64 ou Base64URL",
+    "tools_session": "Générateur de secret de session",
+    "tools_session_desc": "Clés de signature pour cookies et sessions",
     "tools_hash": "Générateur de hachage",
     "tools_hash_desc": "MD5, SHA-1, SHA-256, SHA-512",
     "tools_analyzer": "Analyseur de mot de passe",
@@ -640,7 +652,24 @@
       "read_more": "Lire la suite",
       "generate_cta": "Générer",
       "copy_title": "Copier",
-      "regenerate_title": "Actualiser"
+      "regenerate_title": "Actualiser",
+      "audience_tools_developers_0": "UUID",
+      "audience_tools_developers_1": "JWT",
+      "audience_tools_developers_2": "Clés d’API",
+      "audience_tools_developers_3": "Secrets de webhook",
+      "audience_tools_developers_4": "Jetons de session",
+      "audience_tools_qa_0": "Mots de passe en lot",
+      "audience_tools_qa_1": "Identifiants de test",
+      "audience_tools_qa_2": "Export CSV",
+      "audience_tools_qa_3": "Comptes uniques",
+      "audience_tools_devops_0": "Secrets de signature",
+      "audience_tools_devops_1": "Jetons aléatoires",
+      "audience_tools_devops_2": "Secrets Docker",
+      "audience_tools_devops_3": "Mots de passe de base",
+      "audience_tools_everyone_0": "Mots de passe solides",
+      "audience_tools_everyone_1": "Phrases mémorisables",
+      "audience_tools_everyone_2": "Codes PIN",
+      "audience_tools_everyone_3": "Mots de passe Wi-Fi"
     }
   },
   "barcodeLanding": {

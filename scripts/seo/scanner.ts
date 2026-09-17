@@ -16,7 +16,7 @@ import { PLATFORM_CONFIG, LOCALES, BASE_URL } from '@/lib/config';
 import { getAllRegionCodes } from '@/lib/countryRegistry';
 import type { Product } from '@/lib/config/products';
 import type { Generator } from '@/lib/config/generators';
-import type { SEOPageConfig } from '@/lib/config/credentialSEOPages';
+import type { CredentialToolPage } from '@/lib/config/credentialSEOPages';
 import type { BarcodeSEOPageConfig } from '@/lib/config/barcodeSEOPages';
 import type { ScannedPage } from './config';
 
@@ -37,7 +37,7 @@ export interface ScannerResult {
   pages: ScannedPage[];
   products: Product[];
   generators: Generator[];
-  seoPages: SEOPageConfig[];
+  seoPages: CredentialToolPage[];
   barcodeSeoPages: BarcodeSEOPageConfig[];
   locales: string[];
 }
@@ -100,13 +100,16 @@ export function scanAllPages(): ScannerResult {
     }
   }
 
-  /* ── 5. Credential SEO pages ──────────────────────────────── */
+  /* ── 5. Credential tool pages ─────────────────────────────── */
+  /* Under /credential-generator/{slug}. The bare /{slug} form answers with a
+     308 (lib/config/legacyRedirects.ts), so scanning it measured a redirect. */
   for (const seoPage of ALL_SEO_PAGES) {
     for (const locale of locales) {
+      const path = `/${locale}/credential-generator/${seoPage.slug}`;
       pages.push({
         locale,
-        path: `/${locale}/${seoPage.slug}`,
-        fullUrl: buildFullUrl(locale, `/${seoPage.slug}`),
+        path,
+        fullUrl: buildFullUrl(locale, `/credential-generator/${seoPage.slug}`),
         source: 'seo-page',
       });
     }

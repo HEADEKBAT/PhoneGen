@@ -184,7 +184,17 @@
         "resistsSlowHash": "Una base con hash bcrypt",
         "resistsDictionary": "Diccionarios y listas de filtraciones"
       }
-    }
+    },
+    "modeDesc": {
+      "random": "Control total",
+      "passphrase": "Palabras que se recuerdan",
+      "pronounceable": "Dictable por teléfono"
+    },
+    "uuidV7": "UUID v7",
+    "token": "Token aleatorio",
+    "session": "Secreto de sesión",
+    "oauth": "Secreto OAuth",
+    "type": "Tipo"
   },
   "addressGenerator": {
     "heading": "Generador de direcciones",
@@ -498,6 +508,8 @@
     "tools_api_key_desc": "Claves con prefijo estilo Stripe",
     "tools_token": "Generador de tokens",
     "tools_token_desc": "Tokens Hex, Base64 o Base64URL",
+    "tools_session": "Generador de secretos de sesión",
+    "tools_session_desc": "Claves de firma para cookies y sesiones",
     "tools_hash": "Generador de hashes",
     "tools_hash_desc": "MD5, SHA-1, SHA-256, SHA-512",
     "tools_analyzer": "Analizador de contraseñas",
@@ -640,7 +652,24 @@
       "read_more": "Leer más",
       "generate_cta": "Generar",
       "copy_title": "Copiar",
-      "regenerate_title": "Actualizar"
+      "regenerate_title": "Actualizar",
+      "audience_tools_developers_0": "UUID",
+      "audience_tools_developers_1": "JWT",
+      "audience_tools_developers_2": "Claves de API",
+      "audience_tools_developers_3": "Secretos de webhook",
+      "audience_tools_developers_4": "Tokens de sesión",
+      "audience_tools_qa_0": "Contraseñas por lotes",
+      "audience_tools_qa_1": "Credenciales de prueba",
+      "audience_tools_qa_2": "Exportación CSV",
+      "audience_tools_qa_3": "Cuentas únicas",
+      "audience_tools_devops_0": "Secretos de firma",
+      "audience_tools_devops_1": "Tokens aleatorios",
+      "audience_tools_devops_2": "Secretos de Docker",
+      "audience_tools_devops_3": "Contraseñas de base de datos",
+      "audience_tools_everyone_0": "Contraseñas sólidas",
+      "audience_tools_everyone_1": "Frases memorables",
+      "audience_tools_everyone_2": "Códigos PIN",
+      "audience_tools_everyone_3": "Contraseñas Wi-Fi"
     }
   },
   "barcodeLanding": {

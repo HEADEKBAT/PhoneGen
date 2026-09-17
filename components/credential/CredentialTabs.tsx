@@ -16,6 +16,7 @@ import {
   UserPlus,
 } from 'lucide-react';
 import { useCredentialGeneratorStore, type CredentialGeneratorStore } from '@/lib/store';
+import { useTranslations } from '@/lib/i18n';
 import {
   generateRandomPassword,
   generatePassphrase,
@@ -49,31 +50,36 @@ import PresetPanel from './PresetPanel';
 
 /* ── Constants ────────────────────────────────────────────────────────── */
 
+/* Labels are translation keys, not words: this tool shipped entirely in
+   English on a site that serves six languages, with the `credential.*`
+   dictionary sitting unused beside it in all six. */
 const TABS = [
-  { id: 'passwords' as const, label: 'Passwords', icon: Key },
-  { id: 'pins-secrets' as const, label: 'PIN & Secrets', icon: Lock },
-  { id: 'dev-pairs' as const, label: 'Dev Pairs', icon: Users },
-  { id: 'history' as const, label: 'History', icon: Hash },
+  { id: 'passwords' as const, labelKey: 'credential.passwords', icon: Key },
+  { id: 'pins-secrets' as const, labelKey: 'credential.pinSecrets', icon: Lock },
+  { id: 'dev-pairs' as const, labelKey: 'credential.devPairs', icon: Users },
+  { id: 'history' as const, labelKey: 'credential.history', icon: Hash },
 ];
 
-const PASSWORD_MODES: { id: PasswordMode; label: string; desc: string }[] = [
-  { id: 'random', label: 'Random', desc: 'Full control' },
-  { id: 'passphrase', label: 'Passphrase', desc: 'XKCD-style' },
-  { id: 'pronounceable', label: 'Pronounceable', desc: 'CVC-based' },
+const PASSWORD_MODES: { id: PasswordMode; labelKey: string; descKey: string }[] = [
+  { id: 'random', labelKey: 'credential.random', descKey: 'credential.modeDesc.random' },
+  { id: 'passphrase', labelKey: 'credential.passphrase', descKey: 'credential.modeDesc.passphrase' },
+  { id: 'pronounceable', labelKey: 'credential.pronounceable', descKey: 'credential.modeDesc.pronounceable' },
 ];
 
-const SECRET_MODES: { id: SecretMode; label: string }[] = [
-  { id: 'pin', label: 'PIN' },
-  { id: 'uuid', label: 'UUID v4' },
-  { id: 'uuid-v7', label: 'UUID v7' },
-  { id: 'jwt', label: 'JWT Secret' },
-  { id: 'api-key', label: 'API Key' },
-  { id: 'webhook', label: 'Webhook Secret' },
-  { id: 'token', label: 'Random Token' },
-  { id: 'session', label: 'Session Secret' },
-  { id: 'oauth', label: 'OAuth Secret' },
-  { id: 'hex', label: 'Hex' },
-  { id: 'base64', label: 'Base64' },
+/* The format names stay as they are written in the specs — UUID v4, JWT, hex,
+   base64 are not translated anywhere — while the words around them are. */
+const SECRET_MODES: { id: SecretMode; labelKey: string }[] = [
+  { id: 'pin', labelKey: 'credential.pin' },
+  { id: 'uuid', labelKey: 'credential.uuid' },
+  { id: 'uuid-v7', labelKey: 'credential.uuidV7' },
+  { id: 'jwt', labelKey: 'credential.jwt' },
+  { id: 'api-key', labelKey: 'credential.apiKey' },
+  { id: 'webhook', labelKey: 'credential.webhook' },
+  { id: 'token', labelKey: 'credential.token' },
+  { id: 'session', labelKey: 'credential.session' },
+  { id: 'oauth', labelKey: 'credential.oauth' },
+  { id: 'hex', labelKey: 'credential.hex' },
+  { id: 'base64', labelKey: 'credential.base64' },
 ];
 
 const QUANTITY_OPTIONS = [1, 5, 10, 25, 50, 100] as const;
@@ -102,6 +108,7 @@ function useCopiedTimer() {
 /* ── Main Component ───────────────────────────────────────────────────── */
 
 export default function CredentialTabs() {
+  const { t } = useTranslations();
   const store = useCredentialGeneratorStore();
   const { copiedIndex, copy } = useCopiedTimer();
   const [loading, setLoading] = useState(false);
@@ -186,7 +193,7 @@ export default function CredentialTabs() {
               }`}
             >
               <Icon size={15} />
-              {tab.label}
+              {t(tab.labelKey)}
             </button>
           );
         })}
@@ -210,9 +217,9 @@ export default function CredentialTabs() {
                   }`}
                 >
                   <span className={`text-sm font-semibold ${isActive ? 'text-primary' : 'text-foreground'}`}>
-                    {mode.label}
+                    {t(mode.labelKey)}
                   </span>
-                  <p className="text-[11px] text-muted-foreground mt-0.5">{mode.desc}</p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">{t(mode.descKey)}</p>
                 </button>
               );
             })}
@@ -232,7 +239,7 @@ export default function CredentialTabs() {
           <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
             <h3 className="font-heading font-semibold text-foreground text-sm mb-3 flex items-center gap-2">
               <Hash size={14} />
-              Secrets
+              {t('credential.secrets')}
             </h3>
             <div className="flex flex-wrap gap-2 mb-4">
               {SECRET_MODES.map((mode) => {
@@ -247,14 +254,14 @@ export default function CredentialTabs() {
                         : 'border-border text-muted-foreground hover:text-foreground bg-background'
                     }`}
                   >
-                    {mode.label}
+                    {t(mode.labelKey)}
                   </button>
                 );
               })}
             </div>
             {store.secretMode === 'pin' && (
             <div className="flex flex-wrap gap-3">
-              <ControlGroup label="Length">
+              <ControlGroup label={t('credential.length')}>
                 <div className="flex gap-1">
                   {([4, 6, 8] as const).map((n) => (
                     <button
@@ -271,7 +278,7 @@ export default function CredentialTabs() {
                   ))}
                 </div>
               </ControlGroup>
-              <ControlGroup label="Options">
+              <ControlGroup label={t('credential.options')}>
                 <label className="flex items-center gap-2 h-9 px-3 rounded-lg border border-border bg-background cursor-pointer hover:bg-muted/30 transition-colors">
                   <input
                     type="checkbox"
@@ -279,13 +286,13 @@ export default function CredentialTabs() {
                     onChange={(e) => store.setPinNoRepeat(e.target.checked)}
                     className="rounded border-border accent-primary"
                   />
-                  <span className="text-xs text-muted-foreground">No consecutive repeats</span>
+                  <span className="text-xs text-muted-foreground">{t('credential.noConsecutiveRepeats')}</span>
                 </label>
               </ControlGroup>
             </div>
             )}
             {store.secretMode === 'hex' && (
-              <ControlGroup label="Length">
+              <ControlGroup label={t('credential.length')}>
                 <input
                   type="number"
                   min={1}
@@ -297,7 +304,7 @@ export default function CredentialTabs() {
               </ControlGroup>
             )}
             {store.secretMode === 'base64' && (
-              <ControlGroup label="Length">
+              <ControlGroup label={t('credential.length')}>
                 <input
                   type="number"
                   min={1}
@@ -310,7 +317,7 @@ export default function CredentialTabs() {
             )}
             {store.secretMode === 'token' && (
               <div className="flex flex-wrap gap-3">
-                <ControlGroup label="Length">
+                <ControlGroup label={t('credential.length')}>
                   <input
                     type="number"
                     min={1}
@@ -320,7 +327,7 @@ export default function CredentialTabs() {
                     className="h-9 w-24 rounded-lg border border-border bg-background px-3 text-sm text-foreground"
                   />
                 </ControlGroup>
-                <ControlGroup label="Type">
+                <ControlGroup label={t('credential.type')}>
                   <div className="flex gap-1">
                     {(['hex', 'base64', 'base64url'] as const).map((type) => (
                       <button
@@ -348,7 +355,7 @@ export default function CredentialTabs() {
         <div className="space-y-5">
           <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
             <div className="flex flex-wrap gap-3">
-              <ControlGroup label="Quantity">
+              <ControlGroup label={t('credential.quantity')}>
                 <select
                   value={store.pairQuantity}
                   onChange={(e) => store.setPairQuantity(Number(e.target.value))}
@@ -359,7 +366,7 @@ export default function CredentialTabs() {
                   ))}
                 </select>
               </ControlGroup>
-              <ControlGroup label="Country">
+              <ControlGroup label={t('credential.country')}>
                 <select
                   value={store.pairCountry}
                   onChange={(e) => store.setPairCountry(e.target.value)}
@@ -394,7 +401,7 @@ export default function CredentialTabs() {
             ) : (
               <Sparkles size={16} />
             )}
-            {loading ? 'Generating…' : 'Generate'}
+            {loading ? t('credential.generating') : t('credential.generate')}
           </button>
 
           {store.results.length > 0 && store.activeTab !== 'dev-pairs' && (
@@ -432,7 +439,7 @@ export default function CredentialTabs() {
                 <button
                   onClick={() => copy(result, i)}
                   className="shrink-0 size-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                  title="Copy"
+                  title={t('credential.copy')}
                 >
                   {copiedIndex === i ? <Check size={14} className="text-primary" /> : <Copy size={14} />}
                 </button>
@@ -596,10 +603,12 @@ function Toggle({ value, onChange, label }: { value: boolean; onChange: (v: bool
 }
 
 function RandomPasswordControls({ store }: { store: CredentialGeneratorStore }) {
+  const { t } = useTranslations();
+
   return (
     <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
       <div className="flex flex-wrap gap-3">
-        <ControlGroup label="Length">
+        <ControlGroup label={t('credential.length')}>
           <input
             type="number"
             min={4}
@@ -609,7 +618,7 @@ function RandomPasswordControls({ store }: { store: CredentialGeneratorStore }) 
             className="h-9 w-20 rounded-lg border border-border bg-background px-3 text-sm text-foreground"
           />
         </ControlGroup>
-        <ControlGroup label="Character types">
+        <ControlGroup label={t('credential.characterTypes')}>
           <div className="flex flex-wrap gap-1.5">
             <Toggle value={store.passwordUppercase} onChange={store.setPasswordUppercase} label="A-Z" />
             <Toggle value={store.passwordLowercase} onChange={store.setPasswordLowercase} label="a-z" />
@@ -617,7 +626,7 @@ function RandomPasswordControls({ store }: { store: CredentialGeneratorStore }) 
             <Toggle value={store.passwordSymbols} onChange={store.setPasswordSymbols} label="!@#$" />
           </div>
         </ControlGroup>
-        <ControlGroup label="Exclude characters">
+        <ControlGroup label={t('credential.excludeChars')}>
           <input
             type="text"
             value={store.passwordExcludeChars}
@@ -626,8 +635,8 @@ function RandomPasswordControls({ store }: { store: CredentialGeneratorStore }) 
             className="h-9 w-32 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground/60 font-mono"
           />
         </ControlGroup>
-        <ControlGroup label="Options">
-          <Toggle value={store.passwordAvoidAmbiguous} onChange={store.setPasswordAvoidAmbiguous} label="Avoid ambiguous" />
+        <ControlGroup label={t('credential.options')}>
+          <Toggle value={store.passwordAvoidAmbiguous} onChange={store.setPasswordAvoidAmbiguous} label={t('credential.avoidAmbiguous')} />
         </ControlGroup>
       </div>
     </div>
@@ -635,10 +644,12 @@ function RandomPasswordControls({ store }: { store: CredentialGeneratorStore }) 
 }
 
 function PassphraseControls({ store }: { store: CredentialGeneratorStore }) {
+  const { t } = useTranslations();
+
   return (
     <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
       <div className="flex flex-wrap gap-3">
-        <ControlGroup label="Word count">
+        <ControlGroup label={t('credential.wordCount')}>
           <div className="flex gap-1">
             {([3, 4, 5, 6, 7, 8] as const).map((n) => (
               <button
@@ -655,7 +666,7 @@ function PassphraseControls({ store }: { store: CredentialGeneratorStore }) {
             ))}
           </div>
         </ControlGroup>
-        <ControlGroup label="Separator">
+        <ControlGroup label={t('credential.separator')}>
           <div className="flex gap-1">
             {(['-', '_', '.', ' '] as const).map((sep) => (
               <button
@@ -672,17 +683,19 @@ function PassphraseControls({ store }: { store: CredentialGeneratorStore }) {
             ))}
           </div>
         </ControlGroup>
-        <Toggle value={store.passphraseCapitalize} onChange={store.setPassphraseCapitalize} label="Capitalize words" />
-        <Toggle value={store.passphraseIncludeNumber} onChange={store.setPassphraseIncludeNumber} label="Include number" />
+        <Toggle value={store.passphraseCapitalize} onChange={store.setPassphraseCapitalize} label={t('credential.capitalizeWords')} />
+        <Toggle value={store.passphraseIncludeNumber} onChange={store.setPassphraseIncludeNumber} label={t('credential.includeNumber')} />
       </div>
     </div>
   );
 }
 
 function PronounceableControls({ store }: { store: CredentialGeneratorStore }) {
+  const { t } = useTranslations();
+
   return (
     <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
-      <ControlGroup label="Syllables">
+      <ControlGroup label={t('credential.syllables')}>
         <div className="flex gap-1">
           {([2, 3, 4, 5] as const).map((n) => (
             <button

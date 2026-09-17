@@ -184,7 +184,17 @@
         "resistsSlowHash": "Eine mit bcrypt gehashte Datenbank",
         "resistsDictionary": "Wörterbücher und Leak-Listen"
       }
-    }
+    },
+    "modeDesc": {
+      "random": "Volle Kontrolle",
+      "passphrase": "Wörter, die man sich merkt",
+      "pronounceable": "Am Telefon diktierbar"
+    },
+    "uuidV7": "UUID v7",
+    "token": "Zufalls-Token",
+    "session": "Session-Secret",
+    "oauth": "OAuth-Secret",
+    "type": "Typ"
   },
   "addressGenerator": {
     "heading": "Adressgenerator",
@@ -498,6 +508,8 @@
     "tools_api_key_desc": "API-Schlüssel mit Präfix",
     "tools_token": "Token-Generator",
     "tools_token_desc": "Hex-, Base64- oder Base64URL-Token",
+    "tools_session": "Session-Secret-Generator",
+    "tools_session_desc": "Signaturschlüssel für Cookies und Sessions",
     "tools_hash": "Hash-Generator",
     "tools_hash_desc": "MD5, SHA-1, SHA-256, SHA-512",
     "tools_analyzer": "Passwort-Analyse",
@@ -640,7 +652,24 @@
       "read_more": "Weiterlesen",
       "generate_cta": "Generieren",
       "copy_title": "Kopieren",
-      "regenerate_title": "Aktualisieren"
+      "regenerate_title": "Aktualisieren",
+      "audience_tools_developers_0": "UUID",
+      "audience_tools_developers_1": "JWT",
+      "audience_tools_developers_2": "API-Schlüssel",
+      "audience_tools_developers_3": "Webhook-Secrets",
+      "audience_tools_developers_4": "Session-Tokens",
+      "audience_tools_qa_0": "Passwörter im Bündel",
+      "audience_tools_qa_1": "Test-Zugangsdaten",
+      "audience_tools_qa_2": "CSV-Export",
+      "audience_tools_qa_3": "Eindeutige Konten",
+      "audience_tools_devops_0": "Signatur-Secrets",
+      "audience_tools_devops_1": "Zufalls-Tokens",
+      "audience_tools_devops_2": "Docker-Secrets",
+      "audience_tools_devops_3": "Datenbank-Passwörter",
+      "audience_tools_everyone_0": "Starke Passwörter",
+      "audience_tools_everyone_1": "Merkbare Passphrasen",
+      "audience_tools_everyone_2": "PIN-Codes",
+      "audience_tools_everyone_3": "WLAN-Passwörter"
     }
   },
   "barcodeLanding": {

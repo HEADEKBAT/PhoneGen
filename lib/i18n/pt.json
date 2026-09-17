@@ -184,7 +184,17 @@
         "resistsSlowHash": "Uma base com hash bcrypt",
         "resistsDictionary": "Dicionários e listas de vazamentos"
       }
-    }
+    },
+    "modeDesc": {
+      "random": "Controlo total",
+      "passphrase": "Palavras que se lembram",
+      "pronounceable": "Ditável ao telefone"
+    },
+    "uuidV7": "UUID v7",
+    "token": "Token aleatório",
+    "session": "Segredo de sessão",
+    "oauth": "Segredo OAuth",
+    "type": "Tipo"
   },
   "addressGenerator": {
     "heading": "Gerador de endereços",
@@ -498,6 +508,8 @@
     "tools_api_key_desc": "Chaves com prefixo estilo Stripe",
     "tools_token": "Gerador de token",
     "tools_token_desc": "Tokens Hex, Base64 ou Base64URL",
+    "tools_session": "Gerador de segredos de sessão",
+    "tools_session_desc": "Chaves de assinatura para cookies e sessões",
     "tools_hash": "Gerador de hash",
     "tools_hash_desc": "MD5, SHA-1, SHA-256, SHA-512",
     "tools_analyzer": "Analisador de senhas",
@@ -640,7 +652,24 @@
       "read_more": "Ler mais",
       "generate_cta": "Gerar",
       "copy_title": "Copiar",
-      "regenerate_title": "Atualizar"
+      "regenerate_title": "Atualizar",
+      "audience_tools_developers_0": "UUID",
+      "audience_tools_developers_1": "JWT",
+      "audience_tools_developers_2": "Chaves de API",
+      "audience_tools_developers_3": "Segredos de webhook",
+      "audience_tools_developers_4": "Tokens de sessão",
+      "audience_tools_qa_0": "Senhas em lote",
+      "audience_tools_qa_1": "Credenciais de teste",
+      "audience_tools_qa_2": "Exportação CSV",
+      "audience_tools_qa_3": "Contas únicas",
+      "audience_tools_devops_0": "Segredos de assinatura",
+      "audience_tools_devops_1": "Tokens aleatórios",
+      "audience_tools_devops_2": "Segredos do Docker",
+      "audience_tools_devops_3": "Senhas de base de dados",
+      "audience_tools_everyone_0": "Senhas fortes",
+      "audience_tools_everyone_1": "Frases memoráveis",
+      "audience_tools_everyone_2": "Códigos PIN",
+      "audience_tools_everyone_3": "Senhas de Wi-Fi"
     }
   },
   "barcodeLanding": {

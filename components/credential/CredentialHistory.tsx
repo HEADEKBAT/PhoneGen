@@ -2,8 +2,10 @@
 
 import { useCredentialGeneratorStore } from '@/lib/store';
 import { Trash2, Clock } from 'lucide-react';
+import { useTranslations } from '@/lib/i18n';
 
 export default function CredentialHistory() {
+  const { t } = useTranslations();
   const history = useCredentialGeneratorStore((s) => s.history);
   const clearHistory = useCredentialGeneratorStore((s) => s.clearHistory);
 
@@ -11,9 +13,9 @@ export default function CredentialHistory() {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <Clock size={32} className="text-muted-foreground/40 mb-3" />
-        <p className="text-sm text-muted-foreground">No history yet</p>
+        <p className="text-sm text-muted-foreground">{t('credential.historyEmpty')}</p>
         <p className="text-xs text-muted-foreground/60 mt-1">
-          Generated credentials will appear here
+          {t('credential.historyHint')}
         </p>
       </div>
     );
@@ -24,7 +26,7 @@ export default function CredentialHistory() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <p className="text-xs text-muted-foreground">
-          Last {history.length} entries — stored only in your browser
+          {t('credential.historyStored', { count: String(history.length) })}
         </p>
         <button
           onClick={clearHistory}
