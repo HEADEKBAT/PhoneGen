@@ -470,8 +470,8 @@
   },
   "credentialLanding": {
     "hero": {
-      "title": "Générez des identifiants sécurisés",
-      "subtitle": "Générez mots de passe, phrases de passe, clés API, UUID, secrets JWT et identifiants de développement — tout localement dans votre navigateur.",
+      "title": "Solide, et on vous montre pourquoi.",
+      "subtitle": "Mots de passe, phrases secrètes, codes PIN, clés d’API, secrets JWT et UUID, produits par l’API Web Crypto dans cet onglet. Chacun arrive avec le nombre de bits derrière lui et le temps qu’il tient face à trois attaques différentes — parce que « solide » sans chiffre ne veut rien dire.",
       "benefits": [
         "Navigateur uniquement",
         "Aucune requête serveur",
@@ -479,8 +479,8 @@
         "Gratuit pour toujours",
         "Open Source"
       ],
-      "ctaPrimary": "Commencer",
-      "ctaSecondary": "Explorer les outils"
+      "ctaPrimary": "Ouvrir le générateur",
+      "ctaSecondary": "Voir les outils"
     },
     "audience_title_developers": "Développeurs",
     "audience_desc_developers": "Générez des UUID, secrets JWT, clés API et jetons de session.",
@@ -626,11 +626,11 @@
       "audience_title": "Pour qui ?",
       "audience_subtitle": "Des outils pour chaque rôle — des développeurs aux utilisateurs quotidiens",
       "tools_title": "Outils populaires",
-      "tools_subtitle": "Choisissez parmi 11 générateurs puissants",
+      "tools_subtitle": "Chacun a sa page, ses options et son exemple.",
       "presets_title": "Préréglages rapides",
       "presets_subtitle": "Paramètres préconfigurés pour les services populaires",
       "security_title": "Sécurité avant tout",
-      "security_subtitle": "Vos données ne quittent jamais votre appareil",
+      "security_subtitle": "Ce que l’outil fait, et ne fait pas, de ce qu’il produit.",
       "formats_title": "Formats pris en charge",
       "formats_subtitle": "Tous les formats nécessaires en un seul endroit",
       "use_cases_title": "Cas d'utilisation",
@@ -670,6 +670,52 @@
       "audience_tools_everyone_1": "Phrases mémorisables",
       "audience_tools_everyone_2": "Codes PIN",
       "audience_tools_everyone_3": "Mots de passe Wi-Fi"
+    },
+    "eyebrow": {
+      "tools": "11 générateurs",
+      "crypto": "Web Crypto",
+      "inBrowser": "tourne dans le navigateur",
+      "noAccount": "sans compte"
+    },
+    "showcase": {
+      "label": "exemple",
+      "note": "Quatre mots tirés d’une liste de 4096 — douze bits chacun, rien d’arrondi."
+    },
+    "groups": {
+      "passwords": {
+        "title": "Mots de passe",
+        "note": "À taper, ou à retenir"
+      },
+      "identifiers": {
+        "title": "Identifiants",
+        "note": "Pour une colonne de base"
+      },
+      "secrets": {
+        "title": "Secrets",
+        "note": "Pour un fichier de configuration"
+      }
+    },
+    "securityItems": {
+      "crypto": {
+        "title": "crypto.getRandomValues",
+        "desc": "Chaque valeur vient du CSPRNG du navigateur. Math.random n’apparaît nulle part dans cet outil."
+      },
+      "browser": {
+        "title": "Rien ne sort d’ici",
+        "desc": "Le générateur est du JavaScript dans cet onglet. Aucune requête ne transporte une valeur produite, parce qu’il n’y a pas de requête — ouvrez le panneau réseau et regardez."
+      },
+      "history": {
+        "title": "L’historique reste dans le navigateur",
+        "desc": "Les dernières entrées tiennent dans le localStorage de ce navigateur et nulle part ailleurs. Les effacer est un bouton."
+      },
+      "free": {
+        "title": "Sans compte, sans limite",
+        "desc": "Rien à créer, rien de compté, aucun filigrane sur le résultat."
+      }
+    },
+    "closing": {
+      "title": "Prenez ce qu’il vous faut",
+      "body": "Onze générateurs, un onglet, rien de conservé."
     }
   },
   "barcodeLanding": {

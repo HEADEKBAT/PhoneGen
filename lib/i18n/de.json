@@ -470,8 +470,8 @@
   },
   "credentialLanding": {
     "hero": {
-      "title": "Sichere Anmeldedaten generieren",
-      "subtitle": "Generieren Sie Passwörter, Passphrasen, API-Schlüssel, UUIDs, JWT-Geheimnisse und Entwickler-Anmeldedaten — alles lokal in Ihrem Browser.",
+      "title": "Stark — und Sie sehen, warum.",
+      "subtitle": "Passwörter, Passphrasen, PINs, API-Schlüssel, JWT-Secrets und UUIDs, erzeugt von der Web Crypto API in diesem Tab. Zu jedem gehört die Zahl der Bits dahinter und wie lange es drei verschiedenen Angriffen standhält — denn „stark“ heißt ohne Zahl gar nichts.",
       "benefits": [
         "Nur Browser",
         "Keine Serveranfragen",
@@ -479,8 +479,8 @@
         "Für immer kostenlos",
         "Open Source"
       ],
-      "ctaPrimary": "Starten",
-      "ctaSecondary": "Entdecken"
+      "ctaPrimary": "Generator öffnen",
+      "ctaSecondary": "Werkzeuge ansehen"
     },
     "audience_title_developers": "Entwickler",
     "audience_desc_developers": "Generieren Sie UUIDs, JWT-Geheimnisse, API-Schlüssel, Webhook-Geheimnisse und Sitzungstoken für Ihre Anwendungen.",
@@ -626,11 +626,11 @@
       "audience_title": "Für wen ist es gedacht",
       "audience_subtitle": "Werkzeuge für jede Rolle — von Entwicklern bis zu Alltagsnutzern",
       "tools_title": "Beliebte Tools",
-      "tools_subtitle": "Wählen Sie aus 11 leistungsstarken Generatoren",
+      "tools_subtitle": "Jeder hat seine eigene Seite, seine Optionen und sein Beispiel.",
       "presets_title": "Schnellvorgaben",
       "presets_subtitle": "Vorkonfigurierte Einstellungen für beliebte Dienste",
       "security_title": "Sicherheit zuerst",
-      "security_subtitle": "Ihre Daten verlassen nie Ihr Gerät",
+      "security_subtitle": "Was das Werkzeug mit dem Erzeugten tut — und was nicht.",
       "formats_title": "Unterstützte Formate",
       "formats_subtitle": "Jedes benötigte Format an einem Ort",
       "use_cases_title": "Anwendungsfälle",
@@ -670,6 +670,52 @@
       "audience_tools_everyone_1": "Merkbare Passphrasen",
       "audience_tools_everyone_2": "PIN-Codes",
       "audience_tools_everyone_3": "WLAN-Passwörter"
+    },
+    "eyebrow": {
+      "tools": "11 Generatoren",
+      "crypto": "Web Crypto",
+      "inBrowser": "läuft im Browser",
+      "noAccount": "ohne Konto"
+    },
+    "showcase": {
+      "label": "Beispiel",
+      "note": "Vier Wörter aus einer Liste von 4096 — je zwölf Bit, nichts gerundet."
+    },
+    "groups": {
+      "passwords": {
+        "title": "Passwörter",
+        "note": "Zum Tippen oder zum Merken"
+      },
+      "identifiers": {
+        "title": "Bezeichner",
+        "note": "Für eine Datenbankspalte"
+      },
+      "secrets": {
+        "title": "Secrets",
+        "note": "Für eine Konfigurationsdatei"
+      }
+    },
+    "securityItems": {
+      "crypto": {
+        "title": "crypto.getRandomValues",
+        "desc": "Jeder Wert stammt aus dem CSPRNG des Browsers. Math.random kommt in diesem Werkzeug nirgends vor."
+      },
+      "browser": {
+        "title": "Es geht nichts hinaus",
+        "desc": "Der Generator ist JavaScript in diesem Tab. Keine Anfrage trägt einen erzeugten Wert, weil es keine Anfrage gibt — öffnen Sie das Netzwerk-Panel und sehen Sie zu."
+      },
+      "history": {
+        "title": "Der Verlauf bleibt im Browser",
+        "desc": "Die letzten Einträge liegen im localStorage dieses Browsers und sonst nirgends. Löschen ist ein Knopfdruck."
+      },
+      "free": {
+        "title": "Kein Konto, kein Limit",
+        "desc": "Nichts zum Anmelden, nichts wird gezählt, kein Wasserzeichen auf dem Ergebnis."
+      }
+    },
+    "closing": {
+      "title": "Nehmen Sie, was Sie brauchen",
+      "body": "Elf Generatoren, ein Tab, nichts gespeichert."
     }
   },
   "barcodeLanding": {

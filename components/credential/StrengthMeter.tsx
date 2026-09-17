@@ -1,9 +1,9 @@
 'use client';
 
-import { useMemo } from 'react';
 import { ShieldCheck, ShieldX, TriangleAlert } from 'lucide-react';
-import type { Duration, PasswordScore, StrengthNote } from '@/lib/credentialGenerator';
+import type { PasswordScore, StrengthNote } from '@/lib/credentialGenerator';
 import { useTranslations } from '@/lib/i18n';
+import { useDurationFormatter } from '@/components/credential-landing/useDurationFormatter';
 
 interface StrengthMeterProps {
   score: PasswordScore | null;
@@ -38,36 +38,9 @@ const BAND_COLOR: Record<string, string> = {
  * hand-written translations that would each need three plural forms.
  */
 export default function StrengthMeter({ score }: StrengthMeterProps) {
-  const { t, language } = useTranslations();
+  const { t } = useTranslations();
 
-  /* Built once per locale, and read-only afterwards. */
-  const formatters = useMemo(() => {
-    const built: Partial<Record<string, Intl.NumberFormat>> = {};
-    for (const unit of ['second', 'minute', 'hour', 'day', 'month', 'year']) {
-      try {
-        built[unit] = new Intl.NumberFormat(language, {
-          style: 'unit',
-          unit,
-          unitDisplay: 'long',
-          maximumFractionDigits: 1,
-        });
-      } catch {
-        /* A runtime without unit style; the caller falls back to a bare
-           number rather than crashing the meter. */
-      }
-    }
-    return built;
-  }, [language]);
-
-  const formatDuration = (duration: Duration): string => {
-    if (duration.unit === 'instant') return t('credential.strength.instant');
-    if (duration.unit === 'centuries') return t('credential.strength.centuries');
-    /* Intl carries the CLDR plural rules for every locale this site serves, so
-       "2 года" and "5 лет" come from the platform rather than from six
-       hand-written translations with three plural forms each. */
-    const unit = duration.unit.replace(/s$/, '');
-    return formatters[unit]?.format(duration.value) ?? `${duration.value} ${unit}`;
-  };
+  const formatDuration = useDurationFormatter();
 
   if (!score) return null;
 

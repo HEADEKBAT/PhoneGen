@@ -2,21 +2,18 @@ import { type Metadata } from 'next';
 import { getProduct, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
 import { getLocalizedCredentialLanding, getLocalizedFAQs } from '@/lib/config/credentialLanding';
 import { ALL_PRESETS } from '@/lib/config/credentialPresets';
+import { getHeroSample, getToolSamples } from '@/lib/credential/samples';
 import { getT } from '@/lib/i18n/server';
 import Breadcrumb from '@/components/Breadcrumb';
 import {
   CredentialHero,
-  AudienceSection,
-  ToolGrid,
-  PresetSection,
-  SecuritySection,
-  SupportedFormats,
-  UseCases,
-  TrustSection,
-  EcosystemSection,
-  CredentialFAQ,
+  CredentialTools,
+  CredentialPresets,
+  CredentialSecurity,
+  CredentialEcosystem,
+  CredentialUseCases,
 } from '@/components/credential-landing';
-import { CTASection } from '@/components/product-landing';
+import { LandingClosing, LandingFaq } from '@/components/product-landing';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -55,11 +52,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CredentialGeneratorLanding({ params }: Props) {
   const { locale } = await params;
-  const { hero, audience, tools, security, formats, useCases, trust, ecosystem } =
-    getLocalizedCredentialLanding(locale);
+  const { hero, tools, useCases, ecosystem } = getLocalizedCredentialLanding(locale);
   const faqs = getLocalizedFAQs(locale);
   const t = getT(locale);
   const st = (key: string) => t(`credentialLanding.sections.${key}`);
+
+  /* Generated here, by the real generators, so the page cannot show a shape
+     the tool would not produce. See lib/credential/samples.ts. */
+  const heroSample = getHeroSample();
+  const toolSamples = getToolSamples();
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -71,17 +72,13 @@ export default async function CredentialGeneratorLanding({ params }: Props) {
       />
 
       <main className="flex-1">
-        {/* 1. Hero */}
-        <CredentialHero hero={hero} locale={locale} badge={t('products.credential.title')} />
+        <CredentialHero hero={hero} locale={locale} sample={heroSample} />
 
-        {/* 2. Who Is It For */}
-        <AudienceSection audience={audience} title={st('audience_title')} subtitle={st('audience_subtitle')} />
+        <CredentialTools tools={tools} samples={toolSamples} locale={locale} />
 
-        {/* 3. Popular Tools */}
-        <ToolGrid tools={tools} locale={locale} title={st('tools_title')} subtitle={st('tools_subtitle')} />
+        <CredentialSecurity title={st('security_title')} subtitle={st('security_subtitle')} />
 
-        {/* 4. Quick Presets */}
-        <PresetSection
+        <CredentialPresets
           presets={ALL_PRESETS}
           locale={locale}
           title={st('presets_title')}
@@ -89,14 +86,7 @@ export default async function CredentialGeneratorLanding({ params }: Props) {
           ctaLabel={st('view_all')}
         />
 
-        {/* 5. Security */}
-        <SecuritySection items={security} title={st('security_title')} subtitle={st('security_subtitle')} />
-
-        {/* 6. Supported Formats */}
-        <SupportedFormats formats={formats} title={st('formats_title')} subtitle={st('formats_subtitle')} />
-
-        {/* 7. Use Cases */}
-        <UseCases
+        <CredentialUseCases
           useCases={useCases}
           locale={locale}
           title={st('use_cases_title')}
@@ -104,37 +94,45 @@ export default async function CredentialGeneratorLanding({ params }: Props) {
           ctaLabel={st('generate_cta')}
         />
 
-        {/*
-          Between "Use cases" and "Trust" there used to be a "Learn about
-          credential security" grid: ten cards, every one of them
-          `href="#"`. Ten links that go nowhere are not content, and the
-          questions they asked ("What makes a strong password?", "UUID v4
-          vs v7?") are the questions the FAQ below already answers. The
-          translated copy stays in the dictionary for when the articles
-          exist; the section comes back with them.
-        */}
-        {/* 9. Trust */}
-        <TrustSection items={trust} title={st('trust_title')} />
-
-        {/* 10. Ecosystem */}
-        <EcosystemSection
+        <CredentialEcosystem
           links={ecosystem}
           locale={locale}
           title={st('ecosystem_title')}
           subtitle={st('ecosystem_subtitle')}
-          flowTitle={st('flow_title')}
-          flowSteps={[st('flow_user'), st('flow_email'), st('flow_phone'), st('flow_credential'), st('flow_export')]}
         />
 
-        {/* 11. FAQ */}
-        <CredentialFAQ faqs={faqs} />
+        <LandingFaq faqs={faqs.map((faq, i) => ({
+          qKey: `credentialLanding.faqs.${i}.q`,
+          aKey: `credentialLanding.faqs.${i}.a`,
+        }))} />
 
-        {/* 12. CTA */}
-        <CTASection
-          labelKey="productLanding.credential.ctaLabel"
+        <LandingClosing
+          titleKey="credentialLanding.closing.title"
+          bodyKey="credentialLanding.closing.body"
+          ctaKey="credentialLanding.hero.ctaPrimary"
           href={`/${locale}/credential-generator/tool`}
         />
       </main>
     </div>
   );
 }
+
+/*
+ * Four sections are gone, and none of them are coming back as they were.
+ *
+ * "Who is it for" — four emoji cards labelled Developers, QA, DevOps and
+ * Everyone, each with a list of chips. It told a visitor which of four boxes
+ * they fell into and nothing about the product.
+ *
+ * "Supported formats" — twelve badges with no links and no content behind
+ * them, decorating a list the tools section already spells out.
+ *
+ * "Trusted by developers worldwide" — six unsourced assertions under a
+ * headline that is a claim about popularity with nothing behind it.
+ *
+ * "Learn about credential security" — ten cards, every href a "#".
+ *
+ * What replaced them is one section that shows what each of the eleven
+ * generators actually emits, and one that makes four claims a visitor can
+ * check from this page.
+ */

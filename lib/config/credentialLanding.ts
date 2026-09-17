@@ -2,7 +2,7 @@
  * Credential Generator — Landing Page Configuration.
  *
  * All landing section data lives here so components stay generic.
- * Adding a new audience, tool, use case, or article means adding a
+ * Adding a tool or a use case means adding a
  * data entry here — no component changes.
  *
  * For i18n, use getLocalizedCredentialLanding(locale) instead of
@@ -12,13 +12,6 @@
 import { getT } from '@/lib/i18n/server';
 
 /* ── Types ─────────────────────────────────────────────────────────────────── */
-
-export interface AudienceCard {
-  id: string;
-  title: string;
-  desc: string;
-  tools: string[];
-}
 
 export interface LandingTool {
   id: string;
@@ -38,18 +31,6 @@ export interface UseCase {
   preset: string;
 }
 
-export interface SecurityItem {
-  icon: string;
-  label: string;
-  desc: string;
-}
-
-export interface FormatBadge {
-  id: string;
-  label: string;
-  icon: string;
-}
-
 export interface EcosystemLink {
   id: string;
   label: string;
@@ -66,12 +47,8 @@ export interface CredentialLandingConfig {
     ctaPrimary: string;
     ctaSecondary: string;
   };
-  audience: AudienceCard[];
   tools: LandingTool[];
   useCases: UseCase[];
-  security: SecurityItem[];
-  formats: FormatBadge[];
-  trust: string[];
   ecosystem: EcosystemLink[];
 }
 
@@ -118,32 +95,6 @@ export function getLocalizedCredentialLanding(locale: string): CredentialLanding
       ctaPrimary: tk('hero.ctaPrimary'),
       ctaSecondary: tk('hero.ctaSecondary'),
     },
-    audience: [
-      {
-        id: 'developers',
-        title: tk('audience_title_developers'),
-        desc: tk('audience_desc_developers'),
-        tools: [tk('audience_tools_developers_0'), tk('audience_tools_developers_1'), tk('audience_tools_developers_2'), tk('audience_tools_developers_3'), tk('audience_tools_developers_4')],
-      },
-      {
-        id: 'qa',
-        title: tk('audience_title_qa'),
-        desc: tk('audience_desc_qa'),
-        tools: [tk('audience_tools_qa_0'), tk('audience_tools_qa_1'), tk('audience_tools_qa_2'), tk('audience_tools_qa_3')],
-      },
-      {
-        id: 'devops',
-        title: tk('audience_title_devops'),
-        desc: tk('audience_desc_devops'),
-        tools: [tk('audience_tools_devops_0'), tk('audience_tools_devops_1'), tk('audience_tools_devops_2'), tk('audience_tools_devops_3')],
-      },
-      {
-        id: 'everyone',
-        title: tk('audience_title_everyone'),
-        desc: tk('audience_desc_everyone'),
-        tools: [tk('audience_tools_everyone_0'), tk('audience_tools_everyone_1'), tk('audience_tools_everyone_2'), tk('audience_tools_everyone_3')],
-      },
-    ],
     tools: [
       { id: 'password', label: tk('tools_password'), desc: tk('tools_password_desc'), icon: 'Key', mode: 'random' , slug: 'password-generator' },
       { id: 'passphrase', label: tk('tools_passphrase'), desc: tk('tools_passphrase_desc'), icon: 'KeyRound', mode: 'passphrase' , slug: 'passphrase-generator' },
@@ -168,32 +119,6 @@ export function getLocalizedCredentialLanding(locale: string): CredentialLanding
       { id: 'jwt-secret', label: tk('use_case_jwt'), desc: tk('use_case_jwt_desc'), icon: 'Lock', preset: 'jwt' },
       { id: 'api-key-gen', label: tk('use_case_api_key'), desc: tk('use_case_api_key_desc'), icon: 'Key', preset: 'api-key' },
       { id: 'session', label: tk('use_case_session'), desc: tk('use_case_session_desc'), icon: 'ShieldCheck', preset: 'session' },
-    ],
-    security: [
-      { icon: 'Cpu', label: tk('security_crypto'), desc: tk('security_crypto_desc') },
-      { icon: 'Globe', label: tk('security_browser'), desc: tk('security_browser_desc') },
-      { icon: 'EyeOff', label: tk('security_tracking'), desc: tk('security_tracking_desc') },
-      { icon: 'CloudOff', label: tk('security_storage'), desc: tk('security_storage_desc') },
-      { icon: 'Trash2', label: tk('security_history'), desc: tk('security_history_desc') },
-      { icon: 'Code', label: tk('security_opensource'), desc: tk('security_opensource_desc') },
-    ],
-    formats: [
-      { id: 'password', label: tk('formats_passwords'), icon: 'Key' },
-      { id: 'pin', label: tk('formats_pin'), icon: 'Scan' },
-      { id: 'passphrase', label: tk('formats_passphrase'), icon: 'KeyRound' },
-      { id: 'uuid', label: tk('formats_uuid'), icon: 'Hash' },
-      { id: 'jwt', label: tk('formats_jwt'), icon: 'Lock' },
-      { id: 'api-keys', label: tk('formats_api_keys'), icon: 'Key' },
-      { id: 'hex', label: tk('formats_hex'), icon: 'Hash' },
-      { id: 'base64', label: tk('formats_base64'), icon: 'Hash' },
-      { id: 'base64url', label: tk('formats_base64url'), icon: 'Hash' },
-      { id: 'tokens', label: tk('formats_tokens'), icon: 'Shuffle' },
-      { id: 'hashes', label: tk('formats_hashes'), icon: 'Fingerprint' },
-      { id: 'secrets', label: tk('formats_secrets'), icon: 'Lock' },
-    ],
-    trust: [
-      tk('trust.0'), tk('trust.1'), tk('trust.2'),
-      tk('trust.3'), tk('trust.4'), tk('trust.5'),
     ],
     ecosystem: [
       { id: 'user', label: tk('ecosystem_user'), desc: tk('ecosystem_user_desc'), href: '/user-generator', icon: 'Users' },

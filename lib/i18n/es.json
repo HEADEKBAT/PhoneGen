@@ -470,8 +470,8 @@
   },
   "credentialLanding": {
     "hero": {
-      "title": "Genere credenciales seguras",
-      "subtitle": "Genere contraseñas, frases de contraseña, claves API, UUIDs, secretos JWT y credenciales de desarrollador — todo localmente en su navegador.",
+      "title": "Sólido, y se ve por qué.",
+      "subtitle": "Contraseñas, frases de contraseña, códigos PIN, claves de API, secretos JWT y UUID, generados por la API Web Crypto en esta pestaña. Cada uno llega con los bits que lleva detrás y cuánto aguanta frente a tres ataques distintos, porque «seguro» sin una cifra no dice nada.",
       "benefits": [
         "Solo navegador",
         "Sin solicitudes al servidor",
@@ -479,8 +479,8 @@
         "Gratis para siempre",
         "Código abierto"
       ],
-      "ctaPrimary": "Comenzar",
-      "ctaSecondary": "Explorar herramientas"
+      "ctaPrimary": "Abrir el generador",
+      "ctaSecondary": "Ver las herramientas"
     },
     "audience_title_developers": "Desarrolladores",
     "audience_desc_developers": "Genere UUIDs, secretos JWT, claves API y tokens de sesión para sus aplicaciones.",
@@ -626,11 +626,11 @@
       "audience_title": "Para quién es",
       "audience_subtitle": "Herramientas para cada rol — de desarrolladores a usuarios cotidianos",
       "tools_title": "Herramientas populares",
-      "tools_subtitle": "Elija entre 11 potentes generadores",
+      "tools_subtitle": "Cada uno tiene su página, sus opciones y su ejemplo.",
       "presets_title": "Ajustes rápidos",
       "presets_subtitle": "Configuraciones predefinidas para servicios populares",
       "security_title": "Seguridad primero",
-      "security_subtitle": "Sus datos nunca salen de su dispositivo",
+      "security_subtitle": "Lo que la herramienta hace, y no hace, con lo que genera.",
       "formats_title": "Formatos admitidos",
       "formats_subtitle": "Cada formato que necesita en un solo lugar",
       "use_cases_title": "Casos de uso",
@@ -670,6 +670,52 @@
       "audience_tools_everyone_1": "Frases memorables",
       "audience_tools_everyone_2": "Códigos PIN",
       "audience_tools_everyone_3": "Contraseñas Wi-Fi"
+    },
+    "eyebrow": {
+      "tools": "11 generadores",
+      "crypto": "Web Crypto",
+      "inBrowser": "funciona en su navegador",
+      "noAccount": "sin cuenta"
+    },
+    "showcase": {
+      "label": "ejemplo",
+      "note": "Cuatro palabras de una lista de 4096: doce bits cada una, sin redondear."
+    },
+    "groups": {
+      "passwords": {
+        "title": "Contraseñas",
+        "note": "Para teclear, o para recordar"
+      },
+      "identifiers": {
+        "title": "Identificadores",
+        "note": "Para una columna de la base"
+      },
+      "secrets": {
+        "title": "Secretos",
+        "note": "Para un fichero de configuración"
+      }
+    },
+    "securityItems": {
+      "crypto": {
+        "title": "crypto.getRandomValues",
+        "desc": "Cada valor sale del CSPRNG del propio navegador. Math.random no aparece en ninguna parte de esta herramienta."
+      },
+      "browser": {
+        "title": "De aquí no sale nada",
+        "desc": "El generador es JavaScript en esta pestaña. Ninguna petición lleva un valor generado, porque no hay petición: abra el panel de red y compruébelo."
+      },
+      "history": {
+        "title": "El historial se queda en el navegador",
+        "desc": "Las últimas entradas están en el localStorage de este navegador y en ningún otro sitio. Borrarlas es un botón."
+      },
+      "free": {
+        "title": "Sin cuenta y sin límite",
+        "desc": "Nada que registrar, nada que contar, sin marca de agua en el resultado."
+      }
+    },
+    "closing": {
+      "title": "Elija lo que necesite",
+      "body": "Once generadores, una pestaña, nada guardado."
     }
   },
   "barcodeLanding": {

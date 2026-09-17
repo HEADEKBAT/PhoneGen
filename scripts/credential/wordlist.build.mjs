@@ -27,7 +27,8 @@
  *
  * 1. Lowercase, deduplicated, `^[a-z]{3,9}$` — no spaces, hyphens, accents or
  *    capitals, so a passphrase can be typed from a phone keyboard and read
- *    aloud over a phone call without spelling rules.
+ *    aloud over a phone call without spelling rules — minus the BLOCKED list
+ *    below.
  * 2. Of the candidates that survive, the 4096 shortest are kept — ties broken
  *    alphabetically. Shorter words, shorter passphrase to type.
  * 3. Sorted, so the file diffs cleanly and the build is reproducible.
@@ -51,19 +52,53 @@ const SEED = join(HERE, 'wordlist.source.txt');
 const LIST_SIZE = 4096;
 const SHAPE = /^[a-z]{3,9}$/;
 
+/**
+ * Words kept out of the list.
+ *
+ * A passphrase is read aloud, pasted into a ticket, and — on the landing page
+ * — shown to a stranger as the example of what this tool produces. Four words
+ * drawn at random will occasionally land on a sentence nobody wants to read;
+ * `deadly-scary-rude-salad` came out of the first build. Diceware lists are
+ * curated for the same reason.
+ *
+ * This is a judgement call, not a rule: death, violence, illness, insults and
+ * the handful of words that are unpleasant in any combination. It costs about
+ * 1% of the pool and no entropy at all, since the list is trimmed to 4096
+ * either way.
+ */
+const BLOCKED = new Set([
+  'abuse', 'abusive', 'aching', 'afraid', 'aggressive', 'agonizing', 'angry',
+  'anxious', 'ashamed', 'assault', 'awful', 'bitter', 'bleak', 'blood',
+  'bloody', 'bomb', 'brutal', 'burial', 'cancer', 'corpse', 'crazy', 'creepy',
+  'cruel', 'crying', 'damn', 'danger', 'dead', 'deadly', 'death', 'defeated',
+  'depressed', 'despair', 'die', 'disease', 'disgusted', 'disgusting', 'drunk',
+  'dying', 'evil', 'fatal', 'fear', 'fearful', 'filthy', 'foolish', 'frantic',
+  'frightened', 'funeral', 'grave', 'grief', 'grim', 'guilty', 'gun', 'hate',
+  'hateful', 'horrible', 'horror', 'hostile', 'hurt', 'idiot', 'ill', 'illness',
+  'injury', 'insane', 'jealous', 'kill', 'killer', 'lonely', 'loser', 'miserable',
+  'morbid', 'murder', 'nasty', 'obese', 'obnoxious', 'pain', 'painful', 'panic',
+  'pathetic', 'poison', 'poor', 'rage', 'rotten', 'rude', 'sad', 'savage',
+  'scary', 'scream', 'selfish', 'shame', 'sick', 'sickness', 'slaughter',
+  'stupid', 'suffer', 'terrible', 'terror', 'threat', 'tragic', 'trauma',
+  'ugly', 'vicious', 'victim', 'violent', 'vomit', 'war', 'weapon', 'wicked',
+  'worthless', 'wound', 'wretched',
+]);
+
 function build() {
   const defs = faker.rawDefinitions ?? faker.definitions;
   const banks = ['adjective', 'noun', 'verb', 'adverb'];
 
+  const usable = (w) => SHAPE.test(w) && !BLOCKED.has(w);
+
   const pool = new Set();
   for (const word of readFileSync(SEED, 'utf8').split('\n')) {
     const w = word.trim().toLowerCase();
-    if (SHAPE.test(w)) pool.add(w);
+    if (usable(w)) pool.add(w);
   }
   for (const bank of banks) {
     for (const word of defs.word?.[bank] ?? []) {
       const w = String(word).toLowerCase();
-      if (SHAPE.test(w)) pool.add(w);
+      if (usable(w)) pool.add(w);
     }
   }
 
