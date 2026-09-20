@@ -1697,6 +1697,24 @@
         "H": "Recupera el 30%. Lo que exige un logotipo, y lo que sobrevive a un doblez o a una huella."
       },
       "lockedByLogo": "Fijado en H por el logotipo. Tapar parte del símbolo gasta margen de corrección, y en un nivel inferior el logotipo se lo lleva todo."
+    },
+    "type": {
+      "content": "Contenido",
+      "more": "Los {count} tipos",
+      "search": "Buscar tipos",
+      "noMatch": "No hay coincidencias.",
+      "category": {
+        "url": "Enlaces",
+        "text": "Texto",
+        "contact": "Contacto",
+        "network": "Red",
+        "social": "Redes y aplicaciones",
+        "location": "Lugares",
+        "payment": "Pagos",
+        "crypto": "Cripto",
+        "app": "Tiendas y reuniones",
+        "custom": "Personalizado"
+      }
     }
   },
   "qrLanding": {

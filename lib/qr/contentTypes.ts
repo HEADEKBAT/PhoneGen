@@ -670,3 +670,45 @@ export const CONTENT_TYPE_CATEGORIES = [
   { id: 'app', label: 'Apps & Meetings' },
   { id: 'custom', label: 'Custom' },
 ] as const;
+
+/* ── Encoding ────────────────────────────────────────────────────────── */
+
+/**
+ * A view of the form data where every field is a string.
+ *
+ * Eighteen of the thirty-seven encoders dereference a field directly —
+ * `d.username.startsWith('http')`, `d.phone.replace(/\D/g, '')` — and they are
+ * called on every keystroke, starting from an empty object the moment someone
+ * picks a type. So eighteen of the thirty-seven types threw the instant they
+ * were selected, and the throw came out of a `useMemo` during render: the
+ * error boundary caught it and replaced **the entire studio** with nothing.
+ * Four of those were unreachable in the old type picker, which is the only
+ * reason this was not obvious.
+ *
+ * A proxy rather than thirty-seven guards: it fixes the encoders that exist
+ * and the ones nobody has written yet, and an encoder that reads a missing
+ * field gets an empty string, which is what it would have got from an empty
+ * input anyway.
+ */
+function withEmptyDefaults(data: Record<string, string>): Record<string, string> {
+  return new Proxy(data, {
+    get: (target, key: string) => (typeof key === 'string' ? (target[key] ?? '') : undefined),
+  });
+}
+
+/**
+ * The payload for a type, or an empty string if it cannot be built yet.
+ *
+ * Never throws. A half-filled form is the normal state of this tool, not an
+ * error, and nothing a person types should be able to take the page down.
+ */
+export function encodeContent(id: QRContentType, data: Record<string, string>): string {
+  const config = QR_CONTENT_TYPES[id];
+  if (!config) return '';
+
+  try {
+    return config.encode(withEmptyDefaults(data)) ?? '';
+  } catch {
+    return '';
+  }
+}

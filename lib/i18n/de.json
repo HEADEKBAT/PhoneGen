@@ -1697,6 +1697,24 @@
         "H": "Stellt 30% wieder her. Was ein Logo braucht und was einen Knick oder einen Daumenabdruck übersteht."
       },
       "lockedByLogo": "Wegen des Logos auf H festgehalten. Ein verdecktes Stück Symbol verbraucht Fehlerbudget, und auf jeder niedrigeren Stufe verbraucht das Logo alles davon."
+    },
+    "type": {
+      "content": "Inhalt",
+      "more": "Alle {count} Typen",
+      "search": "Typen suchen",
+      "noMatch": "Nichts gefunden.",
+      "category": {
+        "url": "Links",
+        "text": "Text",
+        "contact": "Kontakt",
+        "network": "Netzwerk",
+        "social": "Soziales und Apps",
+        "location": "Orte",
+        "payment": "Zahlungen",
+        "crypto": "Krypto",
+        "app": "Stores und Meetings",
+        "custom": "Eigenes"
+      }
     }
   },
   "qrLanding": {

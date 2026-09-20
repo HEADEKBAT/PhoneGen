@@ -1697,6 +1697,24 @@
         "H": "Recupera 30%. O que um logótipo exige e o que sobrevive a um vinco ou a uma dedada."
       },
       "lockedByLogo": "Mantido em H por causa do logótipo. Tapar parte do símbolo gasta margem de correção e, num nível inferior, o logótipo gasta-a toda."
+    },
+    "type": {
+      "content": "Conteúdo",
+      "more": "Os {count} tipos",
+      "search": "Procurar tipos",
+      "noMatch": "Nada corresponde.",
+      "category": {
+        "url": "Ligações",
+        "text": "Texto",
+        "contact": "Contacto",
+        "network": "Rede",
+        "social": "Redes e aplicações",
+        "location": "Lugares",
+        "payment": "Pagamentos",
+        "crypto": "Cripto",
+        "app": "Lojas e reuniões",
+        "custom": "Personalizado"
+      }
     }
   },
   "qrLanding": {

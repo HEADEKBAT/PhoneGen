@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { QR_CONTENT_TYPES } from './contentTypes';
+import { encodeContent, QR_CONTENT_TYPES } from './contentTypes';
 import { escapeVCard, escapeWifi } from './escape';
 import { byteCapacity } from './capacity';
 import { buildMatrix, coveredModules, maxLogoSide, MAX_LOGO_COVERAGE } from './matrix';
 import { analyseReadiness, effectiveErrorCorrection } from './readiness';
 import { buildEPS, buildPDF } from './vector';
-import type { QROptions } from './types';
+import type { QRContentType, QROptions } from './types';
 
 const BASE: QROptions = {
   content: 'https://www.gencore.space',
@@ -54,6 +54,43 @@ describe('Wi-Fi payloads', () => {
     const field = wifi.fields.find((item: { id: string }) => item.id === 'encryption')!;
     const values = field.options!.map((option: { value: string }) => option.value);
     expect(values).toContain(field.defaultValue);
+  });
+});
+
+describe('every content type survives an empty form', () => {
+  it('never throws, for any of them', () => {
+    /* Eighteen of the thirty-seven encoders dereferenced a field that is
+       undefined until someone types in it — `d.username.startsWith(…)` — and
+       they run inside a `useMemo` during render. Selecting one of those types
+       threw, the error boundary caught it, and the whole studio went blank.
+       Four were unreachable in the old picker, which is the only reason this
+       was not obvious. */
+    for (const id of Object.keys(QR_CONTENT_TYPES) as QRContentType[]) {
+      expect(() => encodeContent(id, {})).not.toThrow();
+    }
+  });
+
+  it('never throws on a half-typed field either', () => {
+    for (const id of Object.keys(QR_CONTENT_TYPES) as QRContentType[]) {
+      const partial = Object.fromEntries(
+        QR_CONTENT_TYPES[id].fields.slice(0, 1).map((field: { id: string }) => [field.id, 'x']),
+      );
+      expect(() => encodeContent(id, partial)).not.toThrow();
+    }
+  });
+
+  it('reaches every declared type from the picker', () => {
+    /* The hand-written category map listed 33 of the 37: skype, facetime,
+       google-maps and gitlab were in no category and could not be selected.
+       The picker groups by each type's own `category` field now, so this
+       holds by construction — and this test says so out loud. */
+    const categories = new Set(
+      Object.values(QR_CONTENT_TYPES).map((config: { category: string }) => config.category),
+    );
+    for (const config of Object.values(QR_CONTENT_TYPES)) {
+      expect(categories.has((config as { category: string }).category)).toBe(true);
+    }
+    expect(Object.keys(QR_CONTENT_TYPES)).toHaveLength(37);
   });
 });
 

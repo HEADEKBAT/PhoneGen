@@ -2,12 +2,13 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import type { QRContentType, QROptions } from '@/lib/qr/types';
-import { getAllContentTypes, getContentTypeConfig } from '@/lib/qr/contentTypes';
-import { Type, Palette, Image as ImageIcon, Settings, ShieldCheck, Download, Check } from 'lucide-react';
+import { encodeContent, getContentTypeConfig } from '@/lib/qr/contentTypes';
+import { Type, Palette, Image as ImageIcon, Settings, ShieldCheck, Download } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n';
 import { effectiveErrorCorrection } from '@/lib/qr/readiness';
 import QRPreview from './shared/QRPreview';
 import QRContentForm from './shared/QRContentForm';
+import QRTypePicker from './shared/QRTypePicker';
 import QRExportPanel from './shared/QRExportPanel';
 import QRReadiness from './shared/QRReadiness';
 import ModuleStyleSelector from './shared/ModuleStyleSelector';
@@ -29,27 +30,13 @@ const TABS: { id: TabId; label: string; icon: React.ReactNode }[] = [
   { id: 'export', label: 'Export', icon: <Download className="h-4 w-4" /> },
 ];
 
-const CONTENT_TYPE_CATEGORIES = [
-  { id: 'popular', label: 'Popular' },
-  { id: 'contact', label: 'Contact' },
-  { id: 'network', label: 'Network' },
-  { id: 'social', label: 'Social' },
-  { id: 'crypto', label: 'Crypto' },
-  { id: 'payment', label: 'Payment' },
-  { id: 'app', label: 'Apps' },
-  { id: 'other', label: 'Other' },
-];
-
-const CATEGORY_CONTENT_TYPES: Record<string, QRContentType[]> = {
-  popular: ['url', 'text', 'wifi', 'vcard', 'email'],
-  contact: ['phone', 'sms', 'whatsapp', 'telegram', 'vcard'],
-  network: ['wifi', 'zoom', 'teams'],
-  social: ['youtube', 'instagram', 'facebook', 'linkedin', 'tiktok', 'x', 'github', 'discord'],
-  crypto: ['bitcoin', 'ethereum', 'litecoin', 'monero'],
-  payment: ['paypal', 'upi', 'sepa'],
-  app: ['app-store', 'google-play', 'steam', 'epic-games'],
-  other: ['location', 'calendar', 'custom-uri'],
-};
+/*
+ * The hand-written category map that stood here is gone. It listed 33 of the
+ * 37 content types — skype, facetime, google-maps and gitlab appeared in no
+ * category and could not be selected at all — and listed wifi and vcard twice,
+ * so they rendered as duplicate chips. QRTypePicker groups by the `category`
+ * field the types already carry, which cannot go out of date.
+ */
 
 const DEFAULT_OPTIONS: QROptions = {
   content: '',
@@ -73,19 +60,22 @@ interface QRStudioClientProps {
 }
 
 export default function QRStudioClient({ standalone = true }: QRStudioClientProps) {
+  const { t } = useTranslations();
   const [activeTab, setActiveTab] = useState<TabId>('content');
   const [contentType, setContentType] = useState<QRContentType>('url');
   const [contentData, setContentData] = useState<Record<string, string>>({});
   const [options, setOptions] = useState<QROptions>(DEFAULT_OPTIONS);
   const [logo, setLogo] = useState<{ dataUrl: string; size: number } | undefined>(undefined);
 
-  const allTypes = useMemo(() => getAllContentTypes(), []);
   const config = useMemo(() => getContentTypeConfig(contentType), [contentType]);
 
   const qrOptions: QROptions = useMemo(() => {
-    const encodedContent = config?.encode
-      ? config.encode(contentData)
-      : (contentData.text || contentData.url || '');
+    /* `encodeContent` never throws. It used to call `config.encode` straight,
+       inside this memo, during render — and eighteen of the thirty-seven
+       encoders dereference a field that is undefined until someone types in
+       it, so selecting one of those types threw and the error boundary
+       replaced the whole studio with a blank page. */
+    const encodedContent = encodeContent(contentType, contentData);
 
     return {
       ...options,
@@ -158,51 +148,18 @@ export default function QRStudioClient({ standalone = true }: QRStudioClientProp
           {/* Content Tab */}
           {activeTab === 'content' && (
             <div className="space-y-4">
-              {/* Content type selector with categories */}
-              <div>
-                <label className="text-xs font-medium text-muted-foreground mb-2 block ml-1">
-                  Content Type
-                </label>
-                <div className="space-y-3">
-                  {CONTENT_TYPE_CATEGORIES.map((category) => {
-                    const types = CATEGORY_CONTENT_TYPES[category.id] || [];
-                    const available = types.filter((t) => allTypes.some((at) => at.id === t));
-                    if (available.length === 0) return null;
-                    return (
-                      <div key={category.id}>
-                        <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-1.5 ml-1">
-                          {category.label}
-                        </p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {available.map((typeId) => {
-                            const typeCfg = getContentTypeConfig(typeId);
-                            if (!typeCfg) return null;
-                            const isActive = contentType === typeId;
-                            return (
-                              <button
-                                key={typeId}
-                                onClick={() => handleContentTypeChange(typeId)}
-                                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-medium border transition-all ${
-                                  isActive
-                                    ? 'bg-primary/10 border-primary text-primary'
-                                    : 'bg-background border-border text-muted-foreground hover:border-muted-foreground/30 hover:bg-muted/20'
-                                }`}
-                              >
-                                {isActive && <Check className="h-3 w-3" />}
-                                {typeCfg.label}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+              {/*
+                The form first, the type picker above it as one compact row.
+                What stood here was a grid of thirty-three chips in eight
+                labelled rows, and it pushed the field you type into to 984
+                pixels down a 950-pixel viewport: the studio opened on a wall
+                of options, an empty preview and nowhere to start.
+              */}
+              <QRTypePicker value={contentType} onChange={handleContentTypeChange} />
 
               <div className="border-t border-border pt-4">
-                <p className="text-xs font-medium text-foreground mb-3 ml-1">
-                  {config?.label || 'Content'}
+                <p className="mb-3 ml-1 text-xs font-medium text-foreground">
+                  {config?.label || t('qrStudio.type.content')}
                 </p>
                 <QRContentForm
                   contentType={contentType}

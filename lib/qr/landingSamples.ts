@@ -9,7 +9,7 @@
  * anyone deciding whether this tool speaks their format.
  */
 
-import { QR_CONTENT_TYPES } from './contentTypes';
+import { encodeContent, QR_CONTENT_TYPES } from './contentTypes';
 import { buildMatrix } from './matrix';
 import { analyseReadiness } from './readiness';
 import { buildSVG } from './vector';
@@ -100,18 +100,14 @@ export function getPayloadSamples(): PayloadSample[] {
 
   for (const group of PAYLOAD_GROUPS) {
     for (const type of group.types) {
-      const config = QR_CONTENT_TYPES[type];
       const data = SAMPLE_DATA[type];
-      if (!config || !data) continue;
+      if (!data) continue;
 
       /* A vCard is eight lines; on a card it reads as one, so the newlines
          become a separator the eye can follow. An encoder that throws on this
          sample data is a bug in the sample, not something to ship blank. */
-      try {
-        samples.push({ type, payload: config.encode(data).replace(/\r?\n/g, ' · ') });
-      } catch {
-        continue;
-      }
+      const payload = encodeContent(type, data);
+      if (payload) samples.push({ type, payload: payload.replace(/\r?\n/g, ' · ') });
     }
   }
 

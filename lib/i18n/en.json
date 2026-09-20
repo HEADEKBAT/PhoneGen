@@ -1697,6 +1697,24 @@
         "H": "Recovers 30%. What a logo needs, and what survives a crease or a thumbprint."
       },
       "lockedByLogo": "Held at H because of the logo. Covering part of a symbol spends recovery budget, and at any lower level the logo spends all of it, leaving nothing for print and scanning noise."
+    },
+    "type": {
+      "content": "Content",
+      "more": "All {count} types",
+      "search": "Search types",
+      "noMatch": "Nothing matches that.",
+      "category": {
+        "url": "Links",
+        "text": "Text",
+        "contact": "Contact",
+        "network": "Network",
+        "social": "Social and apps",
+        "location": "Places",
+        "payment": "Payments",
+        "crypto": "Crypto",
+        "app": "Stores and meetings",
+        "custom": "Custom"
+      }
     }
   },
   "qrLanding": {

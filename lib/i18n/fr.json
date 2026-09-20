@@ -1697,6 +1697,24 @@
         "H": "Récupère 30%. Ce qu’exige un logo, et ce qui survit à un pli ou à une trace de doigt."
       },
       "lockedByLogo": "Maintenu à H à cause du logo. Couvrir une partie du symbole consomme du budget de correction, et à un niveau inférieur le logo le consomme entièrement."
+    },
+    "type": {
+      "content": "Contenu",
+      "more": "Les {count} types",
+      "search": "Rechercher un type",
+      "noMatch": "Aucun résultat.",
+      "category": {
+        "url": "Liens",
+        "text": "Texte",
+        "contact": "Contact",
+        "network": "Réseau",
+        "social": "Réseaux et applis",
+        "location": "Lieux",
+        "payment": "Paiements",
+        "crypto": "Cryptos",
+        "app": "Stores et réunions",
+        "custom": "Personnalisé"
+      }
     }
   },
   "qrLanding": {
