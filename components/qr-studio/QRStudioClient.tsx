@@ -3,12 +3,13 @@
 import { useState, useCallback, useMemo } from 'react';
 import type { QRContentType, QROptions } from '@/lib/qr/types';
 import { getAllContentTypes, getContentTypeConfig } from '@/lib/qr/contentTypes';
-import { Type, Palette, Image as ImageIcon, Settings, ScanLine, Download, Check } from 'lucide-react';
+import { Type, Palette, Image as ImageIcon, Settings, ShieldCheck, Download, Check } from 'lucide-react';
+import { useTranslations } from '@/lib/i18n';
+import { effectiveErrorCorrection } from '@/lib/qr/readiness';
 import QRPreview from './shared/QRPreview';
 import QRContentForm from './shared/QRContentForm';
 import QRExportPanel from './shared/QRExportPanel';
-import QRScannerTest from './shared/QRScannerTest';
-import QRContrastCheck from './shared/QRContrastCheck';
+import QRReadiness from './shared/QRReadiness';
 import ModuleStyleSelector from './shared/ModuleStyleSelector';
 import EyeStyleSelector from './shared/EyeStyleSelector';
 import LogoUploader from './shared/LogoUploader';
@@ -17,14 +18,14 @@ import ErrorCorrectionSelector from './shared/ErrorCorrectionSelector';
 import ColorPicker from './shared/ColorPicker';
 import ResponsivePreview from './shared/ResponsivePreview';
 
-type TabId = 'content' | 'design' | 'logo' | 'settings' | 'scan' | 'export';
+type TabId = 'content' | 'design' | 'logo' | 'settings' | 'check' | 'export';
 
 const TABS: { id: TabId; label: string; icon: React.ReactNode }[] = [
   { id: 'content', label: 'Content', icon: <Type className="h-4 w-4" /> },
   { id: 'design', label: 'Design', icon: <Palette className="h-4 w-4" /> },
   { id: 'logo', label: 'Logo', icon: <ImageIcon className="h-4 w-4" /> },
   { id: 'settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
-  { id: 'scan', label: 'Scan Test', icon: <ScanLine className="h-4 w-4" /> },
+  { id: 'check', label: 'Check', icon: <ShieldCheck className="h-4 w-4" /> },
   { id: 'export', label: 'Export', icon: <Download className="h-4 w-4" /> },
 ];
 
@@ -93,11 +94,6 @@ export default function QRStudioClient({ standalone = true }: QRStudioClientProp
     };
   }, [options, contentType, contentData, config, logo]);
 
-  const contentLength = useMemo(
-    () => qrOptions.content?.length || 0,
-    [qrOptions.content]
-  );
-
   const handleContentTypeChange = useCallback((type: QRContentType) => {
     setContentType(type);
     setContentData({});
@@ -120,13 +116,13 @@ export default function QRStudioClient({ standalone = true }: QRStudioClientProp
           <QRPreview options={qrOptions} size={280} />
         </div>
 
-        {/* Quick info */}
+        {/* One verdict, in one place. A contrast card used to sit here and
+            the preview drew the same verdict again inside itself, both from
+            the same WCAG ratio, which could not see the things that actually
+            stop a code scanning. */}
         {qrOptions.content && (
-          <div className="w-full max-w-sm space-y-2">
-            <QRContrastCheck
-              foreground={options.colors.pattern}
-              background={options.colors.background}
-            />
+          <div className="w-full max-w-sm">
+            <QRReadiness options={qrOptions} />
           </div>
         )}
 
@@ -275,7 +271,10 @@ export default function QRStudioClient({ standalone = true }: QRStudioClientProp
               <LogoUploader
                 logo={logo}
                 onChange={setLogo}
-                errorCorrection={options.errorCorrection}
+                /* The level the symbol is built at, not the one the user
+                   picked: a logo forces H, and the budget shown here has to
+                   be the budget that applies. */
+                errorCorrection={effectiveErrorCorrection(qrOptions)}
               />
               {logo && (
                 <div className="p-2.5 rounded-xl bg-muted/30 border border-border">
@@ -299,7 +298,6 @@ export default function QRStudioClient({ standalone = true }: QRStudioClientProp
                   value={options.errorCorrection}
                   onChange={(v) => updateOption('errorCorrection', v)}
                   hasLogo={!!logo}
-                  contentLength={contentLength}
                 />
               </div>
 
@@ -310,33 +308,15 @@ export default function QRStudioClient({ standalone = true }: QRStudioClientProp
                 />
               </div>
 
-              <div className="border-t border-border pt-4">
-                <div className="p-2.5 rounded-xl bg-muted/30 border border-border">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">Content length</span>
-                    <span className="font-mono text-foreground">{contentLength} chars</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs mt-1">
-                    <span className="text-muted-foreground">QR Version</span>
-                    <span className="font-mono text-foreground">
-                      {contentLength > 0 ? `~${Math.ceil(contentLength / 100) + 1}` : 'N/A'}
-                    </span>
-                  </div>
-                </div>
-              </div>
+              {/* A "QR Version" readout used to sit here, computed as
+                  `ceil(length / 100) + 1` — a number with no relationship to
+                  anything, contradicting the other estimate on the Scan tab,
+                  and both contradicting the symbol the library encoded. The
+                  real version is on the Check panel, read off that symbol. */}
             </div>
           )}
 
-          {/* Scan Test Tab */}
-          {activeTab === 'scan' && (
-            <div>
-              <QRScannerTest
-                content={qrOptions.content}
-                errorCorrection={options.errorCorrection}
-                contentLength={contentLength}
-              />
-            </div>
-          )}
+          {activeTab === 'check' && <QRReadiness options={qrOptions} />}
 
           {/* Export Tab */}
           {activeTab === 'export' && (

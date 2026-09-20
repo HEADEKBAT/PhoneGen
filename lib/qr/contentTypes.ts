@@ -7,6 +7,7 @@
  */
 
 import type { QRContentType, QRContentTypeConfig } from './types';
+import { escapeVCard, escapeWifi } from './escape';
 
 /* ── Helper ──────────────────────────────────────────────────────────── */
 
@@ -180,7 +181,10 @@ export const QR_CONTENT_TYPES: Record<QRContentType, QRContentTypeConfig> = {
     fields: [
       { id: 'ssid', label: 'SSID (Network Name)', type: 'text', placeholder: 'My Wi-Fi Network', required: true },
       { id: 'password', label: 'Password', type: 'password', placeholder: 'Wi-Fi password' },
-      { id: 'encryption', label: 'Encryption', type: 'select', defaultValue: 'WPA2', options: [
+      /* The default used to be 'WPA2', which is not one of the four values
+         below — the generic form emits `defaultValue` verbatim, so it wrote
+         `T:WPA2` into the payload. */
+      { id: 'encryption', label: 'Encryption', type: 'select', defaultValue: 'WPA', options: [
         { label: 'WPA2-PSK', value: 'WPA' },
         { label: 'WPA2-Enterprise', value: 'WPA2-EAP' },
         { label: 'WEP', value: 'WEP' },
@@ -189,12 +193,31 @@ export const QR_CONTENT_TYPES: Record<QRContentType, QRContentTypeConfig> = {
       { id: 'hidden', label: 'Hidden Network', type: 'switch', defaultValue: 'false' },
     ],
     encode: (d) => {
-      const enc = d.encryption || 'nopass';
+      /*
+       * The fallback used to be 'nopass', and the form's encryption select
+       * only writes to the data when the user actively changes it. So the
+       * common path — pick Wi-Fi, type an SSID, type a password, never touch
+       * the dropdown that already displays "WPA2-PSK" — emitted
+       * `WIFI:T:nopass;…` with no `P:` field at all. The code scanned, and the
+       * phone tried to join an open network of that name.
+       *
+       * The fallback is now WPA, matching what the form shows; an open network
+       * is a deliberate choice, not a default nobody made.
+       */
+      const enc = d.encryption || (d.password ? 'WPA' : 'nopass');
       const hidden = d.hidden === 'true' ? 'true' : 'false';
-      if (enc === 'nopass') return `WIFI:T:nopass;S:${d.ssid};H:${hidden};;`;
-      return `WIFI:T:${enc};S:${d.ssid};P:${d.password || ''};H:${hidden};;`;
+      const ssid = escapeWifi(d.ssid || '');
+
+      if (enc === 'nopass') return `WIFI:T:nopass;S:${ssid};H:${hidden};;`;
+      return `WIFI:T:${enc};S:${ssid};P:${escapeWifi(d.password || '')};H:${hidden};;`;
     },
-    validate: (d) => d.ssid ? valid() : invalid('ssid', 'SSID is required'),
+    validate: (d) => {
+      if (!d.ssid) return invalid('ssid', 'SSID is required');
+      if (d.encryption && d.encryption !== 'nopass' && !d.password) {
+        return invalid('password', 'A password is required unless the network is open');
+      }
+      return valid();
+    },
   },
   vcard: {
     id: 'vcard',
@@ -212,18 +235,29 @@ export const QR_CONTENT_TYPES: Record<QRContentType, QRContentTypeConfig> = {
       { id: 'photoUrl', label: 'Photo URL', type: 'url', placeholder: 'https://example.com/photo.jpg' },
     ],
     encode: (d) => {
+      /* Every value is escaped: `;` and `,` carry structure in vCard, and an
+         address written the way addresses are written — "ул. Мира, 5" — became
+         two values without this, as did any surname containing a semicolon. */
+      const e = (value?: string) => escapeVCard(value || '');
       const lines: string[] = ['BEGIN:VCARD', 'VERSION:3.0'];
-      const name = `${d.lastName || ''};${d.firstName};`;
-      lines.push(`FN:${d.firstName} ${d.lastName || ''}`.trim());
-      lines.push(`N:${name}`);
-      if (d.company) lines.push(`ORG:${d.company}`);
-      if (d.phone) lines.push(`TEL:${d.phone}`);
-      if (d.email) lines.push(`EMAIL:${d.email}`);
+
+      lines.push(`FN:${e(`${d.firstName || ''} ${d.lastName || ''}`.trim())}`);
+      /* N: is five components — family, given, additional, prefix, suffix. */
+      lines.push(`N:${e(d.lastName)};${e(d.firstName)};;;`);
+      if (d.company) lines.push(`ORG:${e(d.company)}`);
+      if (d.phone) lines.push(`TEL;TYPE=CELL:${e(d.phone)}`);
+      if (d.email) lines.push(`EMAIL;TYPE=INTERNET:${e(d.email)}`);
+      /* A URL is a value, not free text: escaping a comma inside a query
+         string would corrupt it, and none of vCard's delimiters are legal in
+         a URI anyway. */
       if (d.website) lines.push(`URL:${d.website}`);
-      if (d.address) lines.push(`ADR:;;${d.address};;;`);
+      /* ADR: is post-office box, extended, street, city, region, code,
+         country. The form collects one line, which is the street component. */
+      if (d.address) lines.push(`ADR;TYPE=WORK:;;${e(d.address)};;;;`);
       if (d.photoUrl) lines.push(`PHOTO;VALUE=URI:${d.photoUrl}`);
       lines.push('END:VCARD');
-      return lines.join('\n');
+      /* CRLF, as RFC 2426 §2.4.2 requires. */
+      return lines.join('\r\n');
     },
     validate: (d) => d.firstName ? valid() : invalid('firstName', 'First name is required'),
   },

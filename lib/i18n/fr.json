@@ -1614,5 +1614,89 @@
       "popular": "Populaires",
       "all": "Les 245 pays et territoires"
     }
+  },
+  "qrStudio": {
+    "preview": {
+      "empty": "Saisissez ce qu’il faut encoder",
+      "failed": "Ces données ne tiennent pas dans un QR code, même en version 40."
+    },
+    "quietZone": {
+      "label": "Zone de silence",
+      "value": "{modules} modules",
+      "help": "La bordure vide autour du code. L’ISO/IEC 18004 en exige {required} modules ; en dessous, un lecteur ne repère plus le symbole sur la mise en page qui l’entoure."
+    },
+    "logo": {
+      "drop": "Déposez un logo ici, ou cliquez pour en choisir un",
+      "limits": "PNG, JPG ou SVG · jusqu’à 2 Mo · fond transparent de préférence",
+      "uploaded": "Logo ajouté",
+      "remove": "Retirer le logo",
+      "size": "Largeur du logo",
+      "coverage": "{side}% de la largeur · {coverage}% de la surface",
+      "budget": "Au niveau {level}, un logo peut couvrir {maxCoverage}% de la surface — environ {maxSide}% de la largeur. Le reste du budget de correction revient à l’impression et aux conditions de lecture.",
+      "oversized": "Plus large que ce que le niveau {level} peut porter. Ramenez-le à environ {maxSide}%.",
+      "notImage": "Ce fichier n’est pas une image.",
+      "tooHeavy": "L’image doit faire moins de 2 Mo.",
+      "unreadable": "Ce fichier n’a pas pu être lu."
+    },
+    "export": {
+      "format": "Format",
+      "size": "Pixels",
+      "printWidth": "Largeur à l’impression",
+      "download": "Télécharger en {format}",
+      "working": "Préparation…",
+      "failed": "L’export a échoué. Essayez un autre format.",
+      "minWidth": "À 300 ppp, ce symbole demande au moins {min} mm. À la largeur choisie, un module mesure {module} mm.",
+      "vectorNote": "Du vectoriel, en millimètres réels — ce que demande un imprimeur. Modules carrés et deux couleurs ; le logo et les formes de modules restent dans les formats matriciels.",
+      "alphaNote": "Le fond est transparent si vous l’avez défini ainsi.",
+      "rasterNote": "Le JPEG ignore la transparence et recompresse les bords ; pour ce qui sera scanné, préférez le PNG."
+    },
+    "readiness": {
+      "verdict": {
+        "ready": "Prêt à l’emploi",
+        "risky": "Se lira sans doute",
+        "broken": "Ne se lira pas de façon fiable"
+      },
+      "verdictNote": {
+        "ready": "Vérifié sur le symbole encodé, pas estimé d’après la longueur du texte.",
+        "risky": "Rien de fatal, mais chaque point grignote la marge sur le terrain.",
+        "broken": "Corrigez les points ci-dessous avant d’imprimer quoi que ce soit."
+      },
+      "version": "Version",
+      "payload": "Données",
+      "bytes": "{bytes} sur {capacity} octets",
+      "recovery": "Correction",
+      "recoveryValue": "niveau {level} · {percent}%",
+      "printSize": "À l’impression",
+      "printValue": "{width} mm · {module} mm par module",
+      "logoCover": "Logo",
+      "logoValue": "{percent}% de la surface · {covered} modules sur {total}",
+      "issue": {
+        "inverted": "Modules clairs sur fond sombre. La plupart des appareils photo de téléphone refusent, quel que soit le rapport de contraste — inversez les deux couleurs.",
+        "contrastVeryLow": "Contraste de {ratio}:1. En dessous d’environ 3:1, un lecteur ne distingue plus les modules du fond.",
+        "contrastLow": "Contraste de {ratio}:1. Cela passe en pleine lumière et échoue sur une photocopie ou en vitrine.",
+        "quietZoneMissing": "Pas de zone de silence. Le symbole n’a pas de bordure pour être repéré ; c’est la première cause d’échec d’un code imprimé.",
+        "quietZoneShort": "La zone de silence fait {modules} modules ; la norme en exige {required}.",
+        "logoOverBudget": "Le logo couvre {coverage}% de la surface pour {allowed}% autorisés — {covered} modules sur {total}. Réduisez la largeur à environ {maxSide}%.",
+        "logoOnLowEc": "Correction d’erreurs portée de {from} à {to} ({recovery}% de récupération) à cause du logo. En dessous, tout le budget y passe.",
+        "eyeInvisible": "Les carrés d’angle ont presque la couleur du fond. Ce sont eux qu’un décodeur cherche en premier.",
+        "overCapacity": "{bytes} octets ne tiennent dans aucun QR code, quelle que soit la version. Raccourcissez le contenu ou utilisez un lien.",
+        "printTooSmall": "À {widthMm} mm, un module mesure {moduleMm} mm — {dots} points d’imprimante à {dpi} ppp. Imprimez à partir de {minWidthMm} mm, ou à une résolution supérieure."
+      }
+    },
+    "ec": {
+      "name": {
+        "L": "Faible",
+        "M": "Moyen",
+        "Q": "Quartile",
+        "H": "Élevé"
+      },
+      "desc": {
+        "L": "Récupère 7% du symbole. Suffisant sur un écran ou sous verre, juste partout ailleurs — et insuffisant avec un logo.",
+        "M": "Récupère 15%. Le choix habituel, et selon DENSO WAVE le plus fréquent.",
+        "Q": "Récupère 25%. Pour une surface courbe, une petite étiquette, ou tout ce qui se manipule.",
+        "H": "Récupère 30%. Ce qu’exige un logo, et ce qui survit à un pli ou à une trace de doigt."
+      },
+      "lockedByLogo": "Maintenu à H à cause du logo. Couvrir une partie du symbole consomme du budget de correction, et à un niveau inférieur le logo le consomme entièrement."
+    }
   }
 }

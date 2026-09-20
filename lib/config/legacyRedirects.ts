@@ -93,6 +93,18 @@ export const LEGACY_ONE_OFF_REDIRECTS: { from: string; to: string }[] = [
   },
   {
     /*
+     * One studio, two URLs. /qr-generator/qr-code-generator and
+     * /qr-generator/tool rendered the identical component — the `standalone`
+     * prop that was supposed to distinguish them was declared, destructured
+     * and then never referenced — with two sets of SEO copy that disagreed
+     * about how many content types the studio has. Nothing on the site linked
+     * to the first; it existed in the sitemap and nowhere else.
+     */
+    from: 'qr-generator/qr-code-generator',
+    to: 'qr-generator/tool',
+  },
+  {
+    /*
      * The Human Password mode is gone — pronoun + verb + noun is 15.9 bits of
      * structure however large the word banks get. This URL was indexed in six
      * languages, so it keeps answering; it lands on the passphrase tool, which

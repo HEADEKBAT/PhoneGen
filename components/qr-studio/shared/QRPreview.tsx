@@ -1,92 +1,92 @@
 'use client';
 
-import { useRef, useEffect, useState } from 'react';
-import { generateQRToCanvas } from '@/lib/qr/generator';
-import type { QROptions } from '@/lib/qr/types';
+import { useEffect, useRef, useState } from 'react';
 import { Loader2 } from 'lucide-react';
-import { checkQRContrast } from '@/lib/qr/contrastCheck';
+import { renderQRTo } from '@/lib/qr/generator';
+import type { QROptions } from '@/lib/qr/types';
+import { useTranslations } from '@/lib/i18n';
 
 interface QRPreviewProps {
   options: QROptions;
+  /** Rendered pixel size of the square, quiet zone included. */
   size?: number;
   className?: string;
-  onScanTest?: (dataUrl: string) => void;
 }
 
+/**
+ * The QR code itself.
+ *
+ * ── What was wrong ──────────────────────────────────────────────────────────
+ *
+ * This component rendered nothing. It passed its own `<canvas>` to
+ * `generateQRToCanvas`, which handed it to the drawing library as a
+ * *container*; the library does `container.appendChild(...)`, and a `<canvas>`
+ * inside a `<canvas>` is fallback content that a browser never paints. So the
+ * studio drew a white square, and the contrast panel underneath reported 21:1
+ * on it — white on white, scoring perfectly.
+ *
+ * The library appends into whatever element it is given, so the element is a
+ * `<div>` now. `renderQRTo` clears it first, because the library appends
+ * rather than replaces and a preview that re-rendered on every keystroke was
+ * stacking canvases.
+ *
+ * The contrast warning that used to live here is gone: it duplicated the panel
+ * beside it, word for word, from the same function. One verdict, one place —
+ * `QRReadiness` now, which can also see the things a contrast ratio cannot.
+ */
 export default function QRPreview({ options, size = 280, className = '' }: QRPreviewProps) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const holder = useRef<HTMLDivElement>(null);
+  const [state, setState] = useState<'idle' | 'drawing' | 'error'>('idle');
 
   useEffect(() => {
+    const container = holder.current;
+    if (!container) return;
+
     if (!options.content) {
-      setLoading(false);
-      setError(null);
+      container.replaceChildren();
+      setState('idle');
       return;
     }
 
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
+    setState('drawing');
+    try {
+      renderQRTo(container, options, { size });
+      setState('idle');
+    } catch {
+      /* An unencodable payload — too long for version 40, most often. The
+         readiness panel says which; here it is enough not to leave a stale
+         symbol on screen next to new content. */
+      container.replaceChildren();
+      setState('error');
+    }
+  }, [options, size]);
 
-    generateQRToCanvas(options, canvasRef.current || undefined)
-      .then((canvas) => {
-        if (cancelled) return;
-        setLoading(false);
-        setError(null);
-        if (canvas && canvasRef.current !== canvas) {
-          canvasRef.current?.parentNode?.appendChild(canvas);
-        }
-      })
-      .catch((err) => {
-        if (cancelled) return;
-        setLoading(false);
-        setError(err instanceof Error ? err.message : 'Failed to generate QR code');
-      });
-
-    return () => { cancelled = true; };
-  }, [options]);
-
-  const contrast = options.colors?.pattern && options.colors?.background
-    ? checkQRContrast(options.colors.pattern, options.colors.background)
-    : null;
-
-  const showWarning = contrast && !contrast.passAA;
+  const { t } = useTranslations();
 
   return (
     <div className={`flex flex-col items-center justify-center ${className}`}>
       <div
-        className="relative flex items-center justify-center rounded-2xl border border-border bg-white p-4 shadow-sm"
+        className="relative grid place-items-center overflow-hidden rounded-2xl border border-border bg-white p-4 shadow-sm"
         style={{ width: size + 32, height: size + 32 }}
       >
-        {loading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-background/60 rounded-2xl">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-          </div>
-        )}
-        {!options.content && !loading && (
-          <div className="text-center text-muted-foreground px-4">
-            <p className="text-sm">Enter content to generate QR code</p>
-          </div>
-        )}
-        {error && (
-          <div className="text-center text-destructive px-4">
-            <p className="text-xs">{error}</p>
-          </div>
-        )}
-        <canvas
-          ref={canvasRef}
-          className={`rounded-xl ${loading || !options.content ? 'opacity-0 absolute' : 'opacity-100'}`}
-          style={{ width: size, height: size }}
-        />
-      </div>
+        <div ref={holder} className="grid place-items-center [&>canvas]:rounded-lg [&>svg]:rounded-lg" />
 
-      {showWarning && contrast && (
-        <p className="text-[11px] text-amber-500 mt-2 text-center max-w-[280px]">
-          Low contrast: ratio {contrast.ratio.toFixed(1)}:1 (AA requires 4.5:1).
-          {contrast.suggestion}
-        </p>
-      )}
+        {!options.content && (
+          <p className="absolute px-4 text-center text-sm text-neutral-500">
+            {t('qrStudio.preview.empty')}
+          </p>
+        )}
+
+        {state === 'error' && (
+          <p className="absolute px-4 text-center text-xs text-red-600">
+            {t('qrStudio.preview.failed')}
+          </p>
+        )}
+
+        {state === 'drawing' && !options.content && (
+          <Loader2 className="absolute size-6 animate-spin text-neutral-400" />
+        )}
+      </div>
     </div>
   );
 }

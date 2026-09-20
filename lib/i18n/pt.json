@@ -1614,5 +1614,89 @@
       "popular": "Populares",
       "all": "Todos os 245 países e territórios"
     }
+  },
+  "qrStudio": {
+    "preview": {
+      "empty": "Escreva o que quer codificar",
+      "failed": "Estes dados não cabem num código QR, nem na versão 40."
+    },
+    "quietZone": {
+      "label": "Zona de silêncio",
+      "value": "{modules} módulos",
+      "help": "A margem vazia à volta do código. A ISO/IEC 18004 exige {required} módulos; abaixo disso, um leitor não distingue o símbolo do grafismo em redor."
+    },
+    "logo": {
+      "drop": "Largue aqui um logótipo, ou clique para escolher",
+      "limits": "PNG, JPG ou SVG · até 2 MB · de preferência com fundo transparente",
+      "uploaded": "Logótipo adicionado",
+      "remove": "Remover o logótipo",
+      "size": "Largura do logótipo",
+      "coverage": "{side}% da largura · {coverage}% da área",
+      "budget": "No nível {level} um logótipo pode cobrir {maxCoverage}% da área — cerca de {maxSide}% da largura. O resto da margem de correção pertence à impressão e às condições de leitura.",
+      "oversized": "Mais largo do que o nível {level} aguenta. Reduza para cerca de {maxSide}%.",
+      "notImage": "Esse ficheiro não é uma imagem.",
+      "tooHeavy": "A imagem tem de ter menos de 2 MB.",
+      "unreadable": "Não foi possível ler esse ficheiro."
+    },
+    "export": {
+      "format": "Formato",
+      "size": "Píxeis",
+      "printWidth": "Largura impressa",
+      "download": "Transferir {format}",
+      "working": "A preparar…",
+      "failed": "A exportação falhou. Experimente outro formato.",
+      "minWidth": "A 300 ppp este símbolo precisa de pelo menos {min} mm. Na largura escolhida um módulo mede {module} mm.",
+      "vectorNote": "Vetorial, em milímetros reais — o que uma gráfica pede. Módulos quadrados e duas cores; o logótipo e as formas de módulo ficam nos formatos de imagem.",
+      "alphaNote": "O fundo sai transparente se o tiver definido assim.",
+      "rasterNote": "O JPEG não tem transparência e volta a comprimir as arestas; para algo que vai ser lido, prefira PNG."
+    },
+    "readiness": {
+      "verdict": {
+        "ready": "Pronto a usar",
+        "risky": "Provavelmente será lido",
+        "broken": "Não será lido de forma fiável"
+      },
+      "verdictNote": {
+        "ready": "Verificado sobre o símbolo codificado, não estimado pelo comprimento do texto.",
+        "risky": "Nada disto é fatal, mas cada ponto come margem no terreno.",
+        "broken": "Corrija os pontos assinalados antes de imprimir seja o que for."
+      },
+      "version": "Versão",
+      "payload": "Dados",
+      "bytes": "{bytes} de {capacity} bytes",
+      "recovery": "Correção",
+      "recoveryValue": "nível {level} · {percent}%",
+      "printSize": "Impresso a",
+      "printValue": "{width} mm · {module} mm por módulo",
+      "logoCover": "Logótipo",
+      "logoValue": "{percent}% da área · {covered} de {total} módulos",
+      "issue": {
+        "inverted": "Módulos claros sobre fundo escuro. A maioria das câmaras de telemóvel não lê, diga o que disser o rácio de contraste — troque as duas cores.",
+        "contrastVeryLow": "Contraste de {ratio}:1. Abaixo de cerca de 3:1 um leitor não separa os módulos do fundo.",
+        "contrastLow": "Contraste de {ratio}:1. Resulta com boa luz e falha numa fotocópia ou numa montra.",
+        "quietZoneMissing": "Sem zona de silêncio. O símbolo não tem margem por onde ser encontrado; é a causa mais comum de um código impresso falhar.",
+        "quietZoneShort": "A zona de silêncio tem {modules} módulos; a norma exige {required}.",
+        "logoOverBudget": "O logótipo cobre {coverage}% da área e o nível permite {allowed}% — {covered} de {total} módulos. Baixe a largura para cerca de {maxSide}%.",
+        "logoOnLowEc": "Correção de erros subida de {from} para {to} ({recovery}% de recuperação) por causa do logótipo. Com menos, toda a margem vai para ele.",
+        "eyeInvisible": "Os quadrados dos cantos têm quase a cor do fundo. São a primeira coisa que um descodificador procura.",
+        "overCapacity": "{bytes} bytes não cabem num código QR em versão nenhuma. Encurte o conteúdo ou use uma ligação.",
+        "printTooSmall": "A {widthMm} mm um módulo mede {moduleMm} mm — {dots} pontos de impressora a {dpi} ppp. Imprima a {minWidthMm} mm ou mais, ou com maior resolução."
+      }
+    },
+    "ec": {
+      "name": {
+        "L": "Baixo",
+        "M": "Médio",
+        "Q": "Quartil",
+        "H": "Alto"
+      },
+      "desc": {
+        "L": "Recupera 7% do símbolo. Chega num ecrã ou atrás de vidro, é pouco em tudo o resto — e não dá para um logótipo.",
+        "M": "Recupera 15%. A escolha habitual e, segundo a DENSO WAVE, a mais frequente.",
+        "Q": "Recupera 25%. Para superfícies curvas, etiquetas pequenas e tudo o que se manuseia.",
+        "H": "Recupera 30%. O que um logótipo exige e o que sobrevive a um vinco ou a uma dedada."
+      },
+      "lockedByLogo": "Mantido em H por causa do logótipo. Tapar parte do símbolo gasta margem de correção e, num nível inferior, o logótipo gasta-a toda."
+    }
   }
 }

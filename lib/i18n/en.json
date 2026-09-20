@@ -1614,5 +1614,89 @@
       "popular": "Popular",
       "all": "All 245 countries and regions"
     }
+  },
+  "qrStudio": {
+    "preview": {
+      "empty": "Enter something to encode",
+      "failed": "This payload does not fit in a QR code, even at version 40."
+    },
+    "quietZone": {
+      "label": "Quiet zone",
+      "value": "{modules} modules",
+      "help": "The empty border around the code. ISO/IEC 18004 requires {required} modules; below that, scanners struggle to find the symbol against surrounding artwork."
+    },
+    "logo": {
+      "drop": "Drop a logo here, or click to choose one",
+      "limits": "PNG, JPG or SVG · up to 2 MB · transparent background works best",
+      "uploaded": "Logo added",
+      "remove": "Remove the logo",
+      "size": "Logo width",
+      "coverage": "{side}% of the width · {coverage}% of the area",
+      "budget": "At level {level} a logo may cover {maxCoverage}% of the area — a width of about {maxSide}%. The rest of the recovery budget belongs to print and scanning noise.",
+      "oversized": "Wider than level {level} can carry. Bring it down to about {maxSide}%.",
+      "notImage": "That file is not an image.",
+      "tooHeavy": "The image must be under 2 MB.",
+      "unreadable": "That file could not be read."
+    },
+    "export": {
+      "format": "Format",
+      "size": "Pixels",
+      "printWidth": "Printed width",
+      "download": "Download {format}",
+      "working": "Preparing…",
+      "failed": "The export failed. Try a different format.",
+      "minWidth": "At 300 dpi this symbol needs at least {min} mm. At the chosen width a module measures {module} mm.",
+      "vectorNote": "Vector, in real millimetres — what a print shop asks for. Square modules and two colours; the logo and the module shapes stay in the raster formats.",
+      "alphaNote": "The background is transparent when you set it so.",
+      "rasterNote": "JPEG has no transparency and re-compresses edges; prefer PNG for anything that will be scanned."
+    },
+    "readiness": {
+      "verdict": {
+        "ready": "Ready to use",
+        "risky": "It will probably scan",
+        "broken": "This will not scan reliably"
+      },
+      "verdictNote": {
+        "ready": "Checked against the encoded symbol, not estimated from the text.",
+        "risky": "Nothing here is fatal, but each one costs you margin in the field.",
+        "broken": "Fix the items marked below before printing anything."
+      },
+      "version": "Version",
+      "payload": "Payload",
+      "bytes": "{bytes} of {capacity} bytes",
+      "recovery": "Recovery",
+      "recoveryValue": "level {level} · {percent}%",
+      "printSize": "Printed at",
+      "printValue": "{width} mm · {module} mm per module",
+      "logoCover": "Logo",
+      "logoValue": "{percent}% of the area · {covered} of {total} modules",
+      "issue": {
+        "inverted": "Light modules on a dark background. Most phone cameras will not read it, whatever the contrast ratio says — swap the two colours.",
+        "contrastVeryLow": "Contrast is {ratio}:1. Below roughly 3:1 a scanner cannot separate the modules from the background.",
+        "contrastLow": "Contrast is {ratio}:1. It works in good light and fails on a photocopy or in a shop window.",
+        "quietZoneMissing": "No quiet zone. The symbol has no border to be found against; this is the most common reason a printed code fails.",
+        "quietZoneShort": "The quiet zone is {modules} modules; the standard requires {required}.",
+        "logoOverBudget": "The logo covers {coverage}% of the area and the level allows {allowed}% — {covered} of {total} modules. Bring the width down to about {maxSide}%.",
+        "logoOnLowEc": "Error correction raised from {from} to {to} ({recovery}% recovery) because of the logo. Anything less spends the whole budget covering it.",
+        "eyeInvisible": "The corner squares are nearly the colour of the background. They are the first thing a decoder looks for.",
+        "overCapacity": "{bytes} bytes will not fit in a QR code at any version. Shorten the content or use a link.",
+        "printTooSmall": "At {widthMm} mm a module is {moduleMm} mm — {dots} printer dots at {dpi} dpi. Print it at {minWidthMm} mm or larger, or print at a higher resolution."
+      }
+    },
+    "ec": {
+      "name": {
+        "L": "Low",
+        "M": "Medium",
+        "Q": "Quartile",
+        "H": "High"
+      },
+      "desc": {
+        "L": "Recovers 7% of the symbol. Fine on a screen or behind glass, thin everywhere else — and not enough for a logo.",
+        "M": "Recovers 15%. The usual choice, and what DENSO WAVE says is picked most often.",
+        "Q": "Recovers 25%. For a curved surface, a small label, or anywhere the code gets handled.",
+        "H": "Recovers 30%. What a logo needs, and what survives a crease or a thumbprint."
+      },
+      "lockedByLogo": "Held at H because of the logo. Covering part of a symbol spends recovery budget, and at any lower level the logo spends all of it, leaving nothing for print and scanning noise."
+    }
   }
 }

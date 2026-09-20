@@ -1614,5 +1614,89 @@
       "popular": "Beliebt",
       "all": "Alle 245 Länder und Regionen"
     }
+  },
+  "qrStudio": {
+    "preview": {
+      "empty": "Geben Sie ein, was codiert werden soll",
+      "failed": "Diese Daten passen selbst in Version 40 nicht in einen QR-Code."
+    },
+    "quietZone": {
+      "label": "Ruhezone",
+      "value": "{modules} Module",
+      "help": "Der leere Rand um den Code. ISO/IEC 18004 verlangt {required} Module; darunter findet ein Scanner das Symbol im umgebenden Layout nicht."
+    },
+    "logo": {
+      "drop": "Logo hierher ziehen oder klicken, um eines zu wählen",
+      "limits": "PNG, JPG oder SVG · bis 2 MB · transparenter Hintergrund ist am besten",
+      "uploaded": "Logo hinzugefügt",
+      "remove": "Logo entfernen",
+      "size": "Logobreite",
+      "coverage": "{side}% der Breite · {coverage}% der Fläche",
+      "budget": "Auf Stufe {level} darf ein Logo {maxCoverage}% der Fläche bedecken — etwa {maxSide}% der Breite. Der Rest des Fehlerbudgets gehört dem Druck und den Scanbedingungen.",
+      "oversized": "Breiter, als Stufe {level} tragen kann. Auf etwa {maxSide}% verkleinern.",
+      "notImage": "Das ist kein Bild.",
+      "tooHeavy": "Das Bild muss unter 2 MB liegen.",
+      "unreadable": "Die Datei konnte nicht gelesen werden."
+    },
+    "export": {
+      "format": "Format",
+      "size": "Pixel",
+      "printWidth": "Druckbreite",
+      "download": "{format} herunterladen",
+      "working": "Wird vorbereitet…",
+      "failed": "Der Export ist fehlgeschlagen. Versuchen Sie ein anderes Format.",
+      "minWidth": "Bei 300 dpi braucht dieses Symbol mindestens {min} mm. Bei der gewählten Breite misst ein Modul {module} mm.",
+      "vectorNote": "Vektor, in echten Millimetern — was eine Druckerei verlangt. Quadratische Module, zwei Farben; Logo und Modulformen bleiben den Rasterformaten.",
+      "alphaNote": "Der Hintergrund ist transparent, wenn Sie ihn so gesetzt haben.",
+      "rasterNote": "JPEG kennt keine Transparenz und komprimiert Kanten nach; für Scanbares lieber PNG."
+    },
+    "readiness": {
+      "verdict": {
+        "ready": "Einsatzbereit",
+        "risky": "Wird vermutlich gelesen",
+        "broken": "Wird nicht zuverlässig gelesen"
+      },
+      "verdictNote": {
+        "ready": "Am codierten Symbol geprüft, nicht aus der Textlänge geschätzt.",
+        "risky": "Nichts davon ist fatal, aber jedes kostet Reserve im Feld.",
+        "broken": "Beheben Sie die markierten Punkte, bevor Sie etwas drucken."
+      },
+      "version": "Version",
+      "payload": "Nutzdaten",
+      "bytes": "{bytes} von {capacity} Byte",
+      "recovery": "Fehlerkorrektur",
+      "recoveryValue": "Stufe {level} · {percent}%",
+      "printSize": "Im Druck",
+      "printValue": "{width} mm · {module} mm pro Modul",
+      "logoCover": "Logo",
+      "logoValue": "{percent}% der Fläche · {covered} von {total} Modulen",
+      "issue": {
+        "inverted": "Helle Module auf dunklem Grund. Die meisten Handykameras lesen das nicht, egal welches Kontrastverhältnis dasteht — tauschen Sie die Farben.",
+        "contrastVeryLow": "Kontrast {ratio}:1. Unter etwa 3:1 trennt ein Scanner die Module nicht vom Hintergrund.",
+        "contrastLow": "Kontrast {ratio}:1. Bei gutem Licht klappt es, auf einer Fotokopie oder im Schaufenster nicht.",
+        "quietZoneMissing": "Keine Ruhezone. Dem Symbol fehlt der Rand, an dem es gefunden wird; das ist der häufigste Grund, warum ein gedruckter Code scheitert.",
+        "quietZoneShort": "Die Ruhezone hat {modules} Module, die Norm verlangt {required}.",
+        "logoOverBudget": "Das Logo bedeckt {coverage}% der Fläche, erlaubt sind {allowed}% — {covered} von {total} Modulen. Breite auf etwa {maxSide}% verkleinern.",
+        "logoOnLowEc": "Fehlerkorrektur wegen des Logos von {from} auf {to} angehoben ({recovery}% Wiederherstellung). Weniger verbraucht das gesamte Budget für das Logo.",
+        "eyeInvisible": "Die Eckquadrate haben fast die Hintergrundfarbe. Nach ihnen sucht ein Decoder zuerst.",
+        "overCapacity": "{bytes} Byte passen in keiner Version in einen QR-Code. Kürzen Sie den Inhalt oder verwenden Sie einen Link.",
+        "printTooSmall": "Bei {widthMm} mm misst ein Modul {moduleMm} mm — {dots} Druckerpunkte bei {dpi} dpi. Ab {minWidthMm} mm drucken oder mit höherer Auflösung."
+      }
+    },
+    "ec": {
+      "name": {
+        "L": "Niedrig",
+        "M": "Mittel",
+        "Q": "Quartil",
+        "H": "Hoch"
+      },
+      "desc": {
+        "L": "Stellt 7% des Symbols wieder her. Auf einem Bildschirm oder hinter Glas genug, sonst dünn — und für ein Logo zu wenig.",
+        "M": "Stellt 15% wieder her. Die übliche Wahl, und laut DENSO WAVE die häufigste.",
+        "Q": "Stellt 25% wieder her. Für gewölbte Flächen, kleine Etiketten und alles, was angefasst wird.",
+        "H": "Stellt 30% wieder her. Was ein Logo braucht und was einen Knick oder einen Daumenabdruck übersteht."
+      },
+      "lockedByLogo": "Wegen des Logos auf H festgehalten. Ein verdecktes Stück Symbol verbraucht Fehlerbudget, und auf jeder niedrigeren Stufe verbraucht das Logo alles davon."
+    }
   }
 }
