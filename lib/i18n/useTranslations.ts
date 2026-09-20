@@ -50,7 +50,16 @@ export function useTranslations() {
 
     if (params) {
       return Object.entries(params).reduce(
-        (acc, [name, value]) => acc.replace(`{${name}}`, String(value)),
+      /*
+       * Every occurrence, not the first.
+       *
+       * `String.replace` with a string pattern replaces one match, so a
+       * message that used a placeholder twice — "{modules}×{modules}" for a
+       * square symbol — rendered as "29×{modules}" on the page. `replaceAll`
+       * takes the same literal pattern and does what the call always looked
+       * like it was doing.
+       */
+        (acc, [name, value]) => acc.replaceAll(`{${name}}`, String(value)),
         text,
       );
     }

@@ -1698,5 +1698,73 @@
       },
       "lockedByLogo": "Maintenu à H à cause du logo. Couvrir une partie du symbole consomme du budget de correction, et à un niveau inférieur le logo le consomme entièrement."
     }
+  },
+  "qrLanding": {
+    "eyebrow": {
+      "types": "{count} types de contenu",
+      "vector": "vectoriel pour l’impression",
+      "inBrowser": "tourne dans le navigateur",
+      "noAccount": "sans compte"
+    },
+    "title": "Vérifiez-le avant de l’imprimer.",
+    "lede": "La plupart des générateurs vous tendent un PNG et vous souhaitent bonne chance. Celui-ci relit le symbole qu’il vient de construire — la version, les modules que couvre votre logo, la zone de silence, le contraste, la largeur en millimètres — et vous dit ce qui l’empêchera d’être lu, tant qu’il est encore temps de changer.",
+    "cta": {
+      "primary": "Ouvrir le studio",
+      "secondary": "Voir ce qui est encodé"
+    },
+    "showcase": {
+      "label": "celui-ci se lit",
+      "note": "Encodé sur le serveur et dessiné depuis la matrice de modules. Pointez un appareil photo dessus.",
+      "version": "Version",
+      "payload": "Données",
+      "recovery": "Correction",
+      "quietZone": "Zone de silence",
+      "modulesValue": "{version} · {modules}×{modules}",
+      "bytesValue": "{bytes} sur {capacity} octets",
+      "recoveryValue": "niveau {level}",
+      "quietZoneValue": "{modules} modules"
+    },
+    "payloads": {
+      "title": "Ce qu’il y a dedans",
+      "note": "Le texte réellement porté par le symbole, pas sa description.",
+      "groups": {
+        "everyday": {
+          "title": "Au quotidien",
+          "note": "Les six pour lesquels on vient"
+        },
+        "apps": {
+          "title": "Applications et profils",
+          "note": "Un lien à la bonne forme"
+        },
+        "money": {
+          "title": "Paiements et lieux",
+          "note": "Des formats qu’un portefeuille ou une carte reconnaît"
+        }
+      }
+    },
+    "checks": {
+      "title": "Ce qui est vérifié",
+      "note": "Avant que le bouton de téléchargement ne fasse quoi que ce soit.",
+      "quietZone": {
+        "title": "La zone de silence, en modules",
+        "desc": "Quatre modules de bordure vide, comme l’exige l’ISO/IEC 18004. C’est ce qui manque en premier quand un code imprimé refuse de se lire sur un fond coloré."
+      },
+      "inverted": {
+        "title": "Sombre sur clair, pas l’inverse",
+        "desc": "Un rapport de contraste ne voit pas l’inversion : des modules blancs sur noir affichent un parfait 21:1, et la plupart des appareils photo de téléphone les refusent. Ce contrôle regarde laquelle des deux couleurs est réellement la plus sombre."
+      },
+      "logo": {
+        "title": "Ce que coûte le logo",
+        "desc": "Un logo masque des modules. Le studio compte exactement combien, monte la correction d’erreurs au niveau H de lui-même, et refuse un logo que le budget de récupération ne peut pas porter."
+      },
+      "print": {
+        "title": "Des millimètres, pas des pixels",
+        "desc": "Le PDF et l’EPS sortent à la largeur demandée. Le studio indique la plus petite qui survit à une presse : en dessous de 0,17 mm par module, ou de quatre points d’imprimante, les bords se délitent sur le papier."
+      }
+    },
+    "closing": {
+      "title": "Faites-en un et voyez ce qu’il dit",
+      "body": "{count} formats, du vectoriel en sortie, rien de conservé, sans compte."
+    }
   }
 }

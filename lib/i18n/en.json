@@ -1698,5 +1698,73 @@
       },
       "lockedByLogo": "Held at H because of the logo. Covering part of a symbol spends recovery budget, and at any lower level the logo spends all of it, leaving nothing for print and scanning noise."
     }
+  },
+  "qrLanding": {
+    "eyebrow": {
+      "types": "{count} content types",
+      "vector": "vector for print",
+      "inBrowser": "runs in your browser",
+      "noAccount": "no account"
+    },
+    "title": "Check it before you print it.",
+    "lede": "Most generators hand you a PNG and wish you luck. This one reads the symbol it just built — the version, the modules your logo covers, the quiet zone, the contrast, the width in millimetres — and tells you what will stop it scanning, while there is still time to change it.",
+    "cta": {
+      "primary": "Open the studio",
+      "secondary": "See what it encodes"
+    },
+    "showcase": {
+      "label": "this one scans",
+      "note": "Encoded on the server and drawn from the module matrix. Point a camera at it.",
+      "version": "Version",
+      "payload": "Payload",
+      "recovery": "Recovery",
+      "quietZone": "Quiet zone",
+      "modulesValue": "{version} · {modules}×{modules}",
+      "bytesValue": "{bytes} of {capacity} bytes",
+      "recoveryValue": "level {level}",
+      "quietZoneValue": "{modules} modules"
+    },
+    "payloads": {
+      "title": "What goes inside",
+      "note": "The actual text the symbol carries — not a description of it.",
+      "groups": {
+        "everyday": {
+          "title": "Everyday",
+          "note": "The six people come for"
+        },
+        "apps": {
+          "title": "Apps and profiles",
+          "note": "A link with the right shape"
+        },
+        "money": {
+          "title": "Payments and places",
+          "note": "Formats a wallet or a map app knows"
+        }
+      }
+    },
+    "checks": {
+      "title": "What gets checked",
+      "note": "Before the download button does anything.",
+      "quietZone": {
+        "title": "The quiet zone, in modules",
+        "desc": "Four modules of empty border, which ISO/IEC 18004 requires. It is the first thing missing when a printed code refuses to scan against coloured artwork."
+      },
+      "inverted": {
+        "title": "Dark on light, not the reverse",
+        "desc": "A contrast ratio cannot see inversion: white modules on black score a perfect 21:1, and most phone cameras will not read them. This check looks at which of the two is actually darker."
+      },
+      "logo": {
+        "title": "What the logo costs",
+        "desc": "A logo hides modules. The studio counts exactly how many, raises error correction to level H on its own, and says no to a logo the recovery budget cannot carry."
+      },
+      "print": {
+        "title": "Millimetres, not pixels",
+        "desc": "PDF and EPS come out at the width you ask for. The studio names the smallest width that still survives a press: modules under 0.17 mm, or under four printer dots, break up on paper."
+      }
+    },
+    "closing": {
+      "title": "Make one and see what it says",
+      "body": "{count} formats, vector out, nothing stored, no account."
+    }
   }
 }

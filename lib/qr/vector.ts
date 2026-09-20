@@ -219,3 +219,36 @@ export function buildPDF(matrix: QRMatrix, options: VectorOptions): Uint8Array {
   for (let i = 0; i < pdf.length; i++) bytes[i] = pdf.charCodeAt(i) & 0xff;
   return bytes;
 }
+
+/* ── SVG ─────────────────────────────────────────────────────────────── */
+
+/**
+ * The symbol as an SVG string, from the matrix alone.
+ *
+ * No DOM, so this runs on the server: the landing page renders a real QR code
+ * into its own HTML rather than shipping an encoder to the browser to draw a
+ * picture that never changes. The drawing library needs a document and cannot.
+ *
+ * Square modules only, like the two formats above — which is what a symbol
+ * meant to be scanned off a page should be anyway.
+ */
+export function buildSVG(matrix: QRMatrix, options: Omit<VectorOptions, 'widthMm'>): string {
+  const total = matrix.size + options.quietZone * 2;
+  const path = rowRuns(matrix)
+    .map(([x, y, width]) => `M${x + options.quietZone} ${y + options.quietZone}h${width}v1h-${width}z`)
+    .join('');
+
+  const background = options.background
+    ? `<rect width="${total}" height="${total}" fill="${options.background}"/>`
+    : '';
+
+  /* viewBox in modules, so the caller sizes it with CSS and the grid still
+     lands on whole units at any size. shape-rendering keeps the edges hard
+     when a browser scales it down. */
+  return [
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${total} ${total}" shape-rendering="crispEdges" role="img">`,
+    background,
+    `<path d="${path}" fill="${options.foreground}"/>`,
+    '</svg>',
+  ].join('');
+}

@@ -1698,5 +1698,73 @@
       },
       "lockedByLogo": "Fijado en H por el logotipo. Tapar parte del símbolo gasta margen de corrección, y en un nivel inferior el logotipo se lo lleva todo."
     }
+  },
+  "qrLanding": {
+    "eyebrow": {
+      "types": "{count} tipos de contenido",
+      "vector": "vectorial para imprenta",
+      "inBrowser": "funciona en su navegador",
+      "noAccount": "sin cuenta"
+    },
+    "title": "Compruébelo antes de imprimir.",
+    "lede": "La mayoría de los generadores le entregan un PNG y le desean suerte. Este relee el símbolo que acaba de construir —la versión, los módulos que tapa su logotipo, la zona de silencio, el contraste, el ancho en milímetros— y le dice qué impedirá que se lea, cuando todavía puede cambiarlo.",
+    "cta": {
+      "primary": "Abrir el estudio",
+      "secondary": "Ver qué se codifica"
+    },
+    "showcase": {
+      "label": "este se lee",
+      "note": "Codificado en el servidor y dibujado desde la matriz de módulos. Apunte una cámara.",
+      "version": "Versión",
+      "payload": "Datos",
+      "recovery": "Corrección",
+      "quietZone": "Zona de silencio",
+      "modulesValue": "{version} · {modules}×{modules}",
+      "bytesValue": "{bytes} de {capacity} bytes",
+      "recoveryValue": "nivel {level}",
+      "quietZoneValue": "{modules} módulos"
+    },
+    "payloads": {
+      "title": "Lo que va dentro",
+      "note": "El texto que realmente lleva el símbolo, no una descripción de él.",
+      "groups": {
+        "everyday": {
+          "title": "Del día a día",
+          "note": "Los seis por los que se viene"
+        },
+        "apps": {
+          "title": "Aplicaciones y perfiles",
+          "note": "Un enlace con la forma correcta"
+        },
+        "money": {
+          "title": "Pagos y lugares",
+          "note": "Formatos que un monedero o un mapa reconoce"
+        }
+      }
+    },
+    "checks": {
+      "title": "Qué se comprueba",
+      "note": "Antes de que el botón de descarga haga nada.",
+      "quietZone": {
+        "title": "La zona de silencio, en módulos",
+        "desc": "Cuatro módulos de borde vacío, como exige ISO/IEC 18004. Es lo primero que falta cuando un código impreso se niega a leerse sobre un fondo de color."
+      },
+      "inverted": {
+        "title": "Oscuro sobre claro, no al revés",
+        "desc": "Una relación de contraste no ve la inversión: módulos blancos sobre negro dan un 21:1 perfecto y la mayoría de las cámaras de móvil no los leen. Esta comprobación mira cuál de los dos colores es realmente el más oscuro."
+      },
+      "logo": {
+        "title": "Lo que cuesta el logotipo",
+        "desc": "Un logotipo tapa módulos. El estudio cuenta cuántos exactamente, sube por su cuenta la corrección de errores al nivel H y rechaza un logotipo que el margen de recuperación no pueda sostener."
+      },
+      "print": {
+        "title": "Milímetros, no píxeles",
+        "desc": "El PDF y el EPS salen con el ancho que usted pida. El estudio indica el menor que sobrevive a una imprenta: por debajo de 0,17 mm por módulo, o de cuatro puntos de impresora, los bordes se rompen en el papel."
+      }
+    },
+    "closing": {
+      "title": "Haga uno y vea qué dice",
+      "body": "{count} formatos, vectorial a la salida, nada guardado, sin cuenta."
+    }
   }
 }

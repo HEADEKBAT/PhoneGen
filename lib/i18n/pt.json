@@ -1698,5 +1698,73 @@
       },
       "lockedByLogo": "Mantido em H por causa do logótipo. Tapar parte do símbolo gasta margem de correção e, num nível inferior, o logótipo gasta-a toda."
     }
+  },
+  "qrLanding": {
+    "eyebrow": {
+      "types": "{count} tipos de conteúdo",
+      "vector": "vetorial para impressão",
+      "inBrowser": "corre no seu navegador",
+      "noAccount": "sem registo"
+    },
+    "title": "Verifique antes de imprimir.",
+    "lede": "A maioria dos geradores entrega um PNG e deseja sorte. Este relê o símbolo que acabou de construir — a versão, os módulos que o seu logótipo tapa, a zona de silêncio, o contraste, a largura em milímetros — e diz o que vai impedir a leitura, enquanto ainda dá para mudar.",
+    "cta": {
+      "primary": "Abrir o estúdio",
+      "secondary": "Ver o que é codificado"
+    },
+    "showcase": {
+      "label": "este lê-se",
+      "note": "Codificado no servidor e desenhado a partir da matriz de módulos. Aponte uma câmara.",
+      "version": "Versão",
+      "payload": "Dados",
+      "recovery": "Correção",
+      "quietZone": "Zona de silêncio",
+      "modulesValue": "{version} · {modules}×{modules}",
+      "bytesValue": "{bytes} de {capacity} bytes",
+      "recoveryValue": "nível {level}",
+      "quietZoneValue": "{modules} módulos"
+    },
+    "payloads": {
+      "title": "O que vai lá dentro",
+      "note": "O texto que o símbolo carrega mesmo, não uma descrição dele.",
+      "groups": {
+        "everyday": {
+          "title": "Do dia a dia",
+          "note": "Os seis por que se vem"
+        },
+        "apps": {
+          "title": "Aplicações e perfis",
+          "note": "Uma ligação com a forma certa"
+        },
+        "money": {
+          "title": "Pagamentos e lugares",
+          "note": "Formatos que uma carteira ou um mapa conhece"
+        }
+      }
+    },
+    "checks": {
+      "title": "O que é verificado",
+      "note": "Antes de o botão de transferência fazer seja o que for.",
+      "quietZone": {
+        "title": "A zona de silêncio, em módulos",
+        "desc": "Quatro módulos de margem vazia, como a ISO/IEC 18004 exige. É o que falta primeiro quando um código impresso se recusa a ler sobre um fundo colorido."
+      },
+      "inverted": {
+        "title": "Escuro sobre claro, não ao contrário",
+        "desc": "Um rácio de contraste não vê a inversão: módulos brancos sobre preto dão uns perfeitos 21:1 e a maioria das câmaras de telemóvel não os lê. Esta verificação olha para qual das duas cores é realmente a mais escura."
+      },
+      "logo": {
+        "title": "Quanto custa o logótipo",
+        "desc": "Um logótipo tapa módulos. O estúdio conta exatamente quantos, sobe por si a correção de erros para o nível H e recusa um logótipo que a margem de recuperação não aguente."
+      },
+      "print": {
+        "title": "Milímetros, não píxeis",
+        "desc": "O PDF e o EPS saem com a largura que pedir. O estúdio indica a menor que sobrevive a uma gráfica: abaixo de 0,17 mm por módulo, ou de quatro pontos de impressora, as arestas desfazem-se no papel."
+      }
+    },
+    "closing": {
+      "title": "Faça um e veja o que ele diz",
+      "body": "{count} formatos, vetorial à saída, nada guardado, sem registo."
+    }
   }
 }

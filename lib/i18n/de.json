@@ -1698,5 +1698,73 @@
       },
       "lockedByLogo": "Wegen des Logos auf H festgehalten. Ein verdecktes Stück Symbol verbraucht Fehlerbudget, und auf jeder niedrigeren Stufe verbraucht das Logo alles davon."
     }
+  },
+  "qrLanding": {
+    "eyebrow": {
+      "types": "{count} Inhaltstypen",
+      "vector": "Vektor für den Druck",
+      "inBrowser": "läuft im Browser",
+      "noAccount": "ohne Konto"
+    },
+    "title": "Prüfen Sie es, bevor Sie drucken.",
+    "lede": "Die meisten Generatoren geben Ihnen ein PNG und wünschen viel Glück. Dieser liest das eben gebaute Symbol — Version, die vom Logo verdeckten Module, Ruhezone, Kontrast, Breite in Millimetern — und sagt Ihnen, was das Scannen verhindern wird, solange sich noch etwas ändern lässt.",
+    "cta": {
+      "primary": "Studio öffnen",
+      "secondary": "Ansehen, was codiert wird"
+    },
+    "showcase": {
+      "label": "dieser wird gelesen",
+      "note": "Auf dem Server codiert und aus der Modulmatrix gezeichnet. Halten Sie eine Kamera darauf.",
+      "version": "Version",
+      "payload": "Nutzdaten",
+      "recovery": "Fehlerkorrektur",
+      "quietZone": "Ruhezone",
+      "modulesValue": "{version} · {modules}×{modules}",
+      "bytesValue": "{bytes} von {capacity} Byte",
+      "recoveryValue": "Stufe {level}",
+      "quietZoneValue": "{modules} Module"
+    },
+    "payloads": {
+      "title": "Was drinsteht",
+      "note": "Der tatsächliche Text im Symbol — keine Beschreibung davon.",
+      "groups": {
+        "everyday": {
+          "title": "Alltag",
+          "note": "Die sechs, für die man kommt"
+        },
+        "apps": {
+          "title": "Apps und Profile",
+          "note": "Ein Link in der richtigen Form"
+        },
+        "money": {
+          "title": "Zahlungen und Orte",
+          "note": "Formate, die eine Wallet oder eine Karten-App kennt"
+        }
+      }
+    },
+    "checks": {
+      "title": "Was geprüft wird",
+      "note": "Bevor der Download-Knopf irgendetwas tut.",
+      "quietZone": {
+        "title": "Die Ruhezone, in Modulen",
+        "desc": "Vier Module leerer Rand, wie ISO/IEC 18004 es verlangt. Sie fehlt als Erstes, wenn ein gedruckter Code sich auf farbigem Untergrund nicht lesen lässt."
+      },
+      "inverted": {
+        "title": "Dunkel auf Hell, nicht umgekehrt",
+        "desc": "Ein Kontrastverhältnis sieht die Umkehrung nicht: weiße Module auf Schwarz erreichen glatte 21:1, und die meisten Handykameras lesen sie nicht. Diese Prüfung schaut, welche der beiden Farben wirklich dunkler ist."
+      },
+      "logo": {
+        "title": "Was das Logo kostet",
+        "desc": "Ein Logo verdeckt Module. Das Studio zählt genau wie viele, hebt die Fehlerkorrektur selbst auf Stufe H und lehnt ein Logo ab, das das Wiederherstellungsbudget nicht trägt."
+      },
+      "print": {
+        "title": "Millimeter statt Pixel",
+        "desc": "PDF und EPS kommen in der Breite heraus, die Sie angeben. Das Studio nennt die kleinste, die eine Druckmaschine übersteht: Module unter 0,17 mm oder unter vier Druckerpunkten brechen auf Papier auf."
+      }
+    },
+    "closing": {
+      "title": "Machen Sie einen und sehen Sie, was er sagt",
+      "body": "{count} Formate, Vektor am Ausgang, nichts gespeichert, kein Konto."
+    }
   }
 }
