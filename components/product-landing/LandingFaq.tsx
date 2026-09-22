@@ -21,8 +21,8 @@ interface LandingFaqProps {
 /**
  * The FAQ used by the redesigned product landings and templates.
  *
- * It differs from the older `FAQSection` in two ways that matter. That one
- * centres a 3xl heading, which interrupts a page whose other section headings
+ * It differs from the FAQ it replaces in two ways that matter. That one
+ * centred a 3xl heading, which interrupts a page whose other section headings
  * are left-aligned at `text-lg`; and it opens its answers from React state, so
  * an answer is absent from the document until someone clicks. `<details>` is
  * open-able without JavaScript and its content is in the DOM either way —

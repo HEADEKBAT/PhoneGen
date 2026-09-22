@@ -1,8 +1,7 @@
 import { type Metadata } from 'next';
 import { getProduct, getProductLandingConfig, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
 import { getT } from '@/lib/i18n/server';
-import Breadcrumb from '@/components/Breadcrumb';
-import { ProductHero, FeatureGrid, FAQSection, CTASection } from '@/components/product-landing';
+import { ProductLanding } from '@/components/product-landing';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -41,35 +40,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function AccessibilityColorCheckerLanding({ params }: Props) {
   const { locale } = await params;
-  const t = getT(locale);
-  const config = getProductLandingConfig('color');
+  const title = TITLES[locale] || TITLES.en;
+  const cta = `/${locale}/color-generator/tool?mode=contrast`;
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Breadcrumb
-        items={[
-          { label: t('nav.home'), href: `/${locale}` },
-          { label: 'Accessibility Color Checker', href: `/${locale}/accessibility-color-checker` },
-        ]}
-      />
-
-      <main className="flex-1">
-        <ProductHero
-          titleKey={config.heroTitleKey}
-          descKey={config.heroDescKey}
-          ctaLabelKey={config.ctaLabelKey}
-          ctaHref={`/${locale}/color-generator/tool?mode=contrast`}
-        />
-
-        <FeatureGrid features={config.features} />
-
-        <FAQSection faqs={config.faqs} />
-
-        <CTASection
-          labelKey={config.ctaLabelKey}
-          href={`/${locale}/color-generator/tool?mode=contrast`}
-        />
-      </main>
-    </div>
+    <ProductLanding
+      locale={locale}
+      config={getProductLandingConfig('color')}
+      crumb={{ label: title, href: `/${locale}/accessibility-color-checker` }}
+      /* The page's own words. It used to open with the colour studio's
+         generic h1, which said nothing about contrast or WCAG — the two
+         things anyone landing here searched for. */
+      title={title}
+      lede={DESCRIPTIONS[locale] || DESCRIPTIONS.en}
+      ctaHref={cta}
+    />
   );
 }

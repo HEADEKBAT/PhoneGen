@@ -2,14 +2,7 @@ import { type Metadata } from 'next';
 import { getProduct, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
 import { getProductLandingConfig } from '@/lib/config/productLanding';
 import { getT } from '@/lib/i18n/server';
-import Breadcrumb from '@/components/Breadcrumb';
-import {
-  ProductHero,
-  FeatureGrid,
-  ExampleSection,
-  FAQSection,
-  CTASection,
-} from '@/components/product-landing';
+import { ProductLanding } from '@/components/product-landing';
 import DisclaimerBanner from '@/components/crypto/shared/DisclaimerBanner';
 
 type Props = {
@@ -47,54 +40,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   } satisfies SEOProductPage);
 }
 
-export default async function CryptoWalletLanding({ params }: Props) {
+export default async function CryptoWalletPlaygroundLanding({ params }: Props) {
   const { locale } = await params;
   const t = getT(locale);
-  const config = getProductLandingConfig('cryptoWallet');
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Breadcrumb
-        items={[
-          { label: t('nav.home'), href: `/${locale}` },
-          { label: 'Crypto Wallet Playground', href: `/${locale}/crypto-wallet-playground` },
-        ]}
-      />
-
-      <main className="flex-1">
-        {/* Disclaimer */}
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 pt-6">
-          <DisclaimerBanner />
-        </div>
-
-        {/* Hero */}
-        <ProductHero
-          titleKey={config.heroTitleKey}
-          descKey={config.heroDescKey}
-          ctaLabelKey={config.ctaLabelKey}
-          ctaHref={`/${locale}/crypto-wallet-playground/tool`}
-        />
-
-        {/* Features */}
-        <FeatureGrid features={config.features} />
-
-        {/* Example */}
-        <ExampleSection
-          labelKey={config.exampleLabelKey}
-          exampleText="Bitcoin Legacy: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa | Ethereum: 0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18"
-        />
-
-        {/* FAQ */}
-        <FAQSection faqs={config.faqs} />
-
-        {/* CTA */}
-        <CTASection
-          titleKey="productLanding.ctaTitle"
-          descKey="productLanding.ctaDesc"
-          labelKey={config.ctaLabelKey}
-          href={`/${locale}/crypto-wallet-playground/tool`}
-        />
-      </main>
-    </div>
+    <ProductLanding
+      locale={locale}
+      config={getProductLandingConfig('cryptoWallet')}
+      crumb={{ label: t('products.cryptoWallet.title'), href: `/${locale}/crypto-wallet-playground` }}
+      ctaHref={`/${locale}/crypto-wallet-playground/tool`}
+      example={`Bitcoin Legacy: 1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa\nEthereum:      0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18`}
+      beforeHero={<div className="mx-auto max-w-5xl px-4 pt-6 sm:px-6"><DisclaimerBanner /></div>}
+    />
   );
 }

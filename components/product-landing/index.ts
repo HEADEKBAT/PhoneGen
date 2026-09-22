@@ -1,22 +1,15 @@
-/* The redesigned set. Everything new builds on these five. */
+/* The redesigned set. Everything new builds on these. */
 export { default as LandingHero } from './LandingHero';
 export type { LandingHeroAction } from './LandingHero';
 export { default as LandingSection } from './LandingSection';
 export { default as LandingCards } from './LandingCards';
 export type { LandingCard } from './LandingCards';
+export { default as LandingExample } from './LandingExample';
 export { default as LandingFaq } from './LandingFaq';
 export type { LandingFaqItem } from './LandingFaq';
 export { default as LandingClosing } from './LandingClosing';
-
-/*
- * The pre-redesign set, on its way out. Each one goes the moment its last
- * importer moves over: ProductHero and FeatureGrid with the landing factory,
- * FAQSection and CTASection with the SEO templates.
- */
-export { default as ProductHero } from './ProductHero';
-export { default as WhatCanYouGenerate } from './WhatCanYouGenerate';
 export { default as PopularCountries } from './PopularCountries';
-export { default as FeatureGrid } from './FeatureGrid';
-export { default as ExampleSection } from './ExampleSection';
-export { default as FAQSection } from './FAQSection';
-export { default as CTASection } from './CTASection';
+export { toFeatureCards } from './featureCards';
+
+/** The whole standard landing, assembled — 25 pages render through this. */
+export { default as ProductLanding } from './ProductLanding';

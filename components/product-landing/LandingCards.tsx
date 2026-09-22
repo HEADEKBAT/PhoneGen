@@ -26,9 +26,9 @@ interface LandingCardsProps {
 /**
  * A staggered grid of icon, title and one paragraph.
  *
- * The same card is in QRChecks, PhoneFormats, CredentialUseCases, the old
- * FeatureGrid and the tool shell's related-tools row — five hands, five sets
- * of paddings. `h-full` with the paragraph pushed down by `mt-auto` keeps a
+ * The same card was in QRChecks, PhoneFormats, CredentialUseCases, the
+ * feature grid and the tool shell's related-tools row — five hands, five
+ * sets of paddings. `h-full` with the paragraph pushed down by `mt-auto` keeps a
  * row of cards level when one description runs two lines longer than the rest,
  * which is the thing that actually makes a grid look unfinished.
  */

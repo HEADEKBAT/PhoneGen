@@ -1,15 +1,8 @@
 import { type Metadata } from 'next';
 import { getProduct, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
 import { getProductLandingConfig } from '@/lib/config/productLanding';
-import Breadcrumb from '@/components/Breadcrumb';
-import {
-  ProductHero,
-  PopularCountries,
-  FeatureGrid,
-  ExampleSection,
-  FAQSection,
-  CTASection,
-} from '@/components/product-landing';
+import { getT } from '@/lib/i18n/server';
+import { ProductLanding } from '@/components/product-landing';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -48,55 +41,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function AddressGeneratorLanding({ params }: Props) {
   const { locale } = await params;
-  const config = getProductLandingConfig('address');
+  const t = getT(locale);
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Breadcrumb
-        items={[
-          { label: 'GenCore', href: `/${locale}` },
-          { label: 'Address Generator', href: `/${locale}/address-generator` },
-        ]}
-      />
-
-      <main className="flex-1">
-        {/* Hero */}
-        <ProductHero
-          titleKey={config.heroTitleKey}
-          descKey={config.heroDescKey}
-          ctaLabelKey={config.ctaLabelKey}
-          ctaHref={`/${locale}/address-generator/tool`}
-        />
-
-        {/* Features */}
-        <FeatureGrid features={config.features} />
-
-        {/* Popular Countries */}
-        {config.popularCountryCodes && (
-          <PopularCountries
-            countryCodes={config.popularCountryCodes}
-            locale={locale}
-            productSlug="address-generator"
-            heading={config.popularCountriesDescKey}
-            hrefPattern={`/${locale}/address-generator/tool?country={code}`}
-          />
-        )}
-
-        {/* Example */}
-        <ExampleSection
-          labelKey={config.exampleLabelKey}
-          exampleText="123 Main St, New York, NY 10001, United States"
-        />
-
-        {/* FAQ */}
-        <FAQSection faqs={config.faqs} />
-
-        {/* CTA */}
-        <CTASection
-          labelKey={config.ctaLabelKey}
-          href={`/${locale}/address-generator/tool`}
-        />
-      </main>
-    </div>
+    <ProductLanding
+      locale={locale}
+      config={getProductLandingConfig('address')}
+      crumb={{ label: t('products.address.title'), href: `/${locale}/address-generator` }}
+      ctaHref={`/${locale}/address-generator/tool`}
+      example={`123 Main St, New York, NY 10001, United States`}
+      productSlug={'address-generator'}
+      countriesHref={`/${locale}/address-generator/tool?country={code}`}
+    />
   );
 }

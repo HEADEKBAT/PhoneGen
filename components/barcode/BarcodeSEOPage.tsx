@@ -1,5 +1,6 @@
 import Breadcrumb from '@/components/Breadcrumb';
-import { CTASection } from '@/components/product-landing';
+import { getT } from '@/lib/i18n/server';
+import { LandingClosing } from '@/components/product-landing';
 import { generateBarcode } from '@/lib/barcode/engine';
 import { BARCODE_DISPLAY_NAMES } from '@/lib/barcode/types';
 import type { BarcodeSEOPageConfig } from '@/lib/config/barcodeSEOPages';
@@ -16,6 +17,7 @@ interface BarcodeSEOPageProps {
  * Renders an SEO landing page for a barcode generator sub-type.
  */
 export default function BarcodeSEOPage({ locale, config, title, description }: BarcodeSEOPageProps) {
+  const t = getT(locale);
   const displayName = BARCODE_DISPLAY_NAMES[config.barcodeType as keyof typeof BARCODE_DISPLAY_NAMES] || config.barcodeType;
 
   // Render a sample barcode SVG (server-side)
@@ -98,8 +100,10 @@ export default function BarcodeSEOPage({ locale, config, title, description }: B
         <BarcodeSEOFAQ faqs={config.faqs} title={`${config.heroTitle} — FAQ`} />
 
         {/* CTA */}
-        <CTASection
-          labelKey={config.ctaLabel || `Generate ${config.heroTitle}`}
+        <LandingClosing
+          title={t('productLanding.ctaTitle')}
+          body={t('productLanding.ctaDesc')}
+          cta={config.ctaLabel || `Generate ${config.heroTitle}`}
           href={`/${locale}/barcode-generator/${config.slug}`}
         />
       </main>

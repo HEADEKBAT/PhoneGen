@@ -1,15 +1,8 @@
 import { type Metadata } from 'next';
 import { getProduct, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
 import { getProductLandingConfig } from '@/lib/config/productLanding';
-import Breadcrumb from '@/components/Breadcrumb';
-import {
-  ProductHero,
-  PopularCountries,
-  FeatureGrid,
-  ExampleSection,
-  FAQSection,
-  CTASection,
-} from '@/components/product-landing';
+import { getT } from '@/lib/i18n/server';
+import { ProductLanding } from '@/components/product-landing';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -48,55 +41,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function UserGeneratorLanding({ params }: Props) {
   const { locale } = await params;
-  const config = getProductLandingConfig('user');
+  const t = getT(locale);
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Breadcrumb
-        items={[
-          { label: 'GenCore', href: `/${locale}` },
-          { label: 'User Generator', href: `/${locale}/user-generator` },
-        ]}
-      />
-
-      <main className="flex-1">
-        {/* Hero */}
-        <ProductHero
-          titleKey={config.heroTitleKey}
-          descKey={config.heroDescKey}
-          ctaLabelKey={config.ctaLabelKey}
-          ctaHref={`/${locale}/user-generator/tool`}
-        />
-
-        {/* Features */}
-        <FeatureGrid features={config.features} />
-
-        {/* Popular Countries */}
-        {config.popularCountryCodes && (
-          <PopularCountries
-            countryCodes={config.popularCountryCodes}
-            locale={locale}
-            productSlug="user-generator"
-            heading={config.popularCountriesDescKey}
-            hrefPattern={`/${locale}/user-generator/tool?country={code}`}
-          />
-        )}
-
-        {/* Example */}
-        <ExampleSection
-          labelKey={config.exampleLabelKey}
-          exampleText="John Doe\njohn.doe@example.com\n+1 (555) 123-4567\n123 Main St, New York, NY 10001"
-        />
-
-        {/* FAQ */}
-        <FAQSection faqs={config.faqs} />
-
-        {/* CTA */}
-        <CTASection
-          labelKey={config.ctaLabelKey}
-          href={`/${locale}/user-generator/tool`}
-        />
-      </main>
-    </div>
+    <ProductLanding
+      locale={locale}
+      config={getProductLandingConfig('user')}
+      crumb={{ label: t('products.user.title'), href: `/${locale}/user-generator` }}
+      ctaHref={`/${locale}/user-generator/tool`}
+      example={`John Doe\njohn.doe@example.com\n+1 (555) 123-4567\n123 Main St, New York, NY 10001`}
+      productSlug={'user-generator'}
+      countriesHref={`/${locale}/user-generator/tool?country={code}`}
+    />
   );
 }

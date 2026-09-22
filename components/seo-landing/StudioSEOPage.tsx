@@ -1,7 +1,7 @@
 import Breadcrumb from '@/components/Breadcrumb';
 import SEOHero from '@/components/credential-landing/SEOHero';
 import CredentialFAQ from '@/components/credential-landing/CredentialFAQ';
-import { CTASection } from '@/components/product-landing';
+import { LandingClosing } from '@/components/product-landing';
 import { getT } from '@/lib/i18n/server';
 
 export interface StudioSEOFaq {
@@ -127,7 +127,12 @@ export default function StudioSEOPage({
 
         <CredentialFAQ faqs={copy.faqs} title={t('studioSeo.faq', { topic: copy.heroTitle })} />
 
-        <CTASection labelKey={ctaLabel} href={`/${locale}/${ctaHref}`} />
+        <LandingClosing
+          title={t('productLanding.ctaTitle')}
+          body={t('productLanding.ctaDesc')}
+          cta={ctaLabel}
+          href={`/${locale}/${ctaHref}`}
+        />
       </main>
     </div>
   );

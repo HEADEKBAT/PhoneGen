@@ -11,7 +11,7 @@ import {
   BarcodeFAQ,
   EcosystemSection,
 } from '@/components/barcode';
-import { CTASection } from '@/components/product-landing';
+import { LandingClosing } from '@/components/product-landing';
 import {
   BARCODE_HERO,
   BARCODE_AUDIENCE,
@@ -93,8 +93,12 @@ export default async function BarcodeGeneratorLanding({ params }: Props) {
         <EcosystemSection links={BARCODE_ECOSYSTEM} locale={locale} />
 
         {/* 8. CTA */}
-        <CTASection
-          labelKey="Open Barcode Studio"
+        <LandingClosing
+          title={t('productLanding.ctaTitle')}
+          body={t('productLanding.ctaDesc')}
+          /* Still an English literal, like the headings around it:
+             this page's own copy is the next stage's job. */
+          cta="Open Barcode Studio"
           href={`/${locale}/barcode-generator/tool`}
         />
       </main>

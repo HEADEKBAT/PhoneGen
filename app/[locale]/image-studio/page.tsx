@@ -1,8 +1,7 @@
 import { type Metadata } from 'next';
 import { getProduct, getProductLandingConfig, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
 import { getT } from '@/lib/i18n/server';
-import Breadcrumb from '@/components/Breadcrumb';
-import { ProductHero, FeatureGrid, FAQSection, CTASection } from '@/components/product-landing';
+import { ProductLanding } from '@/components/product-landing';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -42,38 +41,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ImageStudioLanding({ params }: Props) {
   const { locale } = await params;
   const t = getT(locale);
-  const config = getProductLandingConfig('image');
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <Breadcrumb
-        items={[
-          { label: t('nav.home'), href: `/${locale}` },
-          { label: 'Image Studio', href: `/${locale}/image-studio` },
-        ]}
-      />
-
-      <main className="flex-1">
-        {/* 1. Hero */}
-        <ProductHero
-          titleKey={config.heroTitleKey}
-          descKey={config.heroDescKey}
-          ctaLabelKey={config.ctaLabelKey}
-          ctaHref={`/${locale}/image-studio/tool`}
-        />
-
-        {/* 2. Features */}
-        <FeatureGrid features={config.features} />
-
-        {/* 3. FAQ */}
-        <FAQSection faqs={config.faqs} />
-
-        {/* 4. CTA */}
-        <CTASection
-          labelKey={config.ctaLabelKey}
-          href={`/${locale}/image-studio/tool`}
-        />
-      </main>
-    </div>
+    <ProductLanding
+      locale={locale}
+      config={getProductLandingConfig('image')}
+      crumb={{ label: t('products.image.title'), href: `/${locale}/image-studio` }}
+      ctaHref={`/${locale}/image-studio/tool`}
+    />
   );
 }

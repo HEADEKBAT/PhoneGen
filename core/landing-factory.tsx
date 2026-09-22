@@ -39,9 +39,7 @@ import {
   generateMetadata as seoGenerateMetadata,
   type SEOProductPage,
 } from '@/lib/config';
-import { getT } from '@/lib/i18n/server';
-import Breadcrumb from '@/components/Breadcrumb';
-import { ProductHero, FeatureGrid, FAQSection, CTASection } from '@/components/product-landing';
+import { ProductLanding } from '@/components/product-landing';
 
 /* ── Manifest ───────────────────────────────────────────────────────────────── */
 
@@ -100,34 +98,23 @@ export function createLandingPage(manifest: LandingPageManifest) {
 
   async function Page({ params }: PageProps) {
     const { locale } = await params;
-    const t = getT(locale);
     const config = getProductLandingConfig(productId);
-    const href = `/${locale}/${cta}`;
+    const { title, description } = resolveCopy(locale);
 
     return (
-      <div className="flex min-h-screen flex-col">
-        <Breadcrumb
-          items={[
-            { label: t('nav.home'), href: `/${locale}` },
-            { label, href: `/${locale}/${slug}` },
-          ]}
-        />
-
-        <main className="flex-1">
-          <ProductHero
-            titleKey={config.heroTitleKey}
-            descKey={config.heroDescKey}
-            ctaLabelKey={config.ctaLabelKey}
-            ctaHref={href}
-          />
-
-          <FeatureGrid features={config.features} />
-
-          <FAQSection faqs={config.faqs} />
-
-          <CTASection labelKey={config.ctaLabelKey} href={href} />
-        </main>
-      </div>
+      <ProductLanding
+        locale={locale}
+        config={config}
+        crumb={{ label, href: `/${locale}/${slug}` }}
+        /* The page's own copy, not the product's. All seventeen of these used
+           to show the colour studio's h1 and lead, so seventeen pages that
+           rank for seventeen different phrases opened with the same sentence
+           — and the one thing a visitor checks first is whether the page is
+           about what they searched for. */
+        title={title}
+        lede={description}
+        ctaHref={`/${locale}/${cta}`}
+      />
     );
   }
 

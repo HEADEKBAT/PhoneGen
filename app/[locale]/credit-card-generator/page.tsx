@@ -11,7 +11,7 @@ import { type Metadata } from 'next';
 import { getProduct, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
 import Breadcrumb from '@/components/Breadcrumb';
 import SEOHero from '@/components/credential-landing/SEOHero';
-import { CTASection } from '@/components/product-landing';
+import { LandingClosing } from '@/components/product-landing';
 import { getT } from '@/lib/i18n/server';
 import { PAYMENT_SEO_PAGES } from '@/lib/config/paymentSEOPages';
 import PaymentFAQ from '@/components/payment-studio/landing/PaymentFAQ';
@@ -81,8 +81,12 @@ export default async function CreditCardGeneratorLanding({ params }: Props) {
           title="Frequently Asked Questions"
         />
 
-        <CTASection
-          labelKey="Go to Credit Card Generator"
+        <LandingClosing
+          title={t('productLanding.ctaTitle')}
+          body={t('productLanding.ctaDesc')}
+          /* Still an English literal, like the headings around it:
+             this page's own copy is the next stage's job. */
+          cta="Go to Credit Card Generator"
           href={`/${locale}/payment-studio/credit-card-generator`}
         />
       </main>

@@ -23,7 +23,7 @@ interface LandingSectionProps {
  *
  * Written out by hand in QRChecks, QRPayloads, PhoneFormats, PhoneCountries,
  * CredentialTools and five more — and the heading is deliberately small. A
- * centred 3xl heading, which is what the old `FAQSection` and `ToolShell` use,
+ * centred 3xl heading, which is what the sections this replaces used,
  * announces each section as a new page; these are parts of one page.
  */
 export default function LandingSection({

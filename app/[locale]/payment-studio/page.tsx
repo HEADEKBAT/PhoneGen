@@ -9,7 +9,7 @@ import { type Metadata } from 'next';
 import { getProduct, generateMetadata as seoGenerateMetadata, type SEOProductPage } from '@/lib/config';
 import { getT } from '@/lib/i18n/server';
 import Breadcrumb from '@/components/Breadcrumb';
-import { CTASection } from '@/components/product-landing';
+import { LandingClosing } from '@/components/product-landing';
 import PaymentHero from '@/components/payment-studio/landing/PaymentHero';
 import PaymentToolGrid from '@/components/payment-studio/landing/PaymentToolGrid';
 import PaymentFAQ from '@/components/payment-studio/landing/PaymentFAQ';
@@ -74,8 +74,12 @@ export default async function PaymentStudioLanding({ params }: Props) {
           title="Frequently Asked Questions"
         />
 
-        <CTASection
-          labelKey="Open Credit Card Generator"
+        <LandingClosing
+          title={t('productLanding.ctaTitle')}
+          body={t('productLanding.ctaDesc')}
+          /* Still an English literal, like the headings around it:
+             this page's own copy is the next stage's job. */
+          cta="Open Credit Card Generator"
           href={`/${locale}/payment-studio/credit-card-generator`}
         />
       </main>
