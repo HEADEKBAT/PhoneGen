@@ -1639,6 +1639,7 @@
       "unreadable": "Die Datei konnte nicht gelesen werden."
     },
     "export": {
+      "title": "Herunterladen",
       "format": "Format",
       "size": "Pixel",
       "printWidth": "Druckbreite",

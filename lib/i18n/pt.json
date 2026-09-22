@@ -1639,6 +1639,7 @@
       "unreadable": "Não foi possível ler esse ficheiro."
     },
     "export": {
+      "title": "Baixar",
       "format": "Formato",
       "size": "Píxeis",
       "printWidth": "Largura impressa",

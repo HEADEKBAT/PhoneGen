@@ -1639,6 +1639,7 @@
       "unreadable": "Ce fichier n’a pas pu être lu."
     },
     "export": {
+      "title": "Télécharger",
       "format": "Format",
       "size": "Pixels",
       "printWidth": "Largeur à l’impression",

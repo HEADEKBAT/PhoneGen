@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import type { QRContentType, QROptions } from '@/lib/qr/types';
 import { encodeContent, getContentTypeConfig } from '@/lib/qr/contentTypes';
-import { Type, Palette, Image as ImageIcon, Settings, ShieldCheck, Download } from 'lucide-react';
+import { Type, Palette, Image as ImageIcon, Settings } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n';
 import { effectiveErrorCorrection } from '@/lib/qr/readiness';
 import QRPreview from './shared/QRPreview';
@@ -17,18 +17,23 @@ import LogoUploader from './shared/LogoUploader';
 import QuietZoneControl from './shared/QuietZoneControl';
 import ErrorCorrectionSelector from './shared/ErrorCorrectionSelector';
 import ColorPicker from './shared/ColorPicker';
-import ResponsivePreview from './shared/ResponsivePreview';
 
-type TabId = 'content' | 'design' | 'logo' | 'settings' | 'check' | 'export';
+type TabId = 'content' | 'design' | 'logo' | 'settings';
 
 const TABS: { id: TabId; label: string; icon: React.ReactNode }[] = [
   { id: 'content', label: 'Content', icon: <Type className="h-4 w-4" /> },
   { id: 'design', label: 'Design', icon: <Palette className="h-4 w-4" /> },
   { id: 'logo', label: 'Logo', icon: <ImageIcon className="h-4 w-4" /> },
   { id: 'settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
-  { id: 'check', label: 'Check', icon: <ShieldCheck className="h-4 w-4" /> },
-  { id: 'export', label: 'Export', icon: <Download className="h-4 w-4" /> },
 ];
+
+/*
+ * Four tabs, not six. The strip is 420 pixels wide and six tabs did not fit:
+ * it scrolled sideways, and "Export" — the reason anyone opens a generator —
+ * sat off the right edge where nobody found it. Download now lives in the
+ * left column under the verdict, always visible, and the Check tab is gone
+ * because the same readiness panel is already standing there.
+ */
 
 /*
  * The hand-written category map that stood here is gone. It listed 33 of the
@@ -116,9 +121,14 @@ export default function QRStudioClient({ standalone = true }: QRStudioClientProp
           </div>
         )}
 
-        {activeTab === 'export' && (
-          <div className="w-full max-w-sm mt-2">
-            <ResponsivePreview options={qrOptions} />
+        {/* Download, beside the symbol it downloads — six formats, real
+            vectors among them. This used to be a tab that never fit. */}
+        {qrOptions.content && (
+          <div className="w-full max-w-sm rounded-2xl border border-border bg-background p-4 shadow-sm">
+            <p className="mb-3 ml-1 text-xs font-semibold text-foreground">
+              {t('qrStudio.export.title')}
+            </p>
+            <QRExportPanel options={qrOptions} filename={`qr-code-${contentType}`} />
           </div>
         )}
       </div>
@@ -126,12 +136,12 @@ export default function QRStudioClient({ standalone = true }: QRStudioClientProp
       {/* Right Column — Controls */}
       <div className="w-full lg:w-[420px] flex-shrink-0">
         {/* Tabs */}
-        <div className="flex gap-1 p-1 rounded-xl bg-muted/50 border border-border mb-4 overflow-x-auto">
+        <div className="grid grid-cols-4 gap-1 p-1 rounded-xl bg-muted/50 border border-border mb-4">
           {TABS.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
+              className={`flex items-center justify-center gap-1.5 px-2 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-all ${
                 activeTab === tab.id
                   ? 'bg-background text-foreground shadow-sm border border-border'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
@@ -273,17 +283,6 @@ export default function QRStudioClient({ standalone = true }: QRStudioClientProp
             </div>
           )}
 
-          {activeTab === 'check' && <QRReadiness options={qrOptions} />}
-
-          {/* Export Tab */}
-          {activeTab === 'export' && (
-            <div>
-              <QRExportPanel
-                options={qrOptions}
-                filename={`qr-code-${contentType}`}
-              />
-            </div>
-          )}
         </div>
       </div>
     </div>
