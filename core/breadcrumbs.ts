@@ -18,6 +18,7 @@
 
 import type { BreadcrumbItem } from './types';
 import { registry } from './registry';
+import { getT } from '@/lib/i18n/server';
 
 /* ── Known fixed pages (that don't come from the registry) ──────────────────── */
 
@@ -56,8 +57,8 @@ export function buildBreadcrumbs(
       ? segments.slice(1)
       : segments;
 
-  // Root / home
-  crumbs.push({ label: 'Home', href: `/${locale}` });
+  // Root / home. This read "Home" in every language until now.
+  crumbs.push({ label: getT(locale)('nav.home'), href: `/${locale}` });
 
   if (cleanSegments.length === 0) return crumbs;
 
@@ -99,19 +100,37 @@ export function buildProductBreadcrumbs(
 
 /* ── Internal ───────────────────────────────────────────────────────────────── */
 
+/**
+ * The first clause of a page title, for use as a crumb.
+ *
+ * Tool titles are written for a search result — "Генератор Code 128 —
+ * Создание штрихкодов Code 128" — and a breadcrumb has room for the name, not
+ * the sales line. Everything from the first dash or pipe is the sales line.
+ */
+function firstClause(title: string): string {
+  return title.split(/\s[—–|-]\s/)[0].trim();
+}
+
 function resolveLabel(segment: string, locale: string): string {
   // 1. Try known pages (about, etc.)
   const known = getKnownLabel(locale, segment);
   if (known) return known;
 
-  // 2. Try registry — product slug match
+  /*
+   * 2 and 3 used to return `product.name` and `tool.name`, which the manifest
+   * documents as unlocalized. Every crumb on every /ru, /de, /es, /fr and /pt
+   * page was therefore English, directly above a translated h1.
+   */
   const product = registry.getProductBySlug(segment);
-  if (product) return product.name;
+  if (product) {
+    const title = getT(locale)(`products.${product.id}.title`);
+    return title.startsWith('products.') ? product.name : title;
+  }
 
-  // 3. Try registry — all tools
   for (const tool of registry.getAllTools()) {
     if (tool.id === segment || tool.id.endsWith(`/${segment}`)) {
-      return tool.name;
+      const meta = tool.seo.meta[locale as keyof typeof tool.seo.meta] ?? tool.seo.meta.en;
+      return meta?.title ? firstClause(meta.title) : tool.name;
     }
   }
 

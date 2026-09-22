@@ -1785,5 +1785,9 @@
       "title": "Machen Sie einen und sehen Sie, was er sagt",
       "body": "{count} Formate, Vektor am Ausgang, nichts gespeichert, kein Konto."
     }
+  },
+  "toolPage": {
+    "related": "Verwandte Werkzeuge",
+    "relatedNote": "Aus demselben Studio."
   }
 }

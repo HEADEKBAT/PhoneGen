@@ -1785,5 +1785,9 @@
       "title": "Haga uno y vea qué dice",
       "body": "{count} formatos, vectorial a la salida, nada guardado, sin cuenta."
     }
+  },
+  "toolPage": {
+    "related": "Herramientas relacionadas",
+    "relatedNote": "Del mismo estudio."
   }
 }

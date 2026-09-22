@@ -1785,5 +1785,9 @@
       "title": "Make one and see what it says",
       "body": "{count} formats, vector out, nothing stored, no account."
     }
+  },
+  "toolPage": {
+    "related": "Related tools",
+    "relatedNote": "From the same studio."
   }
 }

@@ -1785,5 +1785,9 @@
       "title": "Faites-en un et voyez ce qu’il dit",
       "body": "{count} formats, du vectoriel en sortie, rien de conservé, sans compte."
     }
+  },
+  "toolPage": {
+    "related": "Outils associés",
+    "relatedNote": "Du même studio."
   }
 }

@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowDown, ArrowRight, type LucideIcon } from 'lucide-react';
+import { ArrowDown, ArrowRight } from 'lucide-react';
 import type { ReactNode } from 'react';
 import Starfield from '@/components/background/Starfield';
 import { EASE } from '@/components/home/motion';
@@ -21,8 +21,12 @@ interface LandingHeroProps {
    * count that opens the row.
    */
   facts?: string[];
-  /** Shown as a badge when the page has no facts to put in the eyebrow. */
-  icon?: LucideIcon;
+  /**
+   * Shown as a badge when the page has no facts to put in the eyebrow. An
+   * already-rendered element rather than the component, so a server component
+   * can pass one: a function prop does not cross into a client component.
+   */
+  icon?: ReactNode;
   title: string;
   lede: string;
   /** Override for a title that needs more room than sixteen characters wide. */
@@ -31,6 +35,11 @@ interface LandingHeroProps {
   actions?: LandingHeroAction[];
   /** The right-hand column: whatever this product can show working. */
   showcase?: ReactNode;
+  /**
+   * Half the vertical air. For a page whose point is the tool directly below
+   * it: the hero says what the thing is, then gets out of the way.
+   */
+  compact?: boolean;
 }
 
 /**
@@ -52,12 +61,13 @@ interface LandingHeroProps {
  */
 export default function LandingHero({
   facts,
-  icon: Icon,
+  icon,
   title,
   lede,
   titleWidth = 'max-w-[16ch]',
   actions = [],
   showcase,
+  compact = false,
 }: LandingHeroProps) {
   const reduced = useReducedMotion();
 
@@ -85,20 +95,22 @@ export default function LandingHero({
       </div>
 
       <div
-        className={`relative mx-auto grid max-w-5xl grid-cols-1 items-center gap-10 px-4 pt-16 pb-14 sm:px-6 sm:pt-20 sm:pb-18 lg:gap-14 lg:pt-24 lg:pb-24 ${
-          showcase ? 'lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]' : ''
-        }`}
+        className={`relative mx-auto grid max-w-5xl grid-cols-1 items-center gap-10 px-4 sm:px-6 lg:gap-14 ${
+          compact
+            ? 'pt-10 pb-10 sm:pt-14 sm:pb-12 lg:pt-16 lg:pb-14'
+            : 'pt-16 pb-14 sm:pt-20 sm:pb-18 lg:pt-24 lg:pb-24'
+        } ${showcase ? 'lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]' : ''}`}
       >
         {/* Without a showcase the text stays capped at 3xl rather than running
             the full width: the left edge still lines up with every section
             below, which is what makes the page read as one grid. */}
         <div className={showcase ? undefined : 'max-w-3xl'}>
-          {Icon && !facts?.length && (
+          {icon && !facts?.length && (
             <motion.span
               {...rise(0)}
               className="mb-5 inline-grid size-12 place-items-center rounded-2xl border border-hero-rule bg-hero-well text-hero-action"
             >
-              <Icon size={22} aria-hidden="true" />
+              {icon}
             </motion.span>
           )}
 

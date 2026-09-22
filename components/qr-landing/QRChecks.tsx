@@ -4,11 +4,11 @@ import { Contrast, Frame, Ruler, Stamp, type LucideIcon } from 'lucide-react';
 import { useTranslations } from '@/lib/i18n';
 import { LandingCards, LandingSection } from '@/components/product-landing';
 
-const CHECKS: { id: string; icon: LucideIcon }[] = [
-  { id: 'quietZone', icon: Frame },
-  { id: 'inverted', icon: Contrast },
-  { id: 'logo', icon: Stamp },
-  { id: 'print', icon: Ruler },
+const CHECKS: { id: string; Icon: LucideIcon }[] = [
+  { id: 'quietZone', Icon: Frame },
+  { id: 'inverted', Icon: Contrast },
+  { id: 'logo', Icon: Stamp },
+  { id: 'print', Icon: Ruler },
 ];
 
 /**
@@ -30,9 +30,9 @@ export default function QRChecks() {
       note={t('qrLanding.checks.note')}
     >
       <LandingCards
-        items={CHECKS.map(({ id, icon }) => ({
+        items={CHECKS.map(({ id, Icon }) => ({
           id,
-          icon,
+          icon: <Icon size={15} aria-hidden="true" />,
           title: t(`qrLanding.checks.${id}.title`),
           desc: t(`qrLanding.checks.${id}.desc`),
         }))}

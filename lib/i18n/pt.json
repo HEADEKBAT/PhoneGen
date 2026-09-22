@@ -1785,5 +1785,9 @@
       "title": "Faça um e veja o que ele diz",
       "body": "{count} formatos, vetorial à saída, nada guardado, sem registo."
     }
+  },
+  "toolPage": {
+    "related": "Ferramentas relacionadas",
+    "relatedNote": "Do mesmo estúdio."
   }
 }

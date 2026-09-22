@@ -1,14 +1,16 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
+import type { ReactNode } from 'react';
 import Link from 'next/link';
-import { ArrowUpRight, type LucideIcon } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { REVEAL_VIEWPORT, revealCard, stagger } from '@/components/home/motion';
 
 export interface LandingCard {
   /** Falls back to the title, which is unique in every use so far. */
   id?: string;
-  icon?: LucideIcon;
+  /** A rendered element, so server components can pass one too. */
+  icon?: ReactNode;
   title: string;
   desc: string;
   /** Makes the whole card a link. Locale-prefixed, or a `#anchor`. */
@@ -46,14 +48,12 @@ export default function LandingCards({ items, columns = 2 }: LandingCardsProps) 
       className={`grid list-none grid-cols-1 gap-3 p-0 ${cols}`}
     >
       {items.map((item) => {
-        const Icon = item.icon;
-
         const body = (
           <>
             <div className="flex items-center gap-2.5">
-              {Icon && (
+              {item.icon && (
                 <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-action-soft text-action">
-                  <Icon size={15} aria-hidden="true" />
+                  {item.icon}
                 </span>
               )}
               <h3 className="font-heading text-[0.9375rem] font-semibold tracking-tight text-foreground">
