@@ -101,15 +101,18 @@ export default async function CredentialGeneratorLanding({ params }: Props) {
           subtitle={st('ecosystem_subtitle')}
         />
 
-        <LandingFaq faqs={faqs.map((faq, i) => ({
-          qKey: `credentialLanding.faqs.${i}.q`,
-          aKey: `credentialLanding.faqs.${i}.a`,
-        }))} />
+        <LandingFaq
+          title={t('productLanding.faqTitle')}
+          items={faqs.map((_faq, i) => ({
+            question: t(`credentialLanding.faqs.${i}.q`),
+            answer: t(`credentialLanding.faqs.${i}.a`),
+          }))}
+        />
 
         <LandingClosing
-          titleKey="credentialLanding.closing.title"
-          bodyKey="credentialLanding.closing.body"
-          ctaKey="credentialLanding.hero.ctaPrimary"
+          title={t('credentialLanding.closing.title')}
+          body={t('credentialLanding.closing.body')}
+          cta={t('credentialLanding.hero.ctaPrimary')}
           href={`/${locale}/credential-generator/tool`}
         />
       </main>

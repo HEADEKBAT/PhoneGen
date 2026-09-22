@@ -76,12 +76,18 @@ export default async function QRCodeGeneratorLanding({ params }: Props) {
 
         <QRChecks />
 
-        <LandingFaq faqs={config.faqs} />
+        <LandingFaq
+          title={t('productLanding.faqTitle')}
+          items={config.faqs.map((faq) => ({
+            question: t(faq.qKey),
+            answer: t(faq.aKey),
+          }))}
+        />
 
         <LandingClosing
-          titleKey="qrLanding.closing.title"
-          bodyKey="qrLanding.closing.body"
-          ctaKey="qrLanding.cta.primary"
+          title={t('qrLanding.closing.title')}
+          body={t('qrLanding.closing.body')}
+          cta={t('qrLanding.cta.primary')}
           href={`/${locale}/qr-generator/tool`}
         />
       </main>

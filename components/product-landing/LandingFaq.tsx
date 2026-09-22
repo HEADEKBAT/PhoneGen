@@ -2,16 +2,24 @@
 
 import { motion, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
-import type { FAQ } from '@/lib/config/productLanding';
-import { useTranslations } from '@/lib/i18n';
-import { REVEAL_VIEWPORT, revealCard, revealUp, stagger } from '@/components/home/motion';
+import { REVEAL_VIEWPORT, revealCard, stagger } from '@/components/home/motion';
+import LandingSection from './LandingSection';
+
+export interface LandingFaqItem {
+  question: string;
+  answer: string;
+}
 
 interface LandingFaqProps {
-  faqs: FAQ[];
+  items: LandingFaqItem[];
+  /** Resolved for the locale by the caller. */
+  title: string;
+  note?: string;
+  id?: string;
 }
 
 /**
- * The FAQ used by the redesigned product landings.
+ * The FAQ used by the redesigned product landings and templates.
  *
  * It differs from the older `FAQSection` in two ways that matter. That one
  * centres a 3xl heading, which interrupts a page whose other section headings
@@ -20,16 +28,18 @@ interface LandingFaqProps {
  * open-able without JavaScript and its content is in the DOM either way —
  * which matters on a section whose whole point is the questions it answers.
  *
+ * Questions arrive as strings, not dictionary keys. The four landings hold
+ * theirs in the dictionary and the five page templates hold theirs in
+ * manifests; a key-only prop served the first four and locked out the 108
+ * pages behind the templates.
+ *
  * The FAQPage JSON-LD comes along unchanged: it is what puts these questions
  * in the search result.
  */
-export default function LandingFaq({ faqs }: LandingFaqProps) {
-  const { t } = useTranslations();
+export default function LandingFaq({ items, title, note, id }: LandingFaqProps) {
   const reduced = useReducedMotion();
 
-  if (faqs.length === 0) return null;
-
-  const items = faqs.map((faq) => ({ question: t(faq.qKey), answer: t(faq.aKey) }));
+  if (items.length === 0) return null;
 
   return (
     <>
@@ -48,23 +58,7 @@ export default function LandingFaq({ faqs }: LandingFaqProps) {
         }}
       />
 
-      <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
-        <motion.div
-          variants={revealUp}
-          initial={reduced ? false : 'hidden'}
-          whileInView="shown"
-          viewport={REVEAL_VIEWPORT}
-          className="relative mb-4 border-b border-border pb-2.5"
-        >
-          <h2 className="font-heading text-lg font-semibold tracking-tight text-foreground">
-            {t('productLanding.faqTitle')}
-          </h2>
-          <span
-            aria-hidden="true"
-            className="absolute -bottom-px left-0 h-0.5 w-9 rounded-full bg-action"
-          />
-        </motion.div>
-
+      <LandingSection id={id} title={title} note={note}>
         <motion.div
           variants={stagger(0.035)}
           initial={reduced ? false : 'hidden'}
@@ -94,7 +88,7 @@ export default function LandingFaq({ faqs }: LandingFaqProps) {
             </motion.details>
           ))}
         </motion.div>
-      </section>
+      </LandingSection>
     </>
   );
 }

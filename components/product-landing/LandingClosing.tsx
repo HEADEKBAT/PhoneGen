@@ -3,20 +3,23 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { useTranslations } from '@/lib/i18n';
 import { REVEAL_VIEWPORT, revealUp } from '@/components/home/motion';
 
 interface LandingClosingProps {
-  titleKey: string;
-  bodyKey: string;
-  ctaKey: string;
+  title: string;
+  body: string;
+  cta: string;
   /** Absolute, locale-prefixed, or a `#anchor` on this page. */
   href: string;
 }
 
-/** The last thing on a product landing: one sentence and the one button. */
-export default function LandingClosing({ titleKey, bodyKey, ctaKey, href }: LandingClosingProps) {
-  const { t } = useTranslations();
+/**
+ * The last thing on a product landing: one sentence and the one button.
+ *
+ * Strings rather than dictionary keys, for the reason given on `LandingFaq`:
+ * the page templates carry copy from manifests, already resolved.
+ */
+export default function LandingClosing({ title, body, cta, href }: LandingClosingProps) {
   const reduced = useReducedMotion();
 
   const className =
@@ -24,7 +27,7 @@ export default function LandingClosing({ titleKey, bodyKey, ctaKey, href }: Land
 
   const label = (
     <>
-      {t(ctaKey)}
+      {cta}
       <ArrowRight
         size={15}
         aria-hidden="true"
@@ -42,9 +45,9 @@ export default function LandingClosing({ titleKey, bodyKey, ctaKey, href }: Land
       className="mx-auto max-w-5xl px-4 py-16 text-center sm:px-6 sm:py-20"
     >
       <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-        {t(titleKey)}
+        {title}
       </h2>
-      <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">{t(bodyKey)}</p>
+      <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">{body}</p>
 
       {/* An in-page anchor is not a route change, so `next/link` would be the
           wrong element for it. */}

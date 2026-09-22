@@ -60,11 +60,17 @@ export default async function MediaStudioLanding({ params }: Props) {
         <MediaHero />
         <MediaCapabilities />
         <MediaHow />
-        <LandingFaq faqs={config.faqs} />
+        <LandingFaq
+          title={t('productLanding.faqTitle')}
+          items={config.faqs.map((faq) => ({
+            question: t(faq.qKey),
+            answer: t(faq.aKey),
+          }))}
+        />
         <LandingClosing
-          titleKey="productLanding.media.closing.title"
-          bodyKey="productLanding.media.closing.body"
-          ctaKey="productLanding.media.closing.cta"
+          title={t('productLanding.media.closing.title')}
+          body={t('productLanding.media.closing.body')}
+          cta={t('productLanding.media.closing.cta')}
           href={`/${locale}/media-studio/tool`}
         />
       </main>

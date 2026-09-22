@@ -76,11 +76,17 @@ export default async function PhoneGeneratorLanding({ params }: Props) {
         <PhoneHero examples={examples.slice(0, SHOWCASE_COUNT)} />
         <PhoneCountries locale={locale} examples={examples} all={all} />
         {examples.length > 0 && <PhoneFormats example={examples[0]} />}
-        <LandingFaq faqs={config.faqs} />
+        <LandingFaq
+          title={t('productLanding.faqTitle')}
+          items={config.faqs.map((faq) => ({
+            question: t(faq.qKey),
+            answer: t(faq.aKey),
+          }))}
+        />
         <LandingClosing
-          titleKey="productLanding.phone.closing.title"
-          bodyKey="productLanding.phone.closing.body"
-          ctaKey="productLanding.phone.cta.secondary"
+          title={t('productLanding.phone.closing.title')}
+          body={t('productLanding.phone.closing.body')}
+          cta={t('productLanding.phone.cta.secondary')}
           href="#countries"
         />
       </main>
